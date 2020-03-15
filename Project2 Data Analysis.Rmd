@@ -11,7 +11,10 @@ editor_options:
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(MASS)
+
+
 ```
+
 
 ## R Markdown
 
@@ -23,15 +26,13 @@ Suggested Downtime Activities:
 4. Maybe play around and fit a few LDA models with continuous stuff.
 
 
-```{r}
+```{r read data}
 #reading in 'Bank Additional' file
 bank = read.csv("./DataSets/bank-additional.csv",header = TRUE, sep = ";")
 str(bank)
 summary(bank)
 sum(is.na(bank))
-```
 
-```{r}
 #reading in 'Bank Additional Full' file
 bankfull = read.csv("./DataSets/bank-additional-full.csv",header = TRUE, sep = ";")
 str(bankfull)
@@ -40,13 +41,55 @@ sum(is.na(bankfull))
 ```
 
 
-```{r EDA}
-bank %>% ggplot(aes(age, y)) + geom_boxplot()
-bank %>% ggplot(aes(job, y, fill=y)) + geom_col()
-bank %>% ggplot(aes(marital, y, fill=y)) + geom_col()
-bank %>% ggplot(aes(education, y,  fill=y)) + geom_col()
-bank %>% ggplot(aes(default, y,  fill=y)) + geom_col()
+```{r Feature Engineering}
 
+
+
+```
+
+
+
+```{r EDA}
+
+
+df <- bank # input dataframes for plots
+
+df %>% ggplot(aes(y, age)) + geom_boxplot() + coord_flip()
+df %>% ggplot(aes(job, y, fill=y)) + geom_col()
+df %>% ggplot(aes(marital, y, fill=y)) + geom_col()
+df %>% ggplot(aes(education, y,  fill=y)) + geom_col()
+df %>% ggplot(aes(default, y,  fill=y)) + geom_col()
+df %>% ggplot(aes(housing, y,  fill=y)) + geom_col()
+df %>% ggplot(aes(loan, y,  fill=y)) + geom_col()
+df %>% ggplot(aes(contact, y,  fill=y)) + geom_col()
+df %>% ggplot(aes(month, y,  fill=y)) + geom_col()
+df %>% ggplot(aes(day_of_week, y,  fill=y)) + geom_col()
+df %>% ggplot(aes(y, duration)) + geom_boxplot() + coord_flip()
+df %>% ggplot(aes(campaign, y,  fill=y)) + geom_col()
+df %>% ggplot(aes(y, campaign)) + geom_boxplot() + coord_flip()
+
+df %>% ggplot(aes(pdays, y,  fill=y)) + geom_point()
+
+df %>% ggplot(aes(previous, y,  fill=y)) + geom_col()
+df %>% ggplot(aes(poutcome, y,  fill=y)) + geom_col()
+
+
+df %>% ggplot(aes(emp.var.rate, y,  fill=y)) + geom_col()
+df %>% ggplot(aes(y, emp.var.rate)) + geom_boxplot() + coord_flip()
+
+df %>% ggplot(aes(cons.price.idx, y,  fill=y)) + geom_col()
+df %>% ggplot(aes(y, cons.price.idx)) + geom_boxplot() + coord_flip()
+
+
+df %>% ggplot(aes(cons.conf.idx, y,  fill=y)) + geom_col()
+df %>% ggplot(aes(y, cons.conf.idx)) + geom_boxplot() + coord_flip()
+
+
+df %>% ggplot(aes(euribor3m, y,  fill=y)) + geom_col()
+df %>% ggplot(aes(y, nr.employed)) + geom_boxplot() + coord_flip()
+
+df %>% ggplot(aes(nr.employed, y,  fill=y)) + geom_col()
+df %>% ggplot(aes(y, nr.employed)) + geom_boxplot() + coord_flip()
 
 ```
 
