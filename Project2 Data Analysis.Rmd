@@ -1,6 +1,6 @@
 ---
 title: "Data Analysis Project"
-author: "Sabrina, Dustin and Huy"
+author: "D. Bracy , H.H. Nguyen, S.Purvis"
 date: "3/11/2020"
 output: html_document
 editor_options: 
@@ -142,6 +142,66 @@ ggplot(data = pc.bankCont.scores, aes(x = PC2, y = PC3)) +
 
 ```
 
+```{r}
+library(caret) 
+library(e1071)
+library(rpart)
+library(rpart.plot)
+library(rattle)
+library(randomForest)
+library(caTools)
+library(descr)
+#########################################################
+# Sampling the dataset into training data and test data:
+#############################################################
+
+set.seed(1234)
+splitPerc = .75
+index = sample(1:dim(bankCont)[1],round(splitPerc * dim(bankCont)[1]))
+#index<-sample(1:dim(Auto2)[1],192,replace=F)
+traindata<-bankCont[index,]
+testdata<-bankCont[-index,]
+
+  
+
+
+# Classification and Regression Trees
+bank.cart<-rpart(y ~ ., traindata , method = 'class')
+
+#par(mfrow=c(1,1))
+#fancyRpartPlot(bank.cart , digits=2 , palettes = c("Purples", "Oranges"))
+
+#predict
+cart_pred <- predict( bank.cart , testdata , type = "class")
+cart_prob <- predict( bank.cart , testdata , type = "prob")
+
+# Confusion matrix
+confusionMatrix(cart_pred , testdata$y)
+
+### Cross table validation for CART
+CrossTable(testdata$y, cart_pred,
+          prop.chisq = FALSE, prop.c = FALSE, prop.r = FALSE,
+          dnn = c('actual default', 'predicted default'))
+```
+
+
+
+```{r knn}
+#Implementing KNN
+###########################################
+bank.knn <- train(y ~ ., data = traindata, method = "knn", 
+                  maximize = TRUE,
+                  trControl = trainControl(method = "cv", number = 10),
+                  preProcess=c("center", "scale"))
+
+predictedkNN <- predict(bank.knn , newdata = testdata)
+confusionMatrix(predictedkNN , testdata$y)
+
+### Cross table validation for KNN
+CrossTable(testdata$y, predictedkNN,
+           prop.chisq = FALSE, prop.c = FALSE, prop.r = FALSE,
+           dnn = c('actual default', 'predicted default'))
+```
 
 
 
