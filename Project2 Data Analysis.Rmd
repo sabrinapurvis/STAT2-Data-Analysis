@@ -2,8 +2,11 @@
 title: "Data Analysis Project"
 author: "D. Bracy , H.H. Nguyen, S.Purvis"
 date: "3/11/2020"
-output: html_document
-editor_options: 
+output:
+  word_document: 
+    reference_docx: "wordStyleRef.docx"
+  html_document: default
+editor_options:
   chunk_output_type: console
 ---
 
@@ -12,6 +15,13 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(MASS)
 
+
+
+# wordStyleRef style changes:
+## Set margins to .5"
+## Heading 1 creates page break before line
+## Heading 2 remove space before
+## Heading 5 centers text (#####) 
 
 ```
 
@@ -24,6 +34,19 @@ Suggested Downtime Activities:
 2. summary statistics (the ones I kept complaining about on Project 1)
 3. EDA (basic boxplots, scatterplots, bar charts etc to see how things relate to the response, PCA tool),
 4. Maybe play around and fit a few LDA models with continuous stuff.
+
+##### ![caption](https://whitelabel.2u.com/cdn/v1/smu-mds/compass-dark.svg){width=10%}
+
+
+Note this is just a syntax example. Since we don't have a local picture to use, this will show nothing in the word doc.  Also worth noting is the H5 marking, which centers the image.
+
+
+#### Latex examples:
+
+$$Variance Ratio=  \frac{(σ_{max})^2}{(σ_{min} )^2} = \frac{2.84^2}{1.20^2} =5.6$$
+
+$$log(ReportDeliveryTime) = SchedFreq + HourOfDay + DayOfMonth + ReportCategory + Server$$
+
 
 
 ```{r read data}
