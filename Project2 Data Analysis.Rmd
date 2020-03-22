@@ -14,8 +14,8 @@ editor_options:
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(MASS)
-
-
+library(caret)
+library(corrplot)
 
 # wordStyleRef style changes:
 ## Set margins to .5"
@@ -65,11 +65,74 @@ sum(is.na(bankfull))
 
 
 ```{r Feature Engineering}
+#Create id to merge later
+#bankfull$id <- seq.int(nrow(bankfull))
 
+#Onehot encode categorical variables to binary:
+dmy <- dummyVars(" ~ .", data = bankfull)
+trsf <- data.frame(predict(dmy, newdata = bankfull))
+#bank2 <- inner_join(bankfull, trsf, by = "id")
+
+#Remove binary encoded response
+trsf$y <- ifelse(trsf$y.no == 1, 0, 1)
+bankbin <- subset(trsf, select = -c(y.no, y.yes))
 
 
 ```
 
+
+## Correlation Analysis
+Here we are looking to see improvement gained from feature engineering and to ensure we select features which have high correlation with our response variable for use in our machine learning algorthims.
+
+<center>
+
+![Correlation Plot of all Rdata features](./figures/CorrPlot.png) 
+
+</center>
+
+
+```{r build Correlation Plot, include=FALSE}
+# Corrplot function from: http://www.sthda.com/english/wiki/visualize-correlation-matrix-using-correlogram
+# Vignette for corrplot is also useful
+
+data.cor <- cor(bankbin)
+
+# mat : is a matrix of data
+# ... : further arguments to pass to the native R cor.test function
+cor.mtest <- function(mat, ...) {
+    mat <- as.matrix(mat)
+    n <- ncol(mat)
+    p.mat<- matrix(NA, n, n)
+    diag(p.mat) <- 0
+    for (i in 1:(n - 1)) {
+        for (j in (i + 1):n) {
+            tmp <- cor.test(mat[, i], mat[, j], ...)
+            p.mat[i, j] <- p.mat[j, i] <- tmp$p.value
+        }
+    }
+  colnames(p.mat) <- rownames(p.mat) <- colnames(mat)
+  p.mat
+}
+# matrix of the p-value of the correlation
+p.mat <- cor.mtest(bankbin)
+
+col <- colorRampPalette(c("#BB4444", "#EE9988", "#FFFFFF", "#77AADD", "#4477AA"))
+
+# Build corrPlot.png ordered by Angular order of Eigenvectors
+png(height=1100, width=1200, pointsize=15, file="./figures/corrPlot.png")
+corrplot(data.cor, 
+         method="circle", 
+         order="AOE",
+         tl.col="black", 
+         type="full", 
+         tl.cex = 1, 
+         p.mat = p.mat, 
+         sig.level = 0.01, 
+         insig = "blank")
+ggsave("./figures/corrPlot.png", units="in", width=5, height=4, dpi=600)
+dev.off()
+
+```
 
 
 ```{r EDA}
@@ -120,7 +183,7 @@ df %>% ggplot(aes(y, nr.employed)) + geom_boxplot() + coord_flip()
 
 
 
-```{r LDA analysis}
+```{r LDA analysis with bankcont}
 
 # Select only continuous variables:
 bankCont <- dplyr::select(bankfull, c('age','duration', 'campaign', 'pdays', 'cons.price.idx', 'cons.conf.idx', 'euribor3m', 'nr.employed','y'))
@@ -139,10 +202,28 @@ x
 ME<-(x[2,1]+x[1,2])/1000
 ME
 
+
+
 ```
 
 
-```{r PCA Analysis}
+```{r LDA analysis with bankbin}
+
+mylda<-lda(y~., data=bankbin)
+pred<-predict(mylda,newdata=bankbin)$class  #Predictions can come in many forms, the class form provides the categorical level of your response.
+Truth<-bankbin$y
+x<-table(pred,Truth) # Creating a confusion matrix
+x
+#Missclassification Error
+ME<-(x[2,1]+x[1,2])/1000
+ME
+
+
+
+```
+
+
+```{r PCA Analysis with bankCont}
 
 pc.bankCont<-prcomp(bankCont[,-9],scale.=TRUE)
 pc.bankCont.scores<-pc.bankCont$x
@@ -164,6 +245,33 @@ ggplot(data = pc.bankCont.scores, aes(x = PC2, y = PC3)) +
 
 
 ```
+
+```{r PCA Analysis with bankbin}
+
+pc.bankbin<-prcomp(bankbin[,-64],scale.=TRUE)
+pc.bankbin.scores<-pc.bankbin$x
+
+#Adding the response column to the PC's data frame
+pc.bankbin.scores<-data.frame(pc.bankbin.scores)
+pc.bankbin.scores$y<-bankbin$y
+
+pc.bankbin.scores
+
+#Use ggplot2 to plot the first few pc's
+ggplot(data = pc.bankbin.scores, aes(x = PC1, y = PC2)) +
+  geom_point(aes(col=y), size=1)+
+  ggtitle("PCA of Subscriptions")
+
+ggplot(data = pc.bankbin.scores, aes(x = PC2, y = PC3)) +
+  geom_point(aes(col=y), size=1)+
+  ggtitle("PCA of Subscriptions")
+
+ggplot(data = pc.bankbin.scores, aes(x = PC3, y = PC4)) +
+  geom_point(aes(col=y), size=1)+
+  ggtitle("PCA of Subscriptions")
+
+```
+
 
 ```{r}
 library(caret) 
