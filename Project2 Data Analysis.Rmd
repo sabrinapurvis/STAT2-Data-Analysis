@@ -16,6 +16,7 @@ library(tidyverse)
 library(MASS)
 library(caret)
 library(corrplot)
+library(GGally)
 
 # wordStyleRef style changes:
 ## Set margins to .5"
@@ -176,7 +177,12 @@ df %>% ggplot(aes(y, nr.employed)) + geom_boxplot() + coord_flip()
 
 df %>% ggplot(aes(nr.employed, y,  fill=y)) + geom_col()
 df %>% ggplot(aes(y, nr.employed)) + geom_boxplot() + coord_flip()
+```
 
+```{r}
+#additional EDA Graphics
+ggpairs(df)
+ggcorr(df)
 ```
 
 
