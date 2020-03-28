@@ -183,6 +183,13 @@ df %>% ggplot(aes(y, nr.employed)) + geom_boxplot() + coord_flip()
 #additional EDA Graphics
 ggpairs(df)
 ggcorr(df)
+
+#Duration appears to matter - looking at the day of the week too. It appears you get a Yes on Thursday faster than any other day of the week.
+df %>% ggplot(aes(y, duration)) + geom_boxplot() + coord_flip() + facet_grid(day_of_week ~ .)
+
+df %>% ggplot(aes(euribor3m, nr.employed, color=y)) + geom_point()
+
+
 ```
 
 
