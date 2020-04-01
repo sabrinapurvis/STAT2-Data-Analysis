@@ -17,6 +17,13 @@ library(MASS)
 library(caret)
 library(corrplot)
 library(GGally)
+library(e1071)
+library(rpart)
+library(rpart.plot)
+library(rattle)
+library(randomForest)
+library(caTools)
+library(descr)
 
 # wordStyleRef style changes:
 ## Set margins to .5"
@@ -334,14 +341,7 @@ ggplot(data = pc.bankbin.scores, aes(x = PC3, y = PC4)) +
 
 
 ```{r}
-library(caret) 
-library(e1071)
-library(rpart)
-library(rpart.plot)
-library(rattle)
-library(randomForest)
-library(caTools)
-library(descr)
+
 #########################################################
 # Sampling the dataset into training data and test data:
 #############################################################
