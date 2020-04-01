@@ -27,7 +27,51 @@ library(GGally)
 ```
 
 
-## R Markdown
+
+## Introduction
+
+  The retail banking industry provides financial services to families and individuals.  Banks’ main functions are threefold; they issue credit in the forms of loans and credit lines, provide a secure location to deposit money, and allow a mechanism to manage finances in the form of checking and savings accounts.  This analysis will focus specifically on the influential factors from direct marketing campaigns managed by a Portuguese banking institution in an attempt to get secure commitment for term deposits.  Understanding not only which marketing campaigns were most effective, but also the timing of the campaign and the socioeconomic demographics will allow the retail banking industry to further target and tune their approach to securing term deposits.
+
+## Data Description
+
+  The team was provided a substantial marketing dataset.  It was comprised of categorical and continuous variables and a resulting binary result (Y/N).  The data ranges from May 2008 to November 2010.  As described in the table below, we have equal counts of numeric and categorical variables.  There are demographics, data related to the depth and breadth of the marketing campaign, and market indicators included in this set.
+
+|Variable|Type|Description|
+|---|---|---|
+|Age|Numeric|Age of the Individual|
+|Job|Categorical|Type of job held|
+|Marital|Categorical|Marital Status|
+|Education|Categorical|Level of Education of individual|
+|Default|Categorical|Y/N/Unknown on whether the individual has credit in default|
+|Housing|Categorical|Y/N/Unknown on whether the individual has a housing loan|
+|Loan|Categorical|Y/N/Unknown on whether the individual has a personal loan|
+|Contact|Categorical|Contact Communication Type|
+|Month|Categorical|Month of last contact|
+|Day_of_Week|Categorical|Day of the week of last contact – Weekdays Only|
+|Duration|Numeric|Duration of last contact, in seconds.  *should only be used as a benchmark, since it can’t be known beforehand|
+|Campaign|Numeric|Number of contacts performed during this campaign for this client|
+|Pdays|Numeric|Number of days that passed by after a client was contacted from a previous campaign (999 means not contacted previously)|
+|Previous|Numeric|Number of contacts performed before this campaign for this client|
+|Poutcome|Categorical|Outcome of previous marketing campaign|
+|Emp.var.rate|Numeric|Employment variation rate – quarterly indicator|
+|Cons.price.idx|Numeric|Consumer Price Index – monthly indicator|
+|Cons.conf.idx|Numeric|Consumer confidence index – monthly indicator|
+|Euribor3m|Numeric|Euribor (Euro Interbank Offered Rate) 3 month rate – daily indicator|
+|Nr.employed|Numeric|Number of employees – quarterly indicator|
+|Y|Binary|Did Client subscribe to a term deposit|
+
+
+# Exploratory Data Analysis (EDA)
+
+
+
+
+
+
+
+
+
+# Appendix
 
 Suggested Downtime Activities:  
 
@@ -47,6 +91,7 @@ Note this is just a syntax example. Since we don't have a local picture to use, 
 $$Variance Ratio=  \frac{(σ_{max})^2}{(σ_{min} )^2} = \frac{2.84^2}{1.20^2} =5.6$$
 
 $$log(ReportDeliveryTime) = SchedFreq + HourOfDay + DayOfMonth + ReportCategory + Server$$
+
 
 
 
@@ -249,8 +294,6 @@ pc.bankCont.scores<-pc.bankCont$x
 pc.bankCont.scores<-data.frame(pc.bankCont.scores)
 pc.bankCont.scores$y<-bankCont$y
 
-pc.bankCont.scores
-
 #Use ggplot2 to plot the first few pc's
 ggplot(data = pc.bankCont.scores, aes(x = PC1, y = PC2)) +
   geom_point(aes(col=y), size=1)+
@@ -406,11 +449,11 @@ Required deliverables in the complete report.  The format of your paper (headers
 
 PAGE LIMIT: I do not necesarrily require a page limit, but you should definitely be shooting for know more than 7 pages written.  It of course can blow up quite larger than that due to graphics and tables,  but good projects are clear, concise, to the point.  You do not need to show output for every model you considered.  (You may put supporting plots/charts/tables etc. in the appendix if you want, just make sure you label and reference them appropriately.)  
 
-* Introduction Required
+*_ Introduction Required *
 
-* Data Description  Required
+*_ Data Description  Required *
 
-* Exploratory Analysis Required
+*_ Exploratory Analysis Required *
 
 Addressing Objective 1:
 * Restatement of Problem and the overall approach to solve it Required
