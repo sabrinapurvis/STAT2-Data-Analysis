@@ -31,6 +31,10 @@ library(descr)
 ## Heading 5: centers text (#####) 
 ## Date: remove space after
 
+
+source("./R/helpers.R")
+
+
 ```
 
 # Introduction
@@ -156,15 +160,15 @@ NOTE 2:  Do not forget about organization among your group.  Divide and conquer 
 ```{r read data}
 #reading in 'Bank Additional' file
 bank = read.csv("./DataSets/bank-additional.csv",header = TRUE, sep = ";")
-str(bank)
-summary(bank)
-sum(is.na(bank))
+#str(bank)
+#summary(bank)
+#sum(is.na(bank))
 
 #reading in 'Bank Additional Full' file
 bankfull = read.csv("./DataSets/bank-additional-full.csv",header = TRUE, sep = ";")
-str(bankfull)
-summary(bankfull)
-sum(is.na(bankfull))
+#str(bankfull)
+#summary(bankfull)
+#sum(is.na(bankfull))
 ```
 
 ### Feature Engineering
@@ -174,74 +178,46 @@ sum(is.na(bankfull))
 #bankfull$id <- seq.int(nrow(bankfull))
 #bankfull$pdays <- ifelse(bankfull$pdays == 999, NA, bankfull$pdays)
 
+# convert "unknown" values to NA and view percentage of missing values
+bankfull[bankfull == "unknown"] <- NA 
+plotNAs(bankfull)
 
-#Onehot encode categorical variables to binary:
+# Drop NAs
+bankfull <- bankfull %>% drop_na()
+bankfull$job <- droplevels(bankfull$job, 'unknown')
+bankfull$loan <- droplevels(bankfull$loan, 'unknown')
+bankfull$default <- droplevels(bankfull$default, 'unknown')
+bankfull$education <- droplevels(bankfull$education, 'unknown')
+bankfull$housing <- droplevels(bankfull$housing, 'unknown')
+bankfull$marital <- droplevels(bankfull$marital, 'unknown')
+
+# Onehot encode categorical variables to binary:
 dmy <- dummyVars(" ~ .", data = bankfull)
 trsf <- data.frame(predict(dmy, newdata = bankfull))
-#bank2 <- inner_join(bankfull, trsf, by = "id")
 
-#Remove binary encoded response
+# Remove binary encoded response
 trsf$y <- ifelse(trsf$y.no == 1, 0, 1)
 bankbin <- subset(trsf, select = -c(y.no, y.yes))
 
-```
-
-### Correlation Plot Code:
-
-```{r build Correlation Plot, include=FALSE}
-# Corrplot function from: http://www.sthda.com/english/wiki/visualize-correlation-matrix-using-correlogram
-# Vignette for corrplot is also useful
-
-data.cor <- cor(bankbin)
-
-# mat : is a matrix of data
-# ... : further arguments to pass to the native R cor.test function
-cor.mtest <- function(mat, ...) {
-    mat <- as.matrix(mat)
-    n <- ncol(mat)
-    p.mat<- matrix(NA, n, n)
-    diag(p.mat) <- 0
-    for (i in 1:(n - 1)) {
-        for (j in (i + 1):n) {
-            tmp <- cor.test(mat[, i], mat[, j], ...)
-            p.mat[i, j] <- p.mat[j, i] <- tmp$p.value
-        }
-    }
-  colnames(p.mat) <- rownames(p.mat) <- colnames(mat)
-  p.mat
-}
-# matrix of the p-value of the correlation
-p.mat <- cor.mtest(bankbin)
-
-col <- colorRampPalette(c("#BB4444", "#EE9988", "#FFFFFF", "#77AADD", "#4477AA"))
-
-# Build corrPlot.png ordered by Angular order of Eigenvectors
-png(height=1100, width=1200, pointsize=15, file="./figures/corrPlot.png")
-corrplot(data.cor, 
-         method="circle", 
-         order="AOE",
-         tl.col="black", 
-         type="full", 
-         tl.cex = 1, 
-         p.mat = p.mat, 
-         sig.level = 0.01, 
-         insig = "blank")
-ggsave("./figures/corrPlot.png", units="in", width=5, height=4, dpi=600)
-dev.off()
+summary(bankbin)
 
 ```
+
+
 
 ```{r EDA, fig.width=7.25, fig.height=4.5, echo=FALSE, cache=TRUE, warning=FALSE}
 
-mutate(bankfull, prev = as.factor(previous)) %>% ggplot(aes(prev, y, fill=y)) + geom_col()
+df <- bankfull # input dataframes for plots
 
-df <- bank # input dataframes for plots
+buildCorrPlot(df)
+  
+mutate(df, prev = as.factor(previous)) %>% ggplot(aes(prev, y, fill=y)) + geom_col()
 
 df %>% ggplot(aes(y, age)) + geom_boxplot() + coord_flip()
 df %>% ggplot(aes(job, y, fill=y)) + geom_col()
 df %>% ggplot(aes(marital, y, fill=y)) + geom_col()
 df %>% ggplot(aes(education, y,  fill=y)) + geom_col()
-df %>% ggplot(aes(default, y,  fill=y)) + geom_col()
+df %>% ggplot(aes(default, y,  fill=y)) + geom_boxplot()
 df %>% ggplot(aes(housing, y,  fill=y)) + geom_col()
 df %>% ggplot(aes(loan, y,  fill=y)) + geom_col()
 df %>% ggplot(aes(contact, y,  fill=y)) + geom_col()
@@ -291,7 +267,33 @@ df %>% ggplot(aes(euribor3m, nr.employed, color=y)) + geom_point()
 
 
 
+```{r logistic_regression, cache=TRUE}
+# Split the data into training and test set
+set.seed(115)
+trainIndices = sample(1:dim(df)[1],round(.8 * dim(df)[1]))
+train = df[trainIndices,]
+test = df[-trainIndices,]
 
+
+# Build feature list:
+x<-colnames(df)
+x<-x[x != "y"]
+x<-paste(x, collapse='+')
+x # copy this printed value into the model
+rm(x)
+
+# Everything model:
+everyLog <- glm(y ~ age+job+marital+education+default+housing+loan+contact+month+day_of_week+duration+campaign+pdays+previous+poutcome+emp.var.rate+cons.price.idx+cons.conf.idx+euribor3m+nr.employed
+                 ,data = train, family = "binomial")
+summary(everyLog)
+
+# Smaller model:
+smallerLog <- glm(y~job+contact+month+day_of_week+duration+campaign+pdays+poutcome+emp.var.rate+cons.price.idx+cons.conf.idx+nr.employed, data=train, family="binomial")
+summary(smallerLog)
+
+#ToDO: need to add some lasso/elastic net etc functions
+
+```
 
 
 
@@ -439,27 +441,7 @@ CrossTable(testdata$y, predictedkNN,
 
 
 
-```{r logistic_regression, cache=TRUE}
 
-# Build feature list:
-x<-colnames(bankfull)
-x<-x[x != "y"]
-x<-paste(x, collapse='+')
-x # copy this printed value into the model
-rm(x)
-
-# Build model:
-mylogit <- glm(y ~ age+job+marital+education+default+housing+loan+contact+month+day_of_week+duration+campaign+pdays+previous+poutcome+emp.var.rate+cons.price.idx+cons.conf.idx+euribor3m+nr.employed
-                 ,data = bankfull, family = "binomial")
-
-# Summary of everything model:
-summary(mylogit)
-
-# Recommend we drop: marital, age, loan, previous, housing, education
-mylogit2 <- glm(y ~ job+default+contact+month+day_of_week+duration+campaign+pdays+poutcome+emp.var.rate+cons.price.idx+cons.conf.idx+euribor3m+nr.employed
-                 ,data = bankfull, family = "binomial")
-summary(mylogit2)
-```
 
 
 # Rmd Examples
