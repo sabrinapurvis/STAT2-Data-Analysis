@@ -131,6 +131,11 @@ NOTE 2:  Do not forget about organization among your group.  Divide and conquer 
 *	The conclusion should reprise the questions and conclusions of objective 2 with recommendations of the final model, what could be done to help analysis and model building in the future, and any insight as to why one method outshined all the rest if that is indeed the case.  If they all are similar why did you go with your final model?
 
 
+# References
+[1] ddd
+
+
+
 
 # Appendix
 
@@ -482,5 +487,27 @@ Note this is just a syntax example. Since we don't have a local picture to use, 
 $$Variance Ratio=  \frac{(σ_{max})^2}{(σ_{min} )^2} = \frac{2.84^2}{1.20^2} =5.6$$
 
 $$log(ReportDeliveryTime) = SchedFreq + HourOfDay + DayOfMonth + ReportCategory + Server$$
+
+
+
+
+```{r LDA}
+
+lda.fit = lda(y ~ age+job+marital+education+default+housing+loan+contact+month+day_of_week+duration+campaign+pdays+previous+poutcome+emp.var.rate+cons.price.idx+cons.conf.idx+euribor3m+nr.employed
+                 ,data = bankfull)
+lda.fit
+```
+
+
+```{r QDA}
+qda.fit = qda(y ~ age+job+marital+education+default+housing+loan+contact+month+day_of_week+duration+campaign+pdays+previous+poutcome+emp.var.rate+cons.price.idx+cons.conf.idx+euribor3m+nr.employed
+                 ,data = bankfull)
+qda.fit
+
+```
+
+
+
+
 
 
