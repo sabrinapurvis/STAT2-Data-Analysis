@@ -204,7 +204,7 @@ summary(bankbin)
 
 df <- bankfull # input dataframes for plots
 
-buildCorrPlot(df)
+buildCorrPlot(bankbin)
   
 mutate(df, prev = as.factor(previous)) %>% ggplot(aes(prev, y, fill=y)) + geom_col()
 
@@ -264,6 +264,9 @@ df %>% ggplot(aes(euribor3m, nr.employed, color=y)) + geom_point()
 
 ```{r logistic_regression, cache=TRUE}
 # Split the data into training and test set
+
+df <- bankfull
+
 set.seed(115)
 trainIndices = sample(1:dim(df)[1],round(.8 * dim(df)[1]))
 train = df[trainIndices,]
@@ -283,7 +286,7 @@ everyLog <- glm(y ~ age+job+marital+education+default+housing+loan+contact+month
 summary(everyLog)
 
 # Smaller model:
-smallerLog <- glm(y~job+contact+month+day_of_week+duration+campaign+pdays+poutcome+emp.var.rate+cons.price.idx+cons.conf.idx+nr.employed, data=train, family="binomial")
+smallerLog <- glm(y~job+contact+month+day_of_week+campaign+pdays+poutcome+emp.var.rate+cons.price.idx+cons.conf.idx+nr.employed, data=train, family="binomial")
 summary(smallerLog)
 
 #ToDO: need to add some lasso/elastic net etc functions
