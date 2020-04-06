@@ -296,36 +296,13 @@ summary(smallerLog)
 
 #ToDO: need to add some lasso/elastic net etc functions
 
-```
-
-
-
-
-```{r LDA analysis with bankcont, cache=TRUE}
-
-# Select only continuous variables:
-bankCont <- dplyr::select(bankfull, c('age','duration', 'campaign', 'pdays', 'cons.price.idx', 'cons.conf.idx', 'euribor3m', 'nr.employed','y'))
-bankCont$age <- as.numeric(bankCont$age)
-bankCont$duration <- as.numeric(bankCont$duration)
-bankCont$campaign <- as.numeric(bankCont$campaign)
-bankCont$pdays <- as.numeric(bankCont$pdays)
-
-
-mylda<-lda(y~age+duration+ campaign+ pdays+ cons.price.idx+ cons.conf.idx+ euribor3m+ nr.employed, data=bankCont)
-pred<-predict(mylda,newdata=bankCont)$class  #Predictions can come in many forms, the class form provides the categorical level of your response.
-Truth<-bankCont$y
-x<-table(pred,Truth) # Creating a confusion matrix
-x
-#Missclassification Error
-ME<-(x[2,1]+x[1,2])/1000
-ME
-
-
+summary(bankfull$poutcome)
 
 ```
 
 
-```{r LDA analysis with bankbin, cache=TRUE}
+
+```{r LDA analysis, cache=TRUE}
 
 mylda<-lda(y~., data=bankbin)
 pred<-predict(mylda,newdata=bankbin)$class  #Predictions can come in many forms, the class form provides the categorical level of your response.
@@ -341,28 +318,8 @@ ME
 ```
 
 
-```{r PCA Analysis with bankCont, cache=TRUE}
 
-pc.bankCont<-prcomp(bankCont[,-9],scale.=TRUE)
-pc.bankCont.scores<-pc.bankCont$x
-
-#Adding the response column to the PC's data frame
-pc.bankCont.scores<-data.frame(pc.bankCont.scores)
-pc.bankCont.scores$y<-bankCont$y
-
-#Use ggplot2 to plot the first few pc's
-ggplot(data = pc.bankCont.scores, aes(x = PC1, y = PC2)) +
-  geom_point(aes(col=y), size=1)+
-  ggtitle("PCA of Subscriptions")
-
-ggplot(data = pc.bankCont.scores, aes(x = PC2, y = PC3)) +
-  geom_point(aes(col=y), size=1)+
-  ggtitle("PCA of Subscriptions")
-
-
-```
-
-```{r PCA Analysis with bankbin, cache=TRUE}
+```{r PCA Analysis, cache=TRUE}
 
 pc.bankbin<-prcomp(bankbin[,-64],scale.=TRUE)
 pc.bankbin.scores<-pc.bankbin$x
