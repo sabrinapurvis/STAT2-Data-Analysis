@@ -24,12 +24,16 @@ library(rattle)
 library(randomForest)
 library(caTools)
 library(descr)
+library(forcats)
 
 # wordStyleRef style changes:
 ## Set margins to .5"
 ## Heading 2: remove space before
 ## Heading 5: centers text (#####) 
 ## Date: remove space after
+
+source("./R/helpers.R")
+
 
 ```
 
@@ -131,6 +135,8 @@ NOTE 2:  Do not forget about organization among your group.  Divide and conquer 
 *	The conclusion should reprise the questions and conclusions of objective 2 with recommendations of the final model, what could be done to help analysis and model building in the future, and any insight as to why one method outshined all the rest if that is indeed the case.  If they all are similar why did you go with your final model?
 
 
+# References
+[1] ddd
 
 # Appendix
 
@@ -151,121 +157,86 @@ NOTE 2:  Do not forget about organization among your group.  Divide and conquer 
 ```{r read data}
 #reading in 'Bank Additional' file
 bank = read.csv("./DataSets/bank-additional.csv",header = TRUE, sep = ";")
-str(bank)
-summary(bank)
-sum(is.na(bank))
+#str(bank)
+#summary(bank)
+#sum(is.na(bank))
 
 #reading in 'Bank Additional Full' file
 bankfull = read.csv("./DataSets/bank-additional-full.csv",header = TRUE, sep = ";")
-str(bankfull)
-summary(bankfull)
-sum(is.na(bankfull))
+#str(bankfull)
+#summary(bankfull)
+#sum(is.na(bankfull))
 ```
 
 ### Feature Engineering
 
 ```{r Feature Engineering}
-#Create id to merge later
-#bankfull$id <- seq.int(nrow(bankfull))
-#bankfull$pdays <- ifelse(bankfull$pdays == 999, NA, bankfull$pdays)
 
+# convert "unknown" values to NA and view percentage of missing values
+bankfull[bankfull == "unknown"] <- NA 
+plotNAs(bankfull)
 
-#Onehot encode categorical variables to binary:
+# Remove duration from model, as this isn't known until 'y' is known
+bankfull <- bankfull %>% dplyr::select(!duration)
+
+# Drop NAs
+bankfull <- bankfull %>% drop_na()
+bankfull$job <- droplevels(bankfull$job, 'unknown')
+bankfull$loan <- droplevels(bankfull$loan, 'unknown')
+bankfull$default <- droplevels(bankfull$default, 'unknown')
+bankfull$education <- droplevels(bankfull$education, 'unknown')
+bankfull$housing <- droplevels(bankfull$housing, 'unknown')
+bankfull$marital <- droplevels(bankfull$marital, 'unknown')
+
+# Onehot encode categorical variables to binary:
 dmy <- dummyVars(" ~ .", data = bankfull)
 trsf <- data.frame(predict(dmy, newdata = bankfull))
-#bank2 <- inner_join(bankfull, trsf, by = "id")
 
-#Remove binary encoded response
+# Remove binary encoded response
 trsf$y <- ifelse(trsf$y.no == 1, 0, 1)
 bankbin <- subset(trsf, select = -c(y.no, y.yes))
 
 ```
 
-### Correlation Plot Code:
 
-```{r build Correlation Plot, include=FALSE}
-# Corrplot function from: http://www.sthda.com/english/wiki/visualize-correlation-matrix-using-correlogram
-# Vignette for corrplot is also useful
-
-data.cor <- cor(bankbin)
-
-# mat : is a matrix of data
-# ... : further arguments to pass to the native R cor.test function
-cor.mtest <- function(mat, ...) {
-    mat <- as.matrix(mat)
-    n <- ncol(mat)
-    p.mat<- matrix(NA, n, n)
-    diag(p.mat) <- 0
-    for (i in 1:(n - 1)) {
-        for (j in (i + 1):n) {
-            tmp <- cor.test(mat[, i], mat[, j], ...)
-            p.mat[i, j] <- p.mat[j, i] <- tmp$p.value
-        }
-    }
-  colnames(p.mat) <- rownames(p.mat) <- colnames(mat)
-  p.mat
-}
-# matrix of the p-value of the correlation
-p.mat <- cor.mtest(bankbin)
-
-col <- colorRampPalette(c("#BB4444", "#EE9988", "#FFFFFF", "#77AADD", "#4477AA"))
-
-# Build corrPlot.png ordered by Angular order of Eigenvectors
-png(height=1100, width=1200, pointsize=15, file="./figures/corrPlot.png")
-corrplot(data.cor, 
-         method="circle", 
-         order="AOE",
-         tl.col="black", 
-         type="full", 
-         tl.cex = 1, 
-         p.mat = p.mat, 
-         sig.level = 0.01, 
-         insig = "blank")
-ggsave("./figures/corrPlot.png", units="in", width=5, height=4, dpi=600)
-dev.off()
-
-```
 
 ```{r EDA, fig.width=7.25, fig.height=4.5, echo=FALSE, cache=TRUE, warning=FALSE}
 
-mutate(bankfull, prev = as.factor(previous)) %>% ggplot(aes(prev, y, fill=y)) + geom_col()
+df <- bankfull # input dataframes for plots
 
-df <- bank # input dataframes for plots
-
+buildCorrPlot(bankbin)
+  
+mutate(df, prev = as.factor(previous)) %>% ggplot(aes(prev, y, fill=y)) + geom_col()
 df %>% ggplot(aes(y, age)) + geom_boxplot() + coord_flip()
-df %>% ggplot(aes(job, y, fill=y)) + geom_col()
-df %>% ggplot(aes(marital, y, fill=y)) + geom_col()
-df %>% ggplot(aes(education, y,  fill=y)) + geom_col()
-df %>% ggplot(aes(default, y,  fill=y)) + geom_col()
-df %>% ggplot(aes(housing, y,  fill=y)) + geom_col()
-df %>% ggplot(aes(loan, y,  fill=y)) + geom_col()
-df %>% ggplot(aes(contact, y,  fill=y)) + geom_col()
+
+percentagePlot(df, fct_rev(df$job), "Job Type") + coord_flip()
+percentagePlot(df, fct_rev(df$education), "Education Level") + coord_flip() 
+percentagePlot(df, df$contact, "Contact Method") 
+percentagePlot(df, fct_rev(df$month), "Month") + coord_flip()
+percentagePlot(df, fct_rev(df$day_of_week), "Day of the Week") + coord_flip()
+
+# Do we want to show the non-selected feature plots?
+percentagePlot(df, df$marital, "Marital Status") 
+percentagePlot(df, df$default, "Default") 
+percentagePlot(df, df$housing, "Housing") 
+percentagePlot(df, df$loan, "Loan") 
+percentagePlot(df, df$previous, "Previous") + coord_flip()
+percentagePlot(df, df$poutcome, "Poutcome") 
+
 df %>% ggplot(aes(month, y,  fill=y)) + geom_col()
 df %>% ggplot(aes(day_of_week, y,  fill=y)) + geom_col()
-df %>% ggplot(aes(y, duration)) + geom_boxplot() + coord_flip()
 df %>% ggplot(aes(campaign, y,  fill=y)) + geom_col()
 df %>% ggplot(aes(y, campaign)) + geom_boxplot() + coord_flip()
-
-df %>% ggplot(aes(pdays, y,  fill=y)) + geom_point()
-
+df %>% ggplot(aes(pdays, y,  fill=y)) + geom_boxplot()
 df %>% ggplot(aes(previous, y,  fill=y)) + geom_col()
-df %>% ggplot(aes(poutcome, y,  fill=y)) + geom_col()
-
-
 df %>% ggplot(aes(emp.var.rate, y,  fill=y)) + geom_col()
 df %>% ggplot(aes(y, emp.var.rate)) + geom_boxplot() + coord_flip()
-
 df %>% ggplot(aes(cons.price.idx, y,  fill=y)) + geom_col()
 df %>% ggplot(aes(y, cons.price.idx)) + geom_boxplot() + coord_flip()
-
-
 df %>% ggplot(aes(cons.conf.idx, y,  fill=y)) + geom_col()
 df %>% ggplot(aes(y, cons.conf.idx)) + geom_boxplot() + coord_flip()
-
-
 df %>% ggplot(aes(euribor3m, y,  fill=y)) + geom_col()
 df %>% ggplot(aes(y, nr.employed)) + geom_boxplot() + coord_flip()
-
 df %>% ggplot(aes(nr.employed, y,  fill=y)) + geom_col()
 df %>% ggplot(aes(y, nr.employed)) + geom_boxplot() + coord_flip()
 
@@ -274,10 +245,55 @@ ggpairs(df)
 ggcorr(df)
 
 #Duration appears to matter - looking at the day of the week too. It appears you get a Yes on Thursday faster than any other day of the week.
-df %>% ggplot(aes(y, duration)) + geom_boxplot() + coord_flip() + facet_grid(day_of_week ~ .)
-
+#df %>% ggplot(aes(y, duration)) + geom_boxplot() + coord_flip() + facet_grid(day_of_week ~ .)
 df %>% ggplot(aes(euribor3m, nr.employed, color=y)) + geom_point()
 
+```
+
+
+
+
+
+```{r logistic_regression, cache=TRUE}
+
+# Split the data into training and test set
+set.seed(115)
+trainIndices = sample(1:dim(bankfull)[1],round(.8 * dim(bankfull)[1]))
+
+# Build full test/train
+full.train = bankfull[trainIndices,]
+full.test = bankfull[-trainIndices,]
+
+# Build binary test/train
+bin.train = bankbin[trainIndices,]
+bin.test = bankbin[-trainIndices,]
+
+# Build feature list:
+x<-colnames(bankbin)
+x<-x[x != "y"]
+x<-paste(x, collapse='+')
+x # copy this printed value into the model
+rm(x)
+
+# Everything model:
+full.model <- glm(y ~ age+job+marital+education+default+housing+loan+contact+month+day_of_week+campaign+pdays+previous+poutcome+emp.var.rate+cons.price.idx+cons.conf.idx+euribor3m+nr.employed
+                 ,data = full.train, family = "binomial")
+summary(full.model)
+
+## Stepwise Selection:
+step(full.model,direction="both")
+
+# Smaller model:
+simple.model <- glm(y~job+contact+month+day_of_week+campaign+pdays+poutcome+emp.var.rate+cons.price.idx+cons.conf.idx+nr.employed, data=full.train, family="binomial")
+summary(simple.model)
+
+# Scaled data 
+scaledbin <- data.frame(scale(bankbin))
+scaledbin$y <- bankbin$y
+
+# Build scaled test/train
+scaled.train = scaledbin[trainIndices,]
+scaled.test = scaledbin[-trainIndices,]
 
 ```
 
@@ -289,70 +305,31 @@ df %>% ggplot(aes(euribor3m, nr.employed, color=y)) + geom_point()
 
 
 
+```{r LDA analysis, cache=TRUE}
 
+df <- scaledbin
+set.seed(115)
 
-```{r LDA analysis with bankcont, cache=TRUE}
+trainIndices = sample(1:dim(df)[1],round(.8 * dim(df)[1]))
+train = df[trainIndices,]
 
-# Select only continuous variables:
-bankCont <- dplyr::select(bankfull, c('age','duration', 'campaign', 'pdays', 'cons.price.idx', 'cons.conf.idx', 'euribor3m', 'nr.employed','y'))
-bankCont$age <- as.numeric(bankCont$age)
-bankCont$duration <- as.numeric(bankCont$duration)
-bankCont$campaign <- as.numeric(bankCont$campaign)
-bankCont$pdays <- as.numeric(bankCont$pdays)
-
-
-mylda<-lda(y~age+duration+ campaign+ pdays+ cons.price.idx+ cons.conf.idx+ euribor3m+ nr.employed, data=bankCont)
-pred<-predict(mylda,newdata=bankCont)$class  #Predictions can come in many forms, the class form provides the categorical level of your response.
-Truth<-bankCont$y
+test = df[-trainIndices,]
+mylda<-lda(y~., data=train)
+pred<-predict(mylda,newdata=test)$class  #Predictions can come in many forms, the class form provides the categorical level of your response.
+Truth<-test$y
 x<-table(pred,Truth) # Creating a confusion matrix
 x
+
 #Missclassification Error
 ME<-(x[2,1]+x[1,2])/1000
 ME
 
 
-
 ```
 
 
-```{r LDA analysis with bankbin, cache=TRUE}
 
-mylda<-lda(y~., data=bankbin)
-pred<-predict(mylda,newdata=bankbin)$class  #Predictions can come in many forms, the class form provides the categorical level of your response.
-Truth<-bankbin$y
-x<-table(pred,Truth) # Creating a confusion matrix
-x
-#Missclassification Error
-ME<-(x[2,1]+x[1,2])/1000
-ME
-
-
-
-```
-
-
-```{r PCA Analysis with bankCont, cache=TRUE}
-
-pc.bankCont<-prcomp(bankCont[,-9],scale.=TRUE)
-pc.bankCont.scores<-pc.bankCont$x
-
-#Adding the response column to the PC's data frame
-pc.bankCont.scores<-data.frame(pc.bankCont.scores)
-pc.bankCont.scores$y<-bankCont$y
-
-#Use ggplot2 to plot the first few pc's
-ggplot(data = pc.bankCont.scores, aes(x = PC1, y = PC2)) +
-  geom_point(aes(col=y), size=1)+
-  ggtitle("PCA of Subscriptions")
-
-ggplot(data = pc.bankCont.scores, aes(x = PC2, y = PC3)) +
-  geom_point(aes(col=y), size=1)+
-  ggtitle("PCA of Subscriptions")
-
-
-```
-
-```{r PCA Analysis with bankbin, cache=TRUE}
+```{r PCA Analysis, cache=TRUE}
 
 pc.bankbin<-prcomp(bankbin[,-64],scale.=TRUE)
 pc.bankbin.scores<-pc.bankbin$x
@@ -433,32 +410,17 @@ CrossTable(testdata$y, predictedkNN,
 ```
 
 
+```{r LDA}
+lda.fit = lda(y ~ age+job+marital+education+default+housing+loan+contact+month+day_of_week+duration+campaign+pdays+previous+poutcome+emp.var.rate+cons.price.idx+cons.conf.idx+euribor3m+nr.employed
+                 ,data = bankfull)
+lda.fit
+```
 
-```{r logistic_regression, cache=TRUE}
 
-# Build feature list:
-x<-colnames(bankfull)
-x<-x[x != "y"]
-x<-paste(x, collapse='+')
-x # copy this printed value into the model
-rm(x)
-
-# Build model:
-mylogit <- glm(y ~ age+job+marital+education+default+housing+loan+contact+month+day_of_week+duration+campaign+pdays+previous+poutcome+emp.var.rate+cons.price.idx+cons.conf.idx+euribor3m+nr.employed
-                 ,data = bankfull, family = "binomial")
-
-# Summary of everything model:
-summary(mylogit)
-
-# Recommend we drop: marital, age, loan, previous, housing, education
-mylogit2 <- glm(y ~ job+default+contact+month+day_of_week+duration+campaign+pdays+poutcome+emp.var.rate+cons.price.idx+cons.conf.idx+euribor3m+nr.employed
-                 ,data = bankfull, family = "binomial")
-summary(mylogit2)
-
-# SP Recommend we drop: duration, pdays, nr.employed, default, euroibor3
-mylogit3 <- glm(y ~ job+default+contact+month+campaign+poutcome+emp.var.rate+cons.price.idx+cons.conf.idx
-                 ,data = bankfull, family = "binomial")
-summary(mylogit3)
+```{r QDA}
+qda.fit = qda(y ~ age+job+marital+education+default+housing+loan+contact+month+day_of_week+duration+campaign+pdays+previous+poutcome+emp.var.rate+cons.price.idx+cons.conf.idx+euribor3m+nr.employed
+                 ,data = bankfull)
+qda.fit
 ```
 
 
