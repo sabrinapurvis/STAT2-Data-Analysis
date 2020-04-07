@@ -24,6 +24,7 @@ library(rattle)
 library(randomForest)
 library(caTools)
 library(descr)
+library(forcats)
 
 # wordStyleRef style changes:
 ## Set margins to .5"
@@ -214,31 +215,37 @@ buildCorrPlot(bankbin)
 mutate(df, prev = as.factor(previous)) %>% ggplot(aes(prev, y, fill=y)) + geom_col()
 
 df %>% ggplot(aes(y, age)) + geom_boxplot() + coord_flip()
-df %>% ggplot(aes(job, y, fill=y)) + geom_col()
-df %>% ggplot(aes(marital, y, fill=y)) + geom_col()
-df %>% ggplot(aes(education, y,  fill=y)) + geom_col()
-df %>% ggplot(aes(default, y,  fill=y)) + geom_boxplot()
-df %>% ggplot(aes(housing, y,  fill=y)) + geom_col()
-df %>% ggplot(aes(loan, y,  fill=y)) + geom_col()
-df %>% ggplot(aes(contact, y,  fill=y)) + geom_col()
+
+percentagePlot(df, fct_rev(df$job), "Job Type") + coord_flip()
+percentagePlot(df, fct_rev(df$education), "Education Level") + coord_flip() 
+percentagePlot(df, df$contact, "Contact Method") 
+percentagePlot(df, fct_rev(df$month), "Month") + coord_flip()
+percentagePlot(df, fct_rev(df$day_of_week), "Day of the Week") + coord_flip()
+
+
+# Do we want to show the non-selected feature plots?
+percentagePlot(df, df$marital, "Marital Status") 
+percentagePlot(df, df$default, "Default") 
+percentagePlot(df, df$housing, "Housing") 
+percentagePlot(df, df$loan, "Loan") 
+percentagePlot(df, df$previous, "Previous") + coord_flip()
+percentagePlot(df, df$poutcome, "Poutcome") 
+
 df %>% ggplot(aes(month, y,  fill=y)) + geom_col()
 df %>% ggplot(aes(day_of_week, y,  fill=y)) + geom_col()
-df %>% ggplot(aes(y, duration)) + geom_boxplot() + coord_flip()
+
 df %>% ggplot(aes(campaign, y,  fill=y)) + geom_col()
 df %>% ggplot(aes(y, campaign)) + geom_boxplot() + coord_flip()
 
-df %>% ggplot(aes(pdays, y,  fill=y)) + geom_point()
+df %>% ggplot(aes(pdays, y,  fill=y)) + geom_boxplot()
 
 df %>% ggplot(aes(previous, y,  fill=y)) + geom_col()
-df %>% ggplot(aes(poutcome, y,  fill=y)) + geom_col()
-
 
 df %>% ggplot(aes(emp.var.rate, y,  fill=y)) + geom_col()
 df %>% ggplot(aes(y, emp.var.rate)) + geom_boxplot() + coord_flip()
 
 df %>% ggplot(aes(cons.price.idx, y,  fill=y)) + geom_col()
 df %>% ggplot(aes(y, cons.price.idx)) + geom_boxplot() + coord_flip()
-
 
 df %>% ggplot(aes(cons.conf.idx, y,  fill=y)) + geom_col()
 df %>% ggplot(aes(y, cons.conf.idx)) + geom_boxplot() + coord_flip()
