@@ -24,6 +24,7 @@ library(rattle)
 library(randomForest)
 library(caTools)
 library(descr)
+library(forcats)
 
 # wordStyleRef style changes:
 ## Set margins to .5"
@@ -174,13 +175,14 @@ bankfull = read.csv("./DataSets/bank-additional-full.csv",header = TRUE, sep = "
 ### Feature Engineering
 
 ```{r Feature Engineering}
-#Create id to merge later
-#bankfull$id <- seq.int(nrow(bankfull))
-#bankfull$pdays <- ifelse(bankfull$pdays == 999, NA, bankfull$pdays)
 
 # convert "unknown" values to NA and view percentage of missing values
 bankfull[bankfull == "unknown"] <- NA 
 plotNAs(bankfull)
+
+# Remove duration from model, as this isn't known until 'y' is known
+bankfull <- bankfull %>% dplyr::select(!duration)
+
 
 # Drop NAs
 bankfull <- bankfull %>% drop_na()
@@ -199,7 +201,6 @@ trsf <- data.frame(predict(dmy, newdata = bankfull))
 trsf$y <- ifelse(trsf$y.no == 1, 0, 1)
 bankbin <- subset(trsf, select = -c(y.no, y.yes))
 
-summary(bankbin)
 
 ```
 
@@ -214,31 +215,37 @@ buildCorrPlot(bankbin)
 mutate(df, prev = as.factor(previous)) %>% ggplot(aes(prev, y, fill=y)) + geom_col()
 
 df %>% ggplot(aes(y, age)) + geom_boxplot() + coord_flip()
-df %>% ggplot(aes(job, y, fill=y)) + geom_col()
-df %>% ggplot(aes(marital, y, fill=y)) + geom_col()
-df %>% ggplot(aes(education, y,  fill=y)) + geom_col()
-df %>% ggplot(aes(default, y,  fill=y)) + geom_boxplot()
-df %>% ggplot(aes(housing, y,  fill=y)) + geom_col()
-df %>% ggplot(aes(loan, y,  fill=y)) + geom_col()
-df %>% ggplot(aes(contact, y,  fill=y)) + geom_col()
+
+percentagePlot(df, fct_rev(df$job), "Job Type") + coord_flip()
+percentagePlot(df, fct_rev(df$education), "Education Level") + coord_flip() 
+percentagePlot(df, df$contact, "Contact Method") 
+percentagePlot(df, fct_rev(df$month), "Month") + coord_flip()
+percentagePlot(df, fct_rev(df$day_of_week), "Day of the Week") + coord_flip()
+
+
+# Do we want to show the non-selected feature plots?
+percentagePlot(df, df$marital, "Marital Status") 
+percentagePlot(df, df$default, "Default") 
+percentagePlot(df, df$housing, "Housing") 
+percentagePlot(df, df$loan, "Loan") 
+percentagePlot(df, df$previous, "Previous") + coord_flip()
+percentagePlot(df, df$poutcome, "Poutcome") 
+
 df %>% ggplot(aes(month, y,  fill=y)) + geom_col()
 df %>% ggplot(aes(day_of_week, y,  fill=y)) + geom_col()
-df %>% ggplot(aes(y, duration)) + geom_boxplot() + coord_flip()
+
 df %>% ggplot(aes(campaign, y,  fill=y)) + geom_col()
 df %>% ggplot(aes(y, campaign)) + geom_boxplot() + coord_flip()
 
-df %>% ggplot(aes(pdays, y,  fill=y)) + geom_point()
+df %>% ggplot(aes(pdays, y,  fill=y)) + geom_boxplot()
 
 df %>% ggplot(aes(previous, y,  fill=y)) + geom_col()
-df %>% ggplot(aes(poutcome, y,  fill=y)) + geom_col()
-
 
 df %>% ggplot(aes(emp.var.rate, y,  fill=y)) + geom_col()
 df %>% ggplot(aes(y, emp.var.rate)) + geom_boxplot() + coord_flip()
 
 df %>% ggplot(aes(cons.price.idx, y,  fill=y)) + geom_col()
 df %>% ggplot(aes(y, cons.price.idx)) + geom_boxplot() + coord_flip()
-
 
 df %>% ggplot(aes(cons.conf.idx, y,  fill=y)) + geom_col()
 df %>% ggplot(aes(y, cons.conf.idx)) + geom_boxplot() + coord_flip()
@@ -270,50 +277,69 @@ df %>% ggplot(aes(euribor3m, nr.employed, color=y)) + geom_point()
 ```{r logistic_regression, cache=TRUE}
 # Split the data into training and test set
 
-df <- bankfull
-
 set.seed(115)
-trainIndices = sample(1:dim(df)[1],round(.8 * dim(df)[1]))
-train = df[trainIndices,]
-test = df[-trainIndices,]
+trainIndices = sample(1:dim(bankfull)[1],round(.8 * dim(bankfull)[1]))
+
+# Build full test/train
+full.train = bankfull[trainIndices,]
+full.test = bankfull[-trainIndices,]
+
+# Build binary test/train
+bin.train = bankbin[trainIndices,]
+bin.test = bankbin[-trainIndices,]
 
 
 # Build feature list:
-x<-colnames(df)
+x<-colnames(bankbin)
 x<-x[x != "y"]
 x<-paste(x, collapse='+')
 x # copy this printed value into the model
 rm(x)
 
 # Everything model:
-everyLog <- glm(y ~ age+job+marital+education+default+housing+loan+contact+month+day_of_week+duration+campaign+pdays+previous+poutcome+emp.var.rate+cons.price.idx+cons.conf.idx+euribor3m+nr.employed
-                 ,data = train, family = "binomial")
-summary(everyLog)
+full.model <- glm(y ~ age+job+marital+education+default+housing+loan+contact+month+day_of_week+campaign+pdays+previous+poutcome+emp.var.rate+cons.price.idx+cons.conf.idx+euribor3m+nr.employed
+                 ,data = full.train, family = "binomial")
+summary(full.model)
+
+
+## Stepwise Selection:
+step(full.model,direction="both")
+
 
 # Smaller model:
-smallerLog <- glm(y~job+contact+month+day_of_week+campaign+pdays+poutcome+emp.var.rate+cons.price.idx+cons.conf.idx+nr.employed, data=train, family="binomial")
-summary(smallerLog)
+simple.model <- glm(y~job+contact+month+day_of_week+campaign+pdays+poutcome+emp.var.rate+cons.price.idx+cons.conf.idx+nr.employed, data=full.train, family="binomial")
+summary(simple.model)
 
-#ToDO: need to add some lasso/elastic net etc functions
 
-summary(bankfull$poutcome)
+# Scaled data 
+scaledbin <- data.frame(scale(bankbin))
+scaledbin$y <- bankbin$y
+
+# Build scaled test/train
+scaled.train = scaledbin[trainIndices,]
+scaled.test = scaledbin[-trainIndices,]
+
 
 ```
 
 
 
 ```{r LDA analysis, cache=TRUE}
+df <- scaledbin
 
-mylda<-lda(y~., data=bankbin)
-pred<-predict(mylda,newdata=bankbin)$class  #Predictions can come in many forms, the class form provides the categorical level of your response.
-Truth<-bankbin$y
+set.seed(115)
+trainIndices = sample(1:dim(df)[1],round(.8 * dim(df)[1]))
+train = df[trainIndices,]
+test = df[-trainIndices,]
+
+mylda<-lda(y~., data=train)
+pred<-predict(mylda,newdata=test)$class  #Predictions can come in many forms, the class form provides the categorical level of your response.
+Truth<-test$y
 x<-table(pred,Truth) # Creating a confusion matrix
 x
 #Missclassification Error
 ME<-(x[2,1]+x[1,2])/1000
 ME
-
-
 
 ```
 
