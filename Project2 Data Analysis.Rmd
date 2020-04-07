@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ---
 title: "Bank Marketing Analysis Project"
 author: "D. Bracy , H.H. Nguyen, S.Purvis"
@@ -479,3 +480,543 @@ qda.fit
 
 
 
+=======
+---
+title: "Bank Marketing Analysis Project"
+author: "D. Bracy , H.H. Nguyen, S.Purvis"
+date: "04/02/2020"
+output:
+  word_document: 
+    reference_docx: "wordStyleRef.docx"
+  html_document: default
+editor_options:
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(MASS)
+library(caret)
+library(corrplot)
+library(GGally)
+library(e1071)
+library(rpart)
+library(rpart.plot)
+library(rattle)
+library(randomForest)
+library(caTools)
+library(descr)
+library(forcats)
+
+# wordStyleRef style changes:
+## Set margins to .5"
+## Heading 2: remove space before
+## Heading 5: centers text (#####) 
+## Date: remove space after
+
+source("./R/helpers.R")
+
+
+```
+
+# Introduction
+
+  The retail banking industry provides financial services to families and individuals.  Banks’ main functions are threefold; they issue credit in the forms of loans and credit lines, provide a secure location to deposit money, and allow a mechanism to manage finances in the form of checking and savings accounts.  This analysis will focus specifically on the influential factors from direct marketing campaigns managed by a Portuguese banking institution in an attempt to get secure commitment for term deposits.  Understanding not only which marketing campaigns were most effective, but also the timing of the campaign and the socioeconomic demographics will allow the retail banking industry to further target and tune their approach to securing term deposits.
+
+# Data Description
+
+  The team was provided a substantial marketing dataset.  It was comprised of categorical and continuous variables and a resulting binary result (Y/N).  The data ranges from May 2008 to November 2010.  As described in the table below, we have equal counts of numeric and categorical variables.  There are demographics, data related to the depth and breadth of the marketing campaign, and market indicators included in this set.
+
+|Variable|Type|Description|
+|---|---|---|
+|Age|Numeric|Age of the Individual|
+|Job|Categorical|Type of job held|
+|Marital|Categorical|Marital Status|
+|Education|Categorical|Level of Education of individual|
+|Default|Categorical|Y/N/Unknown on whether the individual has credit in default|
+|Housing|Categorical|Y/N/Unknown on whether the individual has a housing loan|
+|Loan|Categorical|Y/N/Unknown on whether the individual has a personal loan|
+|Contact|Categorical|Contact Communication Type|
+|Month|Categorical|Month of last contact|
+|Day_of_Week|Categorical|Day of the week of last contact – Weekdays Only|
+|Duration|Numeric|Duration of last contact, in seconds.  *should only be used as a benchmark, since it can’t be known beforehand|
+|Campaign|Numeric|Number of contacts performed during this campaign for this client|
+|Pdays|Numeric|Number of days that passed by after a client was contacted from a previous campaign (999 means not contacted previously)|
+|Previous|Numeric|Number of contacts performed before this campaign for this client|
+|Poutcome|Categorical|Outcome of previous marketing campaign|
+|Emp.var.rate|Numeric|Employment variation rate – quarterly indicator|
+|Cons.price.idx|Numeric|Consumer Price Index – monthly indicator|
+|Cons.conf.idx|Numeric|Consumer confidence index – monthly indicator|
+|Euribor3m|Numeric|Euribor (Euro Interbank Offered Rate) 3 month rate – daily indicator|
+|Nr.employed|Numeric|Number of employees – quarterly indicator|
+|Y|Binary|Did Client subscribe to a term deposit|
+
+
+# Exploratory Data Analysis (EDA)  
+
+
+
+
+
+
+## Objective 1: 
+Display the ability to perform EDA and build a logisitc regression model. 
+
+* Perform your logistic regression analysis and provide interpretation of the regression coefficients including hypothesis testing, and confidence intervals. For simplicity sake, you do not need to include interactions with this model. Comment on the  practical vs statistical significance of the deemed important factors.  
+Logistical Considerations.  
+* Just like last time, this does not have to be extremely fancy in terms of the model building approach, let EDA, feature selection, and overall intuition guide you.  
+* If you feel like interactions are absolutely necessary to capture what is going on, then contact me so we can discuss an overall strategy of how to provide interpretations.
+
+### Model Selection
+
+#### Type of Selection
+			Any or all:  LASSO, RIDGE, ELASTIC NET,
+			Stepwise, Forward, Backward 
+			Manual / Intuition		
+
+#### Checking Assumptions
+      Lack of fit test
+      Influential point analysis (Cook’s D and Leverage)
+			Optional  Residual Plots
+			
+####	Parameter Interpretation
+		Interpretation  Required
+		Confidence Intervals Required
+	
+### Objective 1 Conclusion
+
+## Objective 2
+With a simple logistic regression model as a baseline, perform additional competing models to improve on prediction performance metrics.  Which metrics are up to you and your given data set.  
+
+* Record the predictive performance metrics from your simple, highly interpretable model from Objective 1.  
+
+* You must include one additional logistic regression model which is also a more complicated logistic regression model than in Objective 1.  By complicated, I do not mean that you include more predictors (that will be somewhat sorted out in Objective 1), but rather model complexity through interaction terms, new variables created by the group, transformations or additions through polynomials.  
+
+* Create another competing model using just the continuous predictors and use LDA or QDA.  
+
+* (Optional) Use a nonparameteric model approach as a competing model.  Random forest or decision tree for predictors that are both categorical and continuous or a k-nearest neighbors approach if just working with continuous predictors.  
+
+*	Provide a summary table of the performance across the competing methods. Summarize the overall findings.  A really great report will also give insight as to why the “best” model won out.  This is where a thorough EDA will always help.
+Logistical Considerations.  
+
+* Don’t forget PCA can be helpful in various ways throughout your analysis as well as other unsupervised tools such as  heatmaps and cluster analysis from Unit 13.  
+
+* I think a good course of action is to tackle Objective 1 in SAS.  The selection tools are really straight forward to run and the output is a little bit easier to grab.  For objective 2, its better to go with R for this reason…..to ensure performance metrics are comparable make sure that the models are run on the exact same training and test sets (or through a CV approach).  This can be done in SAS, it’ll just take a some additional coding to make sure it gets done properly.
+Additional details
+
+NOTE 1: ALL ANALYSIS MUST BE DONE IN SAS OR R and all code must be placed in the appendix of your report. I’m okay with data cleaning steps and EDA being provided using other tools such as Python.
+
+NOTE 2:  Do not forget about organization among your group.  Divide and conquer is always great, but there is “one report to rule them all” so make sure that it flows as you are stitching things together.
+
+* Make sure it is clear how many models were created to compete against the one in Objective 1.  Make note of any tuning parameters that were used and how you came up with them (knn and random forest logistics)  Required
+
+# Main Analysis Content
+*	Overall report of the error metrics on a test set or CV run.  Also if the two best models have error rates of .05 and .045,  can we really say that one model is outperforming the other?  For the ambitious, McNemar’s test could be helpful in answering that.
+
+# Conclusion/Discussion
+*	The conclusion should reprise the questions and conclusions of objective 2 with recommendations of the final model, what could be done to help analysis and model building in the future, and any insight as to why one method outshined all the rest if that is indeed the case.  If they all are similar why did you go with your final model?
+
+
+# References
+[1] ddd
+
+# Appendix
+
+
+<!-- Caution: Big plots -->
+
+## EDA Plots
+### Correlation Plot
+##### ![](./figures/corrPlot.png){width=10%} 
+\newpage
+### Scatterplot Matrix  
+##### ![](./figures/Scatterplot Matrix.png){width=10%} 
+
+## Code Section
+
+### Read Data
+
+```{r read data}
+#reading in 'Bank Additional' file
+bank = read.csv("./DataSets/bank-additional.csv",header = TRUE, sep = ";")
+#str(bank)
+#summary(bank)
+#sum(is.na(bank))
+
+#reading in 'Bank Additional Full' file
+bankfull = read.csv("./DataSets/bank-additional-full.csv",header = TRUE, sep = ";")
+#str(bankfull)
+#summary(bankfull)
+#sum(is.na(bankfull))
+```
+
+### Feature Engineering
+
+```{r Feature Engineering}
+
+# convert "unknown" values to NA and view percentage of missing values
+bankfull[bankfull == "unknown"] <- NA 
+plotNAs(bankfull)
+
+# Remove duration from model, as this isn't known until 'y' is known
+bankfull <- bankfull %>% dplyr::select(!duration)
+
+# Drop NAs
+bankfull <- bankfull %>% drop_na()
+bankfull$job <- droplevels(bankfull$job, 'unknown')
+bankfull$loan <- droplevels(bankfull$loan, 'unknown')
+bankfull$default <- droplevels(bankfull$default, 'unknown')
+bankfull$education <- droplevels(bankfull$education, 'unknown')
+bankfull$housing <- droplevels(bankfull$housing, 'unknown')
+bankfull$marital <- droplevels(bankfull$marital, 'unknown')
+
+# Onehot encode categorical variables to binary:
+dmy <- dummyVars(" ~ .", data = bankfull)
+trsf <- data.frame(predict(dmy, newdata = bankfull))
+
+# Remove binary encoded response
+trsf$y <- ifelse(trsf$y.no == 1, 0, 1)
+bankbin <- subset(trsf, select = -c(y.no, y.yes))
+
+```
+
+
+
+```{r EDA, fig.width=7.25, fig.height=4.5, echo=FALSE, cache=TRUE, warning=FALSE}
+
+df <- bankfull # input dataframes for plots
+
+buildCorrPlot(bankbin)
+  
+mutate(df, prev = as.factor(previous)) %>% ggplot(aes(prev, y, fill=y)) + geom_col()
+df %>% ggplot(aes(y, age)) + geom_boxplot() + coord_flip()
+
+percentagePlot(df, fct_rev(df$job), "Job Type") + coord_flip()
+percentagePlot(df, fct_rev(df$education), "Education Level") + coord_flip() 
+percentagePlot(df, df$contact, "Contact Method") 
+percentagePlot(df, fct_rev(df$month), "Month") + coord_flip()
+percentagePlot(df, fct_rev(df$day_of_week), "Day of the Week") + coord_flip()
+
+# Do we want to show the non-selected feature plots?
+percentagePlot(df, df$marital, "Marital Status") 
+percentagePlot(df, df$default, "Default") 
+percentagePlot(df, df$housing, "Housing") 
+percentagePlot(df, df$loan, "Loan") 
+percentagePlot(df, df$previous, "Previous") + coord_flip()
+percentagePlot(df, df$poutcome, "Poutcome") 
+
+df %>% ggplot(aes(month, y,  fill=y)) + geom_col()
+df %>% ggplot(aes(day_of_week, y,  fill=y)) + geom_col()
+df %>% ggplot(aes(campaign, y,  fill=y)) + geom_col()
+df %>% ggplot(aes(y, campaign)) + geom_boxplot() + coord_flip()
+df %>% ggplot(aes(pdays, y,  fill=y)) + geom_boxplot()
+df %>% ggplot(aes(previous, y,  fill=y)) + geom_col()
+df %>% ggplot(aes(emp.var.rate, y,  fill=y)) + geom_col()
+df %>% ggplot(aes(y, emp.var.rate)) + geom_boxplot() + coord_flip()
+df %>% ggplot(aes(cons.price.idx, y,  fill=y)) + geom_col()
+df %>% ggplot(aes(y, cons.price.idx)) + geom_boxplot() + coord_flip()
+df %>% ggplot(aes(cons.conf.idx, y,  fill=y)) + geom_col()
+df %>% ggplot(aes(y, cons.conf.idx)) + geom_boxplot() + coord_flip()
+df %>% ggplot(aes(euribor3m, y,  fill=y)) + geom_col()
+df %>% ggplot(aes(y, nr.employed)) + geom_boxplot() + coord_flip()
+df %>% ggplot(aes(nr.employed, y,  fill=y)) + geom_col()
+df %>% ggplot(aes(y, nr.employed)) + geom_boxplot() + coord_flip()
+
+#additional EDA Graphics
+ggpairs(df)
+ggcorr(df)
+
+#Duration appears to matter - looking at the day of the week too. It appears you get a Yes on Thursday faster than any other day of the week.
+#df %>% ggplot(aes(y, duration)) + geom_boxplot() + coord_flip() + facet_grid(day_of_week ~ .)
+df %>% ggplot(aes(euribor3m, nr.employed, color=y)) + geom_point()
+
+```
+
+
+
+
+
+```{r logistic_regression, cache=TRUE}
+
+# Split the data into training and test set
+set.seed(115)
+trainIndices = sample(1:dim(bankfull)[1],round(.8 * dim(bankfull)[1]))
+
+# Build full test/train
+full.train = bankfull[trainIndices,]
+full.test = bankfull[-trainIndices,]
+
+# Build binary test/train
+bin.train = bankbin[trainIndices,]
+bin.test = bankbin[-trainIndices,]
+
+# Build feature list:
+x<-colnames(bankbin)
+x<-x[x != "y"]
+x<-paste(x, collapse='+')
+x # copy this printed value into the model
+rm(x)
+
+# Everything model:
+full.model <- glm(y ~ age+job+marital+education+default+housing+loan+contact+month+day_of_week+campaign+pdays+previous+poutcome+emp.var.rate+cons.price.idx+cons.conf.idx+euribor3m+nr.employed
+                 ,data = full.train, family = "binomial")
+summary(full.model)
+
+## Stepwise Selection:
+step(full.model,direction="both")
+
+# Smaller model:
+simple.model <- glm(y~job+contact+month+day_of_week+campaign+pdays+poutcome+emp.var.rate+cons.price.idx+cons.conf.idx+nr.employed, data=full.train, family="binomial")
+summary(simple.model)
+
+# Scaled data 
+scaledbin <- data.frame(scale(bankbin))
+scaledbin$y <- bankbin$y
+
+# Build scaled test/train
+scaled.train = scaledbin[trainIndices,]
+scaled.test = scaledbin[-trainIndices,]
+
+```
+
+
+
+
+
+
+
+
+
+```{r LDA analysis, cache=TRUE}
+
+df <- scaledbin
+set.seed(115)
+
+trainIndices = sample(1:dim(df)[1],round(.8 * dim(df)[1]))
+train = df[trainIndices,]
+
+test = df[-trainIndices,]
+mylda<-lda(y~., data=train)
+pred<-predict(mylda,newdata=test)$class  #Predictions can come in many forms, the class form provides the categorical level of your response.
+Truth<-test$y
+x<-table(pred,Truth) # Creating a confusion matrix
+x
+
+#Missclassification Error
+ME<-(x[2,1]+x[1,2])/1000
+ME
+
+
+```
+
+
+
+```{r PCA Analysis, cache=TRUE}
+
+pc.bankbin<-prcomp(bankbin[,-64],scale.=TRUE)
+pc.bankbin.scores<-pc.bankbin$x
+
+#Adding the response column to the PC's data frame
+pc.bankbin.scores<-data.frame(pc.bankbin.scores)
+pc.bankbin.scores$y<-bankbin$y
+
+#Use ggplot2 to plot the first few pc's
+ggplot(data = pc.bankbin.scores, aes(x = PC1, y = PC2)) +
+  geom_point(aes(col=y), size=1)+
+  ggtitle("PCA of Subscriptions")
+
+ggplot(data = pc.bankbin.scores, aes(x = PC2, y = PC3)) +
+  geom_point(aes(col=y), size=1)+
+  ggtitle("PCA of Subscriptions")
+
+ggplot(data = pc.bankbin.scores, aes(x = PC3, y = PC4)) +
+  geom_point(aes(col=y), size=1)+
+  ggtitle("PCA of Subscriptions")
+
+```
+
+
+```{r, cache=TRUE}
+# This chunk need a label.  Is this random forest?? What is algo name?
+
+#########################################################
+# Sampling the dataset into training data and test data:
+#############################################################
+
+set.seed(1234)
+splitPerc = .75
+index = sample(1:dim(bankCont)[1],round(splitPerc * dim(bankCont)[1]))
+#index<-sample(1:dim(Auto2)[1],192,replace=F)
+traindata<-bankCont[index,]
+testdata<-bankCont[-index,]
+
+  
+
+
+# Classification and Regression Trees
+bank.cart<-rpart(y ~ ., traindata , method = 'class')
+
+#par(mfrow=c(1,1))
+#fancyRpartPlot(bank.cart , digits=2 , palettes = c("Purples", "Oranges"))
+
+#predict
+cart_pred <- predict( bank.cart , testdata , type = "class")
+cart_prob <- predict( bank.cart , testdata , type = "prob")
+
+# Confusion matrix
+confusionMatrix(cart_pred , testdata$y)
+
+### Cross table validation for CART
+CrossTable(testdata$y, cart_pred,
+          prop.chisq = FALSE, prop.c = FALSE, prop.r = FALSE,
+          dnn = c('actual default', 'predicted default'))
+```
+
+
+
+```{r knn, cache=TRUE}
+#Implementing KNN
+###########################################
+bank.knn <- train(y ~ ., data = traindata, method = "knn", 
+                  maximize = TRUE,
+                  trControl = trainControl(method = "cv", number = 10),
+                  preProcess=c("center", "scale"))
+
+predictedkNN <- predict(bank.knn , newdata = testdata)
+confusionMatrix(predictedkNN , testdata$y)
+
+### Cross table validation for KNN
+CrossTable(testdata$y, predictedkNN,
+           prop.chisq = FALSE, prop.c = FALSE, prop.r = FALSE,
+           dnn = c('actual default', 'predicted default'))
+```
+
+
+```{r LDA}
+lda.fit = lda(y ~ age+job+marital+education+default+housing+loan+contact+month+day_of_week+duration+campaign+pdays+previous+poutcome+emp.var.rate+cons.price.idx+cons.conf.idx+euribor3m+nr.employed
+                 ,data = bankfull)
+lda.fit
+```
+
+
+```{r QDA}
+qda.fit = qda(y ~ age+job+marital+education+default+housing+loan+contact+month+day_of_week+duration+campaign+pdays+previous+poutcome+emp.var.rate+cons.price.idx+cons.conf.idx+euribor3m+nr.employed
+                 ,data = bankfull)
+qda.fit
+```
+
+
+# Rmd Examples
+
+<!-- Ctrl+Shift+C comments out markdown -->
+
+
+
+Suggested Downtime Activities:  
+
+1. Data cleaning (handle missing?,  train/test split logistics:  you want a good balance of Y/N in your train)
+2. summary statistics (the ones I kept complaining about on Project 1)
+3. EDA (basic boxplots, scatterplots, bar charts etc to see how things relate to the response, PCA tool),
+4. Maybe play around and fit a few LDA models with continuous stuff.
+
+### Centered Img
+##### ![caption](https://whitelabel.2u.com/cdn/v1/smu-mds/compass-dark.svg){width=10%}
+
+
+Note this is just a syntax example. Since we don't have a local picture to use, this will show nothing in the word doc.  Also worth noting is the H5 marking, which centers the image.
+
+
+#### Latex examples
+
+$$Variance Ratio=  \frac{(σ_{max})^2}{(σ_{min} )^2} = \frac{2.84^2}{1.20^2} =5.6$$
+
+$$log(ReportDeliveryTime) = SchedFreq + HourOfDay + DayOfMonth + ReportCategory + Server$$
+
+
+
+
+```{r boruta - random forest package - can go to EDA}
+library(Boruta)
+boruta_output <- Boruta(y ~ ., data=bankfull, doTrace=2)
+boruta_signif <- names(boruta_output$finalDecision[boruta_output$finalDecision %in% c("Confirmed", "Tentative")])  # collect Confirmed and Tentative variables
+print(boruta_signif)  # significant variables
+
+plot(boruta_output, cex.axis=.7, las=2, xlab="", main="Variable Importance")
+```
+
+There are some important variables by boruta: housing and loan
+
+```{r other Logistic model - p1}
+bank2 <- bankfull[,-c(6,7)] #drop housing and loan
+
+set.seed(1234)
+splitPerc = .75
+index = sample(1:dim(bank2)[1],round(splitPerc * dim(bank2)[1]))
+#index<-sample(1:dim(Auto2)[1],192,replace=F)
+traindata<-bank2[index,]
+testdata<-bank2[-index,]
+```
+
+
+
+
+```{r - p2 build model }
+# creating the classifier
+classifier.lm = glm(formula = y ~ .,
+                 family = binomial,
+                 data = traindata)
+```
+
+
+```{r function}
+binclass_eval = function (actual, predict) {
+  cm = table(as.integer(actual), as.integer(predict), dnn=c('Actual','Predicted'))
+  ac = (cm['1','1']+cm['0','0'])/(cm['0','1'] + cm['1','0'] + cm['1','1'] + cm['0','0'])
+  pr = cm['1','1']/(cm['0','1'] + cm['1','1'])
+  rc = cm['1','1']/(cm['1','0'] + cm['1','1'])
+  fs = 2* pr*rc/(pr+rc)
+  list(cm=cm, recall=rc, precision=pr, fscore=fs, accuracy=ac)
+}
+```
+
+```{r function}
+
+plot_pred_type_distribution <- function(df, threshold) {
+  v <- rep(NA, nrow(df))
+  v <- ifelse(df$pred >= threshold & df$y == 1, "TP", v)
+  v <- ifelse(df$pred >= threshold & df$y == 0, "FP", v)
+  v <- ifelse(df$pred < threshold & df$y == 1, "FN", v)
+  v <- ifelse(df$pred < threshold & df$y == 0, "TN", v)
+  
+  df$pred_type <- v
+  
+  ggplot(data=df, aes(x=y, y=pred)) + 
+    geom_violin(fill='black', color=NA) + 
+    geom_jitter(aes(color=pred_type), alpha=0.6) +
+    geom_hline(yintercept=threshold, color="red", alpha=0.6) +
+    scale_color_discrete(name = "type") +
+    labs(title=sprintf("Threshold at %.2f", threshold))
+}
+
+```
+
+
+
+```{r - p3 Evaluate model}
+
+pred_lm = predict(classifier.lm, type='response', newdata=testdata[-19])
+
+# plot the prediction distribution
+predictions_LR <- data.frame(y = testdata$y, pred = NA)
+predictions_LR$pred <- pred_lm
+plot_pred_type_distribution(predictions_LR,0.30)
+
+# choose the best threshold as 0.30
+test.eval.LR = binclass_eval(testdata[,19], pred_lm > 0.30)
+
+# Making the Confusion Matrix
+test.eval.LR$cm
+
+```
+>>>>>>> master
