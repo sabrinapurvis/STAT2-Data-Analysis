@@ -174,13 +174,14 @@ bankfull = read.csv("./DataSets/bank-additional-full.csv",header = TRUE, sep = "
 ### Feature Engineering
 
 ```{r Feature Engineering}
-#Create id to merge later
-#bankfull$id <- seq.int(nrow(bankfull))
-#bankfull$pdays <- ifelse(bankfull$pdays == 999, NA, bankfull$pdays)
 
 # convert "unknown" values to NA and view percentage of missing values
 bankfull[bankfull == "unknown"] <- NA 
 plotNAs(bankfull)
+
+# Remove duration from model, as this isn't known until 'y' is known
+bankfull <- bankfull %>% dplyr::select(!duration)
+
 
 # Drop NAs
 bankfull <- bankfull %>% drop_na()
@@ -312,8 +313,6 @@ x
 #Missclassification Error
 ME<-(x[2,1]+x[1,2])/1000
 ME
-
-
 
 ```
 
