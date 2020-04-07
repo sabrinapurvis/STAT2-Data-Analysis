@@ -1,10 +1,16 @@
 
 
-plotNAs <- function(x) {
+################################################################################
+# Plot Missing Values
+################################################################################
+
+
+
+plotNAs <- function(df) {
 
   # Missing values code borrowed from: https://jenslaufer.com/data/analysis/visualize_missing_values_with_ggplot.html
   
-  missing.values <- x %>% gather(key = "key", value = "val") %>%
+  missing.values <- df %>% gather(key = "key", value = "val") %>%
     mutate(isna = is.na(val)) %>%   group_by(key) %>%
     mutate(total = n()) %>%   group_by(key, total, isna) %>%
     summarise(num.isna = n()) %>%   mutate(pct = num.isna / total * 100)
@@ -20,11 +26,15 @@ plotNAs <- function(x) {
   return(percentage.plot)
 }
 
-buildCorrPlot <- function(x){
+################################################################################
+# Correlation Plot Code
   # Corrplot function from: http://www.sthda.com/english/wiki/visualize-correlation-matrix-using-correlogram
   # Vignette for corrplot is also useful
-  
-  data.cor <- cor(x)
+################################################################################
+
+buildCorrPlot <- function(df){
+
+  data.cor <- cor(df)
   
   # mat : is a matrix of data
   # ... : further arguments to pass to the native R cor.test function
@@ -43,7 +53,7 @@ buildCorrPlot <- function(x){
     p.mat
   }
   # matrix of the p-value of the correlation
-  p.mat <- cor.mtest(x)
+  p.mat <- cor.mtest(df)
   
   col <- colorRampPalette(c("#BB4444", "#EE9988", "#FFFFFF", "#77AADD", "#4477AA"))
   
@@ -60,4 +70,23 @@ buildCorrPlot <- function(x){
            insig = "blank")
   ggsave("./figures/corrPlot.png", units="in", width=5, height=4, dpi=600)
   dev.off()
+}
+
+
+################################################################################
+# Returns a pretty plot with percentages
+# Code from: https://sebastiansauer.github.io/percentage_plot_ggplot2_V2/
+################################################################################
+
+percentagePlot <- function(df, x, xlabel) {
+  df <- data.frame(df)
+  return(ggplot(df, aes(x=x,  group=y)) + 
+           geom_bar(aes(y = ..prop.., fill = factor(..x..)), stat="count") +
+           geom_text(aes( label = scales::percent(..prop..),
+                          y= ..prop.. ), stat= "count", vjust = -.5) +
+           labs(y = "Percent", x=xlabel, fill=xlabel) +
+           facet_grid(~y) +
+           scale_y_continuous(labels = scales::percent) +
+           theme(legend.position="none")
+  )
 }
