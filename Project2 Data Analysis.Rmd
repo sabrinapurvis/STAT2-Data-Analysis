@@ -1020,4 +1020,39 @@ test.eval.LR = binclass_eval(testdata[,19], pred_lm > 0.30)
 test.eval.LR$cm
 
 ```
+
+
+```{r GLM Logistic}
+model.main<-glm(y~job+marital+education+contact+month+campaign+poutcome+emp.var.rate+cons.conf.idx, bank_train, 
+                family = binomial(link="logit"))
+summary(model.main)
+library(car)
+(vif(model.main)[,3])^2
+#previous VIF=5
+library(ResourceSelection)
+hoslem.test(model.main$y, fitted(model.main), g=10)
+# Sig. lack of fit, but large n
+fit1.pred.train <- predict(model.main, newdata = bank_train) 
+#Create ROC curves
+pred <- prediction(fit1.pred.train, bank_train$y)
+roc.perf = performance(pred, measure = "tpr", x.measure = "fpr")
+auc.train <- performance(pred, measure = "auc")
+auc.train <- auc.train@y.values
+#Plot ROC
+plot(roc.perf)
+abline(a=0, b= 1) #Ref line indicating poor performance
+text(x = .40, y = .6,paste("AUC = ", round(auc.train[[1]],3), sep = ""))
+title(main="Train Set ROC")
+#Run model from training set on valid set 
+fit1.pred.test <- predict(model.main, newdata = bank_test)
+#ROC curves
+pred1 <- prediction(fit1.pred.test, bank_test$y)
+roc.perf1 = performance(pred1, measure = "tpr", x.measure = "fpr")
+auc.val1 <- performance(pred1, measure = "auc")
+auc.val1 <- auc.val1@y.values
+plot(roc.perf1)
+abline(a=0, b= 1)
+text(x = .40, y = .6,paste("AUC = ", round(auc.val1[[1]],3), sep = ""))
+title(main="Test Set ROC")
+```
 >>>>>>> master
