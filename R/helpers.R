@@ -2,16 +2,7 @@
 # Plot Missing Values
 ################################################################################
 
-<<<<<<< HEAD
-=======
 
-################################################################################
-# Plot Missing Values
-################################################################################
-
-
-
->>>>>>> master
 plotNAs <- function(df) {
 
   # Missing values code borrowed from: https://jenslaufer.com/data/analysis/visualize_missing_values_with_ggplot.html
@@ -37,15 +28,9 @@ plotNAs <- function(df) {
   # Corrplot function from: http://www.sthda.com/english/wiki/visualize-correlation-matrix-using-correlogram
   # Vignette for corrplot is also useful
 ################################################################################
-<<<<<<< HEAD
-buildCorrPlot <- function(df){
-
-  
-=======
 
 buildCorrPlot <- function(df){
 
->>>>>>> master
   data.cor <- cor(df)
   
   # mat : is a matrix of data
@@ -87,11 +72,7 @@ buildCorrPlot <- function(df){
 
 ################################################################################
 # Returns a pretty plot with percentages
-<<<<<<< HEAD
   # Code from: https://sebastiansauer.github.io/percentage_plot_ggplot2_V2/
-=======
-# Code from: https://sebastiansauer.github.io/percentage_plot_ggplot2_V2/
->>>>>>> master
 ################################################################################
 
 percentagePlot <- function(df, x, xlabel) {
