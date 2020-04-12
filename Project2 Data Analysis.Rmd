@@ -1,10 +1,4 @@
 ---
-output:
-  word_document: default
-  html_document: default
----
-<<<<<<< HEAD
----
 title: "Bank Marketing Analysis Project"
 author: "D. Bracy , H.H. Nguyen, S.Purvis"
 date: "04/02/2020"
@@ -1056,4 +1050,4 @@ abline(a=0, b= 1)
 text(x = .40, y = .6,paste("AUC = ", round(auc.val1[[1]],3), sep = ""))
 title(main="Test Set ROC")
 ```
->>>>>>> master
+
