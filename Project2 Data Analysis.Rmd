@@ -137,8 +137,12 @@ NOTE 2:  Do not forget about organization among your group.  Divide and conquer 
 *	The conclusion should reprise the questions and conclusions of objective 2 with recommendations of the final model, what could be done to help analysis and model building in the future, and any insight as to why one method outshined all the rest if that is indeed the case.  If they all are similar why did you go with your final model?
 
 
-# References
-[1] ddd
+# References  
+[1] Anderson et al., Statistics for Business & Economics, Cengage, 2020.  
+[2] James et al., An Introduction to Statistical Learning with Application in R, Springer, 2017.  
+[3] T. Hastie et al., The Elements of Statistical Learning, Data Mining, Inference, and Prediction, 2nd Edition, Springer, 2017.  
+[4] Ramsey and Schafer, The Statistical Sleuth, A Course in Methods of Data Analysis, 3rd Edition, Cengage, 2013.  
+
 
 
 
