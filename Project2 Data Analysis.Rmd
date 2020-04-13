@@ -649,6 +649,69 @@ abline(0, 1, col = "red", lty = 2)
 
 
 
+```{r decision tree - p4  }
+# fit the decision tree classification #p1,2,3 is in logistic
+classifier = rpart(formula = y ~ .,
+                   data = traindata, method = "class")
+
+# plot
+prp(classifier, type = 2, extra = 104, fallen.leaves = TRUE, main="Decision Tree")
+```
+
+
+```{r decision tree - p5}
+
+# predict test data by probability
+pred.DT = predict(classifier, newdata = testdata[-18], type = 'prob')
+
+# find the threshold for prediction optimization
+predictions_DT <- data.frame(y = testdata$y, pred = NA)
+predictions_DT$pred <- pred.DT[,2]
+plot_pred_type_distribution(predictions_DT,0.36)
+
+```
+
+
+```{r - decision tree - p6}
+# choose the best threshold as 0.36
+test.eval.DT = binclass_eval(as.integer(testdata[,18])-1, pred.DT[,2] > 0.36)
+
+# Making the Confusion Matrix
+test.eval.DT$cm
+
+
+# calculate accuracy, precision etc.
+acc_DT=test.eval.DT$accuracy
+prc_DT=test.eval.DT$precision
+recall_DT=test.eval.DT$recall
+fscore_DT=test.eval.DT$fscore
+
+# print evaluation
+cat("Accuracy:  ",   acc_DT,
+    "\nPrecision: ", prc_DT,
+    "\nRecall:    ", recall_DT,
+    "\nFScore:    ", fscore_DT)
+
+
+# calculate ROC curve
+rocr.pred = prediction(predictions = pred.DT[,2], labels = testdata$y)
+rocr.perf = performance(rocr.pred, measure = "tpr", x.measure = "fpr")
+rocr.auc = as.numeric(performance(rocr.pred, "auc")@y.values)
+
+# print ROC AUC
+rocr.auc
+
+
+# plot ROC curve
+plot(rocr.perf,
+     lwd = 3, colorize = TRUE,
+     print.cutoffs.at = seq(0, 1, by = 0.1),
+     text.adj = c(-0.2, 1.7),
+     main = 'ROC Curve')
+mtext(paste('Decision Tree - auc : ', round(rocr.auc, 5)))
+abline(0, 1, col = "red", lty = 2)
+```
+
 
 
 
