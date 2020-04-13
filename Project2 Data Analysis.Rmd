@@ -621,7 +621,28 @@ rocr.auc.lr = as.numeric(performance(rocr.pred.lr, "auc")@y.values)
 rocr.auc.lr
 ```
 
+```{r -p6 ROC curves}
+# plot both ROC curves side by side for an easy comparison
+par(mfrow=c(1,2))
 
+# plot ROC curve for Decision Tree
+plot(rocr.perf,
+     lwd = 3, colorize = TRUE,
+     print.cutoffs.at = seq(0, 1, by = 0.1),
+     text.adj = c(-0.2, 1.7),
+     main = 'ROC Curve')
+mtext(paste('Decision Tree - auc : ', round(rocr.auc, 5)))
+abline(0, 1, col = "red", lty = 2)
+
+# plot ROC curve for Logistic Regression
+plot(rocr.perf.lr,
+     lwd = 3, colorize = TRUE,
+     print.cutoffs.at = seq(0, 1, by = 0.1),
+     text.adj = c(-0.2, 1.7),
+     main = 'ROC Curve')
+mtext(paste('Logistic Regression - auc : ', round(rocr.auc.lr, 5)))
+abline(0, 1, col = "red", lty = 2)
+```
 
 
 
