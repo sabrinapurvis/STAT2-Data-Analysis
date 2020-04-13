@@ -446,7 +446,87 @@ CrossTable(full.test$y, KNN.preds,
 ```
 
 
+```{r alternative KNN}
+library(kableExtra)
+library(class)
 
+iterations = 1
+set.seed(115)
+numks = round(sqrt(dim(scaledbin)[1])*1.2)
+masterAcc = matrix(nrow = iterations, ncol = numks)
+masterSpec = matrix(nrow = iterations, ncol = numks)
+masterSen = matrix(nrow = iterations, ncol = numks)
+knnArray <- c(
+  "job.admin.",
+  "job.blue.collar",
+  "job.entrepreneur",
+  "job.housemaid",
+  "job.management",
+  "job.retired",
+  "job.self.employed",
+  "job.services",
+  "job.student",
+  "job.technician",
+  "job.unemployed",
+  "contact.cellular",
+  "contact.telephone",
+  "month.apr",
+  "month.aug",
+  "month.dec",
+  "month.jul",
+  "month.jun",
+  "month.mar",
+  "month.may",
+  "month.nov",
+  "month.oct",
+  "month.sep",
+  "day_of_week.fri",
+  "day_of_week.mon",
+  "day_of_week.thu",
+  "day_of_week.tue",
+  "day_of_week.wed",
+  "campaign",
+  "pdays",
+  "poutcome.failure",
+  "poutcome.nonexistent",
+  "poutcome.success",
+  "emp.var.rate",
+  "cons.price.idx",
+  "cons.conf.idx",
+  "nr.employed"
+)
+
+# for(j in 1:iterations) {
+#   # resample data
+#   KNN.trainIndices = sample(1:dim(scaledbin)[1],round(.8 * dim(scaledbin)[1]))
+#   KNN.train = scaledbin[trainIndices,]
+#   KNN.test = scaledbin[-trainIndices,]
+#   for(i in 1:numks) {
+#     # predict using i-th value of k
+#     classifications = knn(KNN.train[,knnArray],KNN.test[,knnArray],as.factor(KNN.train$y), prob = TRUE, k = i)
+#     CM = confusionMatrix(table(as.factor(KNN.test$y),classifications, dnn = c("Prediction", "Reference")), positive = '1')
+#     masterAcc[j,i] = CM$overall[1]
+#     masterSen[j,i] = CM$byClass[1]
+#     masterSpec[j,i] = ifelse(is.na(CM$byClass[2]),0,CM$byClass[2])
+#     print(i)
+#   }
+# }
+# 
+# MeanAcc <- colMeans(masterAcc)
+# MeanSen <- colMeans(masterSen)
+# MeanSpec <- colMeans(masterSpec)
+# plot(seq(1,numks), MeanAcc, main="K value determination", xlab="Value of K")
+# k <- which.max(MeanAcc)
+# specs <- c(MeanAcc[k],MeanSen[k],MeanSpec[k])
+# names(specs) <- c("Avg Accuracy", "Avg Sensitivity", "Avg Specificity")
+# specs %>% kable("html") %>% kable_styling 
+
+# Above code identified 60 as the best K
+classifications = knn(scaled.train[,knnArray],scaled.test[,knnArray],as.factor(scaled.train$y), prob = TRUE, k = 60)
+confusionMatrix(table(scaled.test$y,classifications, dnn = c("Prediction", "Reference")), positive = '1')
+
+
+```
 
 
 
