@@ -602,6 +602,20 @@ test.eval.LR$cm
 
 ```
 
+```{r -p4}
+# calculate accuracy, precision etc.
+acc_LR=test.eval.LR$accuracy
+prc_LR=test.eval.LR$precision
+recall_LR=test.eval.LR$recall
+fscore_LR=test.eval.LR$fscore
+```
+
+
+
+
+
+
+
 
 ```{r GLM Logistic, cache=TRUE}
 model.main<-glm(y~job+marital+education+contact+month+campaign+poutcome+emp.var.rate+cons.conf.idx, traindata, 
