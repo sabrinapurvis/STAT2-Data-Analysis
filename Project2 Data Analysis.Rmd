@@ -622,8 +622,7 @@ rocr.auc.lr
 ```
 
 ```{r -p6 ROC curves}
-# plot both ROC curves side by side for an easy comparison
-par(mfrow=c(1,2))
+
 
 
 # plot ROC curve for Logistic Regression
