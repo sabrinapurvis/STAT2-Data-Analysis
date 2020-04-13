@@ -224,6 +224,8 @@ trsf <- data.frame(predict(dmy, newdata = bankfull))
 trsf$y <- ifelse(trsf$y.no == 1, 0, 1)
 bankbin <- subset(trsf, select = -c(y.no, y.yes))
 
+# Clean up environment variables:
+rm(dmy, trsf)
 
 # Split the data into training and test set
 set.seed(115)
@@ -245,6 +247,8 @@ scaledbin$y <- bankbin$y
 scaled.train = scaledbin[trainIndices,]
 scaled.test = scaledbin[-trainIndices,]
 
+
+
 ```
 
 
@@ -253,7 +257,6 @@ scaled.test = scaledbin[-trainIndices,]
 
 df <- bankfull # input dataframes for plots
 
-buildCorrPlot(bankbin)
   
 mutate(df, prev = as.factor(previous)) %>% ggplot(aes(prev, y, fill=y)) + geom_col()
 
@@ -301,33 +304,33 @@ df %>% ggplot(aes(nr.employed, y,  fill=y)) + geom_col()
 df %>% ggplot(aes(y, nr.employed)) + geom_boxplot() + coord_flip()
 
 #additional EDA Graphics
-ggpairs(df) %>% keep(is.numeric)
+
 ggcorr(df)
 
 ```
 
 
-```{r EDA - big plots, eval=FALSE}
+```{r EDA - slow code, eval=FALSE}
 
+buildCorrPlot(bankbin)
 
-#Saved as ./figures/pairs.png
+# GGpairs plot saved as ./figures/pairs.png
+png(height=800, width=800, pointsize=15, file="./figures/pairs.png")
 bankfull %>% keep(is.numeric) %>% ggpairs()
+dev.off()
 
-
-```
-
-
-There are some important variables by boruta: housing and loan
-
-```{r boruta - random forest package - can go to EDA, cache=TRUE}
+# Identify significant features
 boruta_output <- Boruta(y ~ ., data=bankfull, doTrace=2)
 boruta_signif <- names(boruta_output$finalDecision[boruta_output$finalDecision %in% c("Confirmed", "Tentative")])  # collect Confirmed and Tentative variables
-print(boruta_signif)  # significant variables
 
+print(boruta_signif) 
+
+png(height=800, width=800, pointsize=15, file="./figures/variableImportance.png")
 plot(boruta_output, cex.axis=.7, las=2, xlab="", main="Variable Importance")
+dev.off()
+
+
 ```
-
-
 
 
 ```{r logistic_regression, cache=TRUE}
@@ -540,7 +543,9 @@ for(j in 1:iterations) {
 MeanAcc <- colMeans(masterAcc)
 MeanSen <- colMeans(masterSen)
 MeanSpec <- colMeans(masterSpec)
+png('./figures/bestK.png')
 plot(seq(1,numks), MeanAcc, main="K value determination", xlab="Value of K")
+dev.off()
 k <- which.max(MeanAcc)
 specs <- c(MeanAcc[k],MeanSen[k],MeanSpec[k])
 names(specs) <- c("Avg Accuracy", "Avg Sensitivity", "Avg Specificity")
@@ -578,43 +583,10 @@ classifier.lm = glm(formula = y ~ .,
 ```
 
 
-```{r function1}
-binclass_eval = function (actual, predict) {
-  cm = table(as.integer(actual), as.integer(predict), dnn=c('Actual','Predicted'))
-  ac = (cm['1','1']+cm['0','0'])/(cm['0','1'] + cm['1','0'] + cm['1','1'] + cm['0','0'])
-  pr = cm['1','1']/(cm['0','1'] + cm['1','1'])
-  rc = cm['1','1']/(cm['1','0'] + cm['1','1'])
-  fs = 2* pr*rc/(pr+rc)
-  list(cm=cm, recall=rc, precision=pr, fscore=fs, accuracy=ac)
-}
-```
-
-```{r function2, cache=TRUE}
-
-plot_pred_type_distribution <- function(df, threshold) {
-  v <- rep(NA, nrow(df))
-  v <- ifelse(df$pred >= threshold & df$y == 1, "TP", v)
-  v <- ifelse(df$pred >= threshold & df$y == 0, "FP", v)
-  v <- ifelse(df$pred < threshold & df$y == 1, "FN", v)
-  v <- ifelse(df$pred < threshold & df$y == 0, "TN", v)
-  
-  df$pred_type <- v
-  
-  ggplot(data=df, aes(x=y, y=pred)) + 
-    geom_violin(fill='black', color=NA) + 
-    geom_jitter(aes(color=pred_type), alpha=0.6) +
-    geom_hline(yintercept=threshold, color="red", alpha=0.6) +
-    scale_color_discrete(name = "type") +
-    labs(title=sprintf("Threshold at %.2f", threshold))
-}
-
-```
-
-
 
 ```{r - p3 Evaluate model, cache=TRUE}
 
-pred_lm = predict(classifier.lm, type='response', newdata=testdata[-19])
+pred_lm = predict(classifier.lm, type='response', newdata=testdata[-18])
 
 # plot the prediction distribution
 predictions_LR <- data.frame(y = testdata$y, pred = NA)
@@ -623,7 +595,7 @@ predictions_LR$pred <- pred_lm
 plot_pred_type_distribution(predictions_LR,0.30)
 
 # choose the best threshold as 0.30
-test.eval.LR = binclass_eval(testdata[,19], pred_lm > 0.30)
+test.eval.LR = binclass_eval(as.integer(testdata[,18])-1, pred_lm > 0.30)
 
 # Making the Confusion Matrix
 test.eval.LR$cm
@@ -632,7 +604,7 @@ test.eval.LR$cm
 
 
 ```{r GLM Logistic, cache=TRUE}
-model.main<-glm(y~job+marital+education+contact+month+campaign+poutcome+emp.var.rate+cons.conf.idx, bank_train, 
+model.main<-glm(y~job+marital+education+contact+month+campaign+poutcome+emp.var.rate+cons.conf.idx, traindata, 
                 family = binomial(link="logit"))
 summary(model.main)
 library(car)
@@ -643,10 +615,12 @@ library(ResourceSelection)
 hoslem.test(model.main$y, fitted(model.main), g=10)
 
 # Sig. lack of fit, but large n
-fit1.pred.train <- predict(model.main, newdata = bank_train) 
+fit1.pred.train <- predict(model.main, newdata = traindata) 
+
+??prediction
 
 #Create ROC curves
-pred <- prediction(fit1.pred.train, bank_train$y)
+pred <- prediction(fit1.pred.train, traindata$y)
 roc.perf = performance(pred, measure = "tpr", x.measure = "fpr")
 auc.train <- performance(pred, measure = "auc")
 auc.train <- auc.train@y.values

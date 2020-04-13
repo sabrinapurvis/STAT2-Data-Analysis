@@ -87,3 +87,39 @@ percentagePlot <- function(df, x, xlabel) {
            theme(legend.position="none")
   )
 }
+
+
+######################################################################################################
+# Returns a plot for prediction type distribution
+# Code from: http://rstudio-pubs-static.s3.amazonaws.com/210269_7873bb711f7b488a92f1195ef1c0e9af.html
+######################################################################################################
+plot_pred_type_distribution <- function(df, threshold) {
+  v <- rep(NA, nrow(df))
+  v <- ifelse(df$pred >= threshold & df$y == 1, "TP", v)
+  v <- ifelse(df$pred >= threshold & df$y == 0, "FP", v)
+  v <- ifelse(df$pred < threshold & df$y == 1, "FN", v)
+  v <- ifelse(df$pred < threshold & df$y == 0, "TN", v)
+  
+  df$pred_type <- v
+  
+  return (ggplot(data=df, aes(x=y, y=pred)) + 
+    geom_violin(fill='black', color=NA) + 
+    geom_jitter(aes(color=pred_type), alpha=0.3, color='darkgrey') +
+    geom_hline(yintercept=threshold, color="red", alpha=0.6) +
+    scale_color_discrete(name = "type") +
+    labs(title=sprintf("Threshold at %.2f", threshold))
+  )
+}
+
+#######################################################################################################
+# Returns performance metrics for binary class
+# Code from: https://rstudio-pubs-static.s3.amazonaws.com/446413_6ac206ffa826466bb3a33be2f338c61f.html
+#######################################################################################################
+binclass_eval = function (actual, predict) {
+  cm = table(as.integer(actual), as.integer(predict), dnn=c('Actual','Predicted'))
+  ac = (cm['1','1']+cm['0','0'])/(cm['0','1'] + cm['1','0'] + cm['1','1'] + cm['0','0'])
+  pr = cm['1','1']/(cm['0','1'] + cm['1','1'])
+  rc = cm['1','1']/(cm['1','0'] + cm['1','1'])
+  fs = 2* pr*rc/(pr+rc)
+  return (list(cm=cm, recall=rc, precision=pr, fscore=fs, accuracy=ac))
+}
