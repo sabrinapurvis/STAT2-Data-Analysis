@@ -642,6 +642,19 @@ abline(0, 1, col = "red", lty = 2)
 
 
 
+```{r decision tree - p4  }
+# fit the decision tree classification #p1,2,3 is in logistic
+classifier = rpart(formula = y ~ .,
+                   data = traindata, method = "class")
+
+# plot
+prp(classifier, type = 2, extra = 104, fallen.leaves = TRUE, main="Decision Tree")
+```
+
+
+
+
+
 
 
 
