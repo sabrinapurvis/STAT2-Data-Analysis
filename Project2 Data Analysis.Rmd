@@ -27,6 +27,8 @@ library(descr)
 library(forcats)
 library(Boruta)
 library(gridExtra)
+library(kableExtra)
+library(class)
 
 # wordStyleRef style changes:
 ## Set margins to .5"
@@ -195,7 +197,7 @@ $$log(ReportDeliveryTime) = SchedFreq + HourOfDay + DayOfMonth + ReportCategory 
 
 ```{r Feature Engineering}
 
-#reading in 'Bank Additional Full' file
+# read in 'Bank Additional Full' file
 bankfull = read.csv("./DataSets/bank-additional-full.csv",header = TRUE, sep = ";")
 
 # convert "unknown" values to NA and view percentage of missing values
@@ -301,11 +303,29 @@ df %>% ggplot(aes(y, nr.employed)) + geom_boxplot() + coord_flip()
 #additional EDA Graphics
 ggpairs(df) %>% keep(is.numeric)
 ggcorr(df)
-bankfull %>% keep(is.numeric) %>% ggpairs()
 
 ```
 
 
+```{r EDA - big plots, eval=FALSE}
+
+
+#Saved as ./figures/pairs.png
+bankfull %>% keep(is.numeric) %>% ggpairs()
+
+
+```
+
+
+There are some important variables by boruta: housing and loan
+
+```{r boruta - random forest package - can go to EDA, cache=TRUE}
+boruta_output <- Boruta(y ~ ., data=bankfull, doTrace=2)
+boruta_signif <- names(boruta_output$finalDecision[boruta_output$finalDecision %in% c("Confirmed", "Tentative")])  # collect Confirmed and Tentative variables
+print(boruta_signif)  # significant variables
+
+plot(boruta_output, cex.axis=.7, las=2, xlab="", main="Variable Importance")
+```
 
 
 
@@ -357,7 +377,7 @@ ME
 ```
 
 
-```{r QDA}
+```{r QDA, cache=TRUE}
 #qda.fit <- qda(y ~ age+job+marital+education+default+housing+loan+contact+month+day_of_week+campaign+pdays+previous+poutcome+emp.var.rate+cons.price.idx+cons.conf.idx+euribor3m+nr.employed
  #                ,data = bankfull)
 #qda.fit
@@ -396,9 +416,7 @@ grid.arrange(PCA.plots[[1]], PCA.plots[[2]], PCA.plots[[3]],  ncol=3, nrow=1)
 ```
 
 
-```{r, cache=TRUE}
-# This chunk need a label.  Is this random forest?? What is algo name?
-
+```{r Recursive Partitioning, cache=TRUE}
 
 # Classification and Regression Trees
 bank.cart<-rpart(y ~ ., full.train , method = 'class')
@@ -446,10 +464,17 @@ CrossTable(full.test$y, KNN.preds,
 ```
 
 
-```{r alternative KNN}
-library(kableExtra)
-library(class)
+```{r alternative KNN, cache=TRUE}
 
+# Hypertuning identified 60 as the best K
+classifications = knn(scaled.train,scaled.test,as.factor(scaled.train$y), prob = TRUE, k = 60)
+confusionMatrix(table(scaled.test$y,classifications, dnn = c("Prediction", "Reference")), positive = '1')
+
+
+```
+
+
+```{r KNN Hypertuning, eval=FALSE}
 iterations = 1
 set.seed(115)
 numks = round(sqrt(dim(scaledbin)[1])*1.2)
@@ -496,36 +521,34 @@ knnArray <- c(
   "nr.employed"
 )
 
-# for(j in 1:iterations) {
-#   # resample data
-#   KNN.trainIndices = sample(1:dim(scaledbin)[1],round(.8 * dim(scaledbin)[1]))
-#   KNN.train = scaledbin[trainIndices,]
-#   KNN.test = scaledbin[-trainIndices,]
-#   for(i in 1:numks) {
-#     # predict using i-th value of k
-#     classifications = knn(KNN.train[,knnArray],KNN.test[,knnArray],as.factor(KNN.train$y), prob = TRUE, k = i)
-#     CM = confusionMatrix(table(as.factor(KNN.test$y),classifications, dnn = c("Prediction", "Reference")), positive = '1')
-#     masterAcc[j,i] = CM$overall[1]
-#     masterSen[j,i] = CM$byClass[1]
-#     masterSpec[j,i] = ifelse(is.na(CM$byClass[2]),0,CM$byClass[2])
-#     print(i)
-#   }
-# }
-# 
-# MeanAcc <- colMeans(masterAcc)
-# MeanSen <- colMeans(masterSen)
-# MeanSpec <- colMeans(masterSpec)
-# plot(seq(1,numks), MeanAcc, main="K value determination", xlab="Value of K")
-# k <- which.max(MeanAcc)
-# specs <- c(MeanAcc[k],MeanSen[k],MeanSpec[k])
-# names(specs) <- c("Avg Accuracy", "Avg Sensitivity", "Avg Specificity")
-# specs %>% kable("html") %>% kable_styling 
+for(j in 1:iterations) {
+  # resample data
+  KNN.trainIndices = sample(1:dim(scaledbin)[1],round(.8 * dim(scaledbin)[1]))
+  KNN.train = scaledbin[trainIndices,]
+  KNN.test = scaledbin[-trainIndices,]
+  for(i in 1:numks) {
+    # predict using i-th value of k
+    classifications = knn(KNN.train[,knnArray],KNN.test[,knnArray],as.factor(KNN.train$y), prob = TRUE, k = i)
+    CM = confusionMatrix(table(as.factor(KNN.test$y),classifications, dnn = c("Prediction", "Reference")), positive = '1')
+    masterAcc[j,i] = CM$overall[1]
+    masterSen[j,i] = CM$byClass[1]
+    masterSpec[j,i] = ifelse(is.na(CM$byClass[2]),0,CM$byClass[2])
+    print(i)
+  }
+}
 
-# Above code identified 60 as the best K
-classifications = knn(scaled.train[,knnArray],scaled.test[,knnArray],as.factor(scaled.train$y), prob = TRUE, k = 60)
+MeanAcc <- colMeans(masterAcc)
+MeanSen <- colMeans(masterSen)
+MeanSpec <- colMeans(masterSpec)
+plot(seq(1,numks), MeanAcc, main="K value determination", xlab="Value of K")
+k <- which.max(MeanAcc)
+specs <- c(MeanAcc[k],MeanSen[k],MeanSpec[k])
+names(specs) <- c("Avg Accuracy", "Avg Sensitivity", "Avg Specificity")
+specs %>% kable("html") %>% kable_styling
+
+classifications = knn(scaled.train[,knnArray],scaled.test[,knnArray],as.factor(scaled.train$y), prob = TRUE, k = k)
 confusionMatrix(table(scaled.test$y,classifications, dnn = c("Prediction", "Reference")), positive = '1')
 
-
 ```
 
 
@@ -533,18 +556,7 @@ confusionMatrix(table(scaled.test$y,classifications, dnn = c("Prediction", "Refe
 
 
 
-
-```{r boruta - random forest package - can go to EDA}
-boruta_output <- Boruta(y ~ ., data=bankfull, doTrace=2)
-boruta_signif <- names(boruta_output$finalDecision[boruta_output$finalDecision %in% c("Confirmed", "Tentative")])  # collect Confirmed and Tentative variables
-print(boruta_signif)  # significant variables
-
-plot(boruta_output, cex.axis=.7, las=2, xlab="", main="Variable Importance")
-```
-
-There are some important variables by boruta: housing and loan
-
-```{r other Logistic model - p1}
+```{r other Logistic model - p1, cache=TRUE}
 bank2 <- bankfull[,-c(6,7)] #drop housing and loan
 
 set.seed(1234)
@@ -558,7 +570,7 @@ testdata<-bank2[-index,]
 
 
 
-```{r - p2 build model }
+```{r - p2 build model , cache=TRUE}
 # creating the classifier
 classifier.lm = glm(formula = y ~ .,
                  family = binomial,
@@ -577,7 +589,7 @@ binclass_eval = function (actual, predict) {
 }
 ```
 
-```{r function2}
+```{r function2, cache=TRUE}
 
 plot_pred_type_distribution <- function(df, threshold) {
   v <- rep(NA, nrow(df))
@@ -600,7 +612,7 @@ plot_pred_type_distribution <- function(df, threshold) {
 
 
 
-```{r - p3 Evaluate model}
+```{r - p3 Evaluate model, cache=TRUE}
 
 pred_lm = predict(classifier.lm, type='response', newdata=testdata[-19])
 
@@ -619,7 +631,7 @@ test.eval.LR$cm
 ```
 
 
-```{r GLM Logistic}
+```{r GLM Logistic, cache=TRUE}
 model.main<-glm(y~job+marital+education+contact+month+campaign+poutcome+emp.var.rate+cons.conf.idx, bank_train, 
                 family = binomial(link="logit"))
 summary(model.main)
