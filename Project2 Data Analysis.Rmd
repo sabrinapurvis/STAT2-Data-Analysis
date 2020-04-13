@@ -397,12 +397,22 @@ ME
 
 ```{r PCA Analysis, cache=TRUE}
 
-PCA<-prcomp(bankbin[,-64],scale.=TRUE)
-PCA.scores<-PCA$x
+PCA.result<-prcomp(bankbin[,-64],scale.=TRUE)
+PCA.scores<-PCA.result$x
 
 # Add the response column to the PC's data frame
 PCA.scores<-data.frame(PCA.scores)
 PCA.scores$y<-bankbin$y
+
+# Loadings for interpretation
+#PCA.result$rotation
+
+# Scree plot
+PCA.eigen<-(PCA.result$sdev)^2
+PCA.prop<-PCA.eigen/sum(PCA.eigen)
+PCA.cumprop<-cumsum(PCA.prop)
+plot(1:57,PCA.prop,type="l",main="Scree Plot",ylim=c(0,1),xlab="PC #",ylab="Proportion of Variation")
+lines(1:57,PCA.cumprop,lty=3)
 
 ```
 
