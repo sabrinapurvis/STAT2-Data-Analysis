@@ -65,10 +65,8 @@ buildCorrPlot <- function(df){
            p.mat = p.mat, 
            sig.level = 0.01, 
            insig = "blank")
-  ggsave("./figures/corrPlot.png", units="in", width=5, height=4, dpi=600)
   dev.off()
 }
-
 
 ################################################################################
 # Returns a pretty plot with percentages
