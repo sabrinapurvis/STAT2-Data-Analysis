@@ -43,11 +43,11 @@ source("./R/helpers.R")
 
 # Introduction
 
-  The retail banking industry provides financial services to families and individuals.  Banks’ main functions are threefold; they issue credit in the forms of loans and credit lines, provide a secure location to deposit money, and allow a mechanism to manage finances in the form of checking and savings accounts.  This analysis will focus specifically on the influential factors from direct marketing campaigns managed by a Portuguese banking institution in an attempt to get secure commitment for term deposits.  Understanding not only which marketing campaigns were most effective, but also the timing of the campaign and the socioeconomic demographics will allow the retail banking industry to further target and tune their approach to securing term deposits.
+The retail banking industry provides financial services to families and individuals.  Banks’ main functions are threefold; they issue credit in the forms of loans and credit lines, provide a secure location to deposit money, and allow a mechanism to manage finances in the form of checking and savings accounts.  This analysis will focus specifically on the influential factors from direct marketing campaigns managed by a Portuguese banking institution in an attempt to get secure commitment for term deposits.  Understanding not only which marketing campaigns were most effective, but also the timing of the campaign and the socioeconomic demographics will allow the retail banking industry to further target and tune their approach to securing term deposits.
 
 # Data Description
 
-  The team was provided a substantial marketing dataset.  It was comprised of categorical and continuous variables and a resulting binary result (Y/N).  The data ranges from May 2008 to November 2010.  As described in the table below, we have equal counts of numeric and categorical variables.  There are demographics, data related to the depth and breadth of the marketing campaign, and market indicators included in this set.
+The team was provided a substantial marketing dataset.  It was comprised of categorical and continuous variables and a resulting binary result (Y/N).  The data ranges from May 2008 to November 2010.  As described in the table below, we have equal counts of numeric and categorical variables.  There are demographics, data related to the depth and breadth of the marketing campaign, and market indicators included in this set.
 
 |Variable|Type|Description|
 |---|---|---|
@@ -76,139 +76,89 @@ source("./R/helpers.R")
 
 # Exploratory Data Analysis (EDA)  
 
-  When preliminarily assessing the data, we first evaluated the impact of missing data. We found that technically we did not have any missing data, but we were provided a fair amount of unknown values.  The original dataset has thousands of observations.  Because we did not feel limited by our dataset size, we decided to exclude any observation that has an unknown record recorded in any of the variables.  This left us over 30,000 complete observations to work with.  Next, we evaluated the normality of all continuous variables.  We employed boxplots and barcharts to visually inspect distribution.  We observed right skewness in Age, but we can rely on central limit theorem for normality assumptions in spite of visual indications.
-  We next investigated correlation.  As shown in the correlation plot (![](./figures/corrPlot.png){width=10%}), there are some common sense correlations, particularly between specific factors in variables.  For example, cons.price.idx & emp.var.rate are positively correlated.  This is reasonable as both are market indicators that would naturally tether together.  
-  As referenced above, we excluded duration from the model selection process.  It is an indicator variable that can be utilized as a benchmark, but is not known before the calls are made.  
+When preliminarily assessing the data, we first evaluated the impact of missing data. We found that technically we did not have any missing data, but we were provided a fair amount of unknown values.  The original dataset has thousands of observations.  Because we did not feel limited by our dataset size, we decided to exclude any observation that has an unknown record recorded in any of the variables.  This left us over 30,000 complete observations to work with.  Next, we evaluated the normality of all continuous variables.  We employed boxplots and barcharts to visually inspect distribution.  We observed right skewness in Age, but we can rely on central limit theorem for normality assumptions in spite of visual indications.
 
-### PCA
-Three PCA plots are shown below that display separation between the most highly correlated features found in the data. 
+We next investigated correlation.  As shown in the correlation plot (![](./figures/corrPlot.png){width=10%}), there are some common sense correlations, particularly between specific factors in variables.  For example, cons.price.idx & emp.var.rate are positively correlated.  This is reasonable as both are market indicators that would naturally tether together.  
+
+As referenced above, we excluded duration from the model selection process.  It is an indicator variable that can be utilized as a benchmark, but is not known before the calls are made.  
+
+### Principal Component Analysis (PCA)
+The three PCA plots don't show as much separation as we would hope for. We can expect our prediction algorithms to struggle a little bit in providing accurate results, due to the tightly entangled results of our subscription (y) response variable.
 
 ##### ![](./figures/PCA.png){width=10%} 
 
 
-## Objective 1: 
-Display the ability to perform EDA and build a logisitc regression model. 
+# Logistic Regression Analysis
 
-* Perform your logistic regression analysis and provide interpretation of the regression coefficients including hypothesis testing, and confidence intervals. For simplicity sake, you do not need to include interactions with this model. Comment on the  practical vs statistical significance of the deemed important factors.  
-Logistical Considerations.  
-* Just like last time, this does not have to be extremely fancy in terms of the model building approach, let EDA, feature selection, and overall intuition guide you.  
-* If you feel like interactions are absolutely necessary to capture what is going on, then contact me so we can discuss an overall strategy of how to provide interpretations.
+## Building the model
 
-### Model Selection
-
-#### Type of Selection
+### Feature Selection
 			Any or all:  LASSO, RIDGE, ELASTIC NET,
 			Stepwise, Forward, Backward 
-			Manual / Intuition		
-
-#### Checking Assumptions
+			Manual / Intuition	
+### Assessing the fit
       Lack of fit test
+### Assumption Checking
       Influential point analysis (Cook’s D and Leverage)
+### Residual Diagnostic Plots 
 			Optional  Residual Plots
-			
-####	Parameter Interpretation
+## Interpretation
 		Interpretation  Required
 		Confidence Intervals Required
-	
-### Objective 1 Conclusion
 
-## Objective 2
+<!-- $$Variance Ratio=  \frac{(σ_{max})^2}{(σ_{min} )^2} = \frac{2.84^2}{1.20^2} =5.6$$ -->
+
+$$y=job+contact+month+day\_of\_week+campaign+pdays+poutcome+emp.var.rate+cons.price.idx+cons.conf.idx+nr.employed$$		
+		
+## Logistic Regression Conclusion
+Perform your logistic regression analysis and provide interpretation of the regression coefficients including hypothesis testing, and confidence intervals. For simplicity sake, you do not need to include interactions with this model. Comment on the  practical vs statistical significance of the deemed important factors.  
+
+
+# Alternative Models
 With a simple logistic regression model as a baseline, perform additional competing models to improve on prediction performance metrics.  Which metrics are up to you and your given data set.  
 
-* Record the predictive performance metrics from your simple, highly interpretable model from Objective 1.  
-
+## Adding Complexity to Logistic Regression
 * You must include one additional logistic regression model which is also a more complicated logistic regression model than in Objective 1.  By complicated, I do not mean that you include more predictors (that will be somewhat sorted out in Objective 1), but rather model complexity through interaction terms, new variables created by the group, transformations or additions through polynomials.  
 
+## Looking at Continous Predictors
 * Create another competing model using just the continuous predictors and use LDA or QDA.  
 
-* (Optional) Use a nonparameteric model approach as a competing model.  Random forest or decision tree for predictors that are both categorical and continuous or a k-nearest neighbors approach if just working with continuous predictors.  
+### LDA
 
+### KNN
+
+## Non-parametric Models
+* (Optional) Use a nonparameteric model approach as a competing model.  Random forest or decision tree for predictors that are both categorical and continuous or a k-nearest neighbors approach if just working with continuous predictors.  
+### KNN
+
+### Random Forest
+
+# Model Performance Comparisons
+* Record the predictive performance metrics from your simple, highly interpretable model from Objective 1.  
 *	Provide a summary table of the performance across the competing methods. Summarize the overall findings.  A really great report will also give insight as to why the “best” model won out.  This is where a thorough EDA will always help.
 Logistical Considerations.  
-
-* Don’t forget PCA can be helpful in various ways throughout your analysis as well as other unsupervised tools such as  heatmaps and cluster analysis from Unit 13.  
-
-* I think a good course of action is to tackle Objective 1 in SAS.  The selection tools are really straight forward to run and the output is a little bit easier to grab.  For objective 2, its better to go with R for this reason…..to ensure performance metrics are comparable make sure that the models are run on the exact same training and test sets (or through a CV approach).  This can be done in SAS, it’ll just take a some additional coding to make sure it gets done properly.
-Additional details
-
-NOTE 1: ALL ANALYSIS MUST BE DONE IN SAS OR R and all code must be placed in the appendix of your report. I’m okay with data cleaning steps and EDA being provided using other tools such as Python.
-
-NOTE 2:  Do not forget about organization among your group.  Divide and conquer is always great, but there is “one report to rule them all” so make sure that it flows as you are stitching things together.
-
 * Make sure it is clear how many models were created to compete against the one in Objective 1.  Make note of any tuning parameters that were used and how you came up with them (knn and random forest logistics)  Required
 
-# Main Analysis Content
+# Conclusion
 *	Overall report of the error metrics on a test set or CV run.  Also if the two best models have error rates of .05 and .045,  can we really say that one model is outperforming the other?  For the ambitious, McNemar’s test could be helpful in answering that.
-
-# Conclusion/Discussion
 *	The conclusion should reprise the questions and conclusions of objective 2 with recommendations of the final model, what could be done to help analysis and model building in the future, and any insight as to why one method outshined all the rest if that is indeed the case.  If they all are similar why did you go with your final model?
-
-
-# References  
-[1] Anderson et al., Statistics for Business & Economics, Cengage, 2020.  
-[2] James et al., An Introduction to Statistical Learning with Application in R, Springer, 2017.  
-[3] T. Hastie et al., The Elements of Statistical Learning, Data Mining, Inference, and Prediction, 2nd Edition, Springer, 2017.  
-[4] Ramsey and Schafer, The Statistical Sleuth, A Course in Methods of Data Analysis, 3rd Edition, Cengage, 2013.  
-
-
 
 
 
 # Appendix
 
-
-<!-- Caution: Big plots -->
-
-## EDA Plots
-### Correlation Plot
-##### ![](./figures/corrPlot.png){width=10%} 
-\newpage
-### Scatterplot Matrix  
-##### ![](./figures/Scatterplot Matrix.png){width=10%} 
-\newpage
-### Generalized Pairs Plot  
-##### ![](./figures/pairs.png){width=10%} 
-
 ## Code Section
-
 
 ### Feature Engineering
 
-# Rmd Examples
-
-<!-- Ctrl+Shift+C comments out markdown -->
-
-
-
-Suggested Downtime Activities:  
-
-1. Data cleaning (handle missing?,  train/test split logistics:  you want a good balance of Y/N in your train)
-2. summary statistics (the ones I kept complaining about on Project 1)
-3. EDA (basic boxplots, scatterplots, bar charts etc to see how things relate to the response, PCA tool),
-4. Maybe play around and fit a few LDA models with continuous stuff.
-
-### Centered Img
-##### ![caption](https://whitelabel.2u.com/cdn/v1/smu-mds/compass-dark.svg){width=10%}
-
-
-Note this is just a syntax example. Since we don't have a local picture to use, this will show nothing in the word doc.  Also worth noting is the H5 marking, which centers the image.
-
-
-#### Latex examples
-
-$$Variance Ratio=  \frac{(σ_{max})^2}{(σ_{min} )^2} = \frac{2.84^2}{1.20^2} =5.6$$
-
-$$log(ReportDeliveryTime) = SchedFreq + HourOfDay + DayOfMonth + ReportCategory + Server$$
-
-
-
-```{r Feature Engineering}
+```{r Feature Engineering, warning=FALSE}
 
 # read in 'Bank Additional Full' file
 bankfull = read.csv("./DataSets/bank-additional-full.csv",header = TRUE, sep = ";")
 
 # convert "unknown" values to NA and view percentage of missing values
 bankfull[bankfull == "unknown"] <- NA 
+
 plotNAs(bankfull)
 
 # Remove duration from model, as this isn't known until 'y' is known
@@ -258,13 +208,12 @@ scaled.test = scaledbin[-trainIndices,]
 
 ```
 
+### EDA
 
-
-```{r EDA, fig.width=7.25, fig.height=4.5, echo=FALSE, cache=TRUE, warning=FALSE}
+```{r EDA, fig.width=7.25, fig.height=4.5, cache=TRUE, warning=FALSE}
 
 df <- bankfull # input dataframes for plots
 
-  
 mutate(df, prev = as.factor(previous)) %>% ggplot(aes(prev, y, fill=y)) + geom_col()
 
 df %>% ggplot(aes(y, age)) + geom_boxplot() + coord_flip()
@@ -317,21 +266,24 @@ ggcorr(df)
 ```
 
 
-```{r EDA - slow code, eval=FALSE}
+```{r EDA Big Plots, eval=FALSE, warning=FALSE}
 
+
+
+# Build Correlation Plot
 buildCorrPlot(bankbin)
 
-# GGpairs plot saved as ./figures/pairs.png
+# Build Pairs Plot
 png(height=800, width=800, pointsize=15, file="./figures/pairs.png")
 bankfull %>% keep(is.numeric) %>% ggpairs()
 dev.off()
 
 # Identify significant features
 boruta_output <- Boruta(y ~ ., data=bankfull, doTrace=2)
-boruta_signif <- names(boruta_output$finalDecision[boruta_output$finalDecision %in% c("Confirmed", "Tentative")])  # collect Confirmed and Tentative variables
-
+boruta_signif <- names(boruta_output$finalDecision[boruta_output$finalDecision %in% c("Confirmed", "Tentative")]) 
 print(boruta_signif) 
 
+# Build Variable Importance Plot
 png(height=800, width=800, pointsize=15, file="./figures/variableImportance.png")
 plot(boruta_output, cex.axis=.7, las=2, xlab="", main="Variable Importance")
 dev.off()
@@ -339,6 +291,7 @@ dev.off()
 
 ```
 
+### Logistic Regression
 
 ```{r logistic_regression, cache=TRUE}
 
@@ -350,23 +303,26 @@ x # copy this printed value into the model
 rm(x)
 
 # Everything model:
-full.model <- glm(y ~ age+job+marital+education+default+housing+loan+contact+month+day_of_week+campaign+pdays+previous+poutcome+emp.var.rate+cons.price.idx+cons.conf.idx+euribor3m+nr.employed
-                 ,data = full.train, family = "binomial")
+full.model <- glm(y ~ age+job+marital+education+default+housing+loan+contact+month+day_of_week+campaign+pdays+previous+poutcome+
+    emp.var.rate+cons.price.idx+cons.conf.idx+euribor3m+nr.employed, data = full.train, family = "binomial")
+
 summary(full.model)
-
-
-# Stepwise Selection commented out to speed up knit process:
-#step(full.model,direction="both")
-
 
 # Smaller model:
 simple.model <- glm(y~job+contact+month+day_of_week+campaign+pdays+poutcome+emp.var.rate+cons.price.idx+cons.conf.idx+nr.employed, data=full.train, family="binomial")
-summary(simple.model)
 
+summary(simple.model)
 
 ```
 
+```{r Logistic Regression Feature Selection, eval=FALSE}
 
+# Stepwise Selection commented out to speed up knit process:
+step(full.model,direction="both")
+
+```
+
+### LDA
 
 ```{r LDA analysis, cache=TRUE}
 
@@ -394,6 +350,7 @@ ME
 
 ```
 
+### PCA
 
 ```{r PCA Analysis, cache=TRUE}
 
@@ -440,7 +397,7 @@ dev.off()
 
 ```
 
-
+### Recursive Partitioning
 
 ```{r Recursive Partitioning, cache=TRUE}
 
@@ -463,6 +420,8 @@ CrossTable(full.train$y, cart_pred,
           dnn = c('actual default', 'predicted default'))
 ```
 
+
+### KNN
 
 KNN Has an 88% overall accuracy, with 97% sensitivity.  However, specificity suffers with only 29.6% accuracy. Scaling the data alone did not improve the performance of KNN.  We then fed KNN algorithm the limited set of predictors used in Logistic Regression, which also did not improve performance. 
 
@@ -577,7 +536,6 @@ classifications = knn(scaled.train[,knnArray],scaled.test[,knnArray],as.factor(s
 confusionMatrix(table(scaled.test$y,classifications, dnn = c("Prediction", "Reference")), positive = '1')
 
 ```
-
 
 
 
@@ -768,5 +726,24 @@ title(main="Test Set ROC")
 ```
 
 
+<!-- Caution: Big plots -->
+
+## EDA Plots
+### Correlation Plot
+##### ![](./figures/corrPlot.png){width=10%} 
+\newpage
+### Scatterplot Matrix  
+##### ![](./figures/Scatterplot Matrix.png){width=10%} 
+\newpage
+### Generalized Pairs Plot  
+##### ![](./figures/pairs.png){width=10%} 
 
 
+# Aknowledgement
+
+
+# References  
+[1] Anderson et al., Statistics for Business & Economics, Cengage, 2020.  
+[2] James et al., An Introduction to Statistical Learning with Application in R, Springer, 2017.  
+[3] T. Hastie et al., The Elements of Statistical Learning, Data Mining, Inference, and Prediction, 2nd Edition, Springer, 2017.  
+[4] Ramsey and Schafer, The Statistical Sleuth, A Course in Methods of Data Analysis, 3rd Edition, Cengage, 2013.  
