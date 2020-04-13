@@ -610,7 +610,16 @@ recall_LR=test.eval.LR$recall
 fscore_LR=test.eval.LR$fscore
 ```
 
+```{r -p5 ROC AUC}
+library(ROCR)
+# calculate ROC
+rocr.pred.lr = prediction(predictions = pred_lm, labels = testdata$y)
+rocr.perf.lr = performance(rocr.pred.lr, measure = "tpr", x.measure = "fpr")
+rocr.auc.lr = as.numeric(performance(rocr.pred.lr, "auc")@y.values)
 
+# print ROC AUC
+rocr.auc.lr
+```
 
 
 
