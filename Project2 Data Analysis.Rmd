@@ -263,7 +263,7 @@ df %>% ggplot(aes(nr.employed, y,  fill=y)) + geom_col()
 df %>% ggplot(aes(y, nr.employed)) + geom_boxplot() + coord_flip()
 
 #additional EDA Graphics
-ggpairs(df)
+ggpairs(df) %>% keep(is.numeric)
 ggcorr(df)
 bankfull %>% keep(is.numeric) %>% ggpairs()
 ```
