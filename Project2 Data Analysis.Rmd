@@ -26,6 +26,7 @@ library(caTools)
 library(descr)
 library(forcats)
 library(Boruta)
+library(gridExtra)
 
 # wordStyleRef style changes:
 ## Set margins to .5"
@@ -161,25 +162,41 @@ NOTE 2:  Do not forget about organization among your group.  Divide and conquer 
 
 ## Code Section
 
-### Read Data
-
-```{r read data}
-#reading in 'Bank Additional' file
-bank = read.csv("./DataSets/bank-additional.csv",header = TRUE, sep = ";")
-#str(bank)
-#summary(bank)
-#sum(is.na(bank))
-
-#reading in 'Bank Additional Full' file
-bankfull = read.csv("./DataSets/bank-additional-full.csv",header = TRUE, sep = ";")
-#str(bankfull)
-#summary(bankfull)
-#sum(is.na(bankfull))
-```
 
 ### Feature Engineering
 
+# Rmd Examples
+
+<!-- Ctrl+Shift+C comments out markdown -->
+
+
+
+Suggested Downtime Activities:  
+
+1. Data cleaning (handle missing?,  train/test split logistics:  you want a good balance of Y/N in your train)
+2. summary statistics (the ones I kept complaining about on Project 1)
+3. EDA (basic boxplots, scatterplots, bar charts etc to see how things relate to the response, PCA tool),
+4. Maybe play around and fit a few LDA models with continuous stuff.
+
+### Centered Img
+##### ![caption](https://whitelabel.2u.com/cdn/v1/smu-mds/compass-dark.svg){width=10%}
+
+
+Note this is just a syntax example. Since we don't have a local picture to use, this will show nothing in the word doc.  Also worth noting is the H5 marking, which centers the image.
+
+
+#### Latex examples
+
+$$Variance Ratio=  \frac{(σ_{max})^2}{(σ_{min} )^2} = \frac{2.84^2}{1.20^2} =5.6$$
+
+$$log(ReportDeliveryTime) = SchedFreq + HourOfDay + DayOfMonth + ReportCategory + Server$$
+
+
+
 ```{r Feature Engineering}
+
+#reading in 'Bank Additional Full' file
+bankfull = read.csv("./DataSets/bank-additional-full.csv",header = TRUE, sep = ";")
 
 # convert "unknown" values to NA and view percentage of missing values
 bankfull[bankfull == "unknown"] <- NA 
@@ -187,7 +204,6 @@ plotNAs(bankfull)
 
 # Remove duration from model, as this isn't known until 'y' is known
 bankfull <- bankfull %>% dplyr::select(!duration)
-
 
 # Drop NAs
 bankfull <- bankfull %>% drop_na()
@@ -206,6 +222,26 @@ trsf <- data.frame(predict(dmy, newdata = bankfull))
 trsf$y <- ifelse(trsf$y.no == 1, 0, 1)
 bankbin <- subset(trsf, select = -c(y.no, y.yes))
 
+
+# Split the data into training and test set
+set.seed(115)
+trainIndices = sample(1:dim(bankfull)[1],round(.8 * dim(bankfull)[1]))
+
+# Build full test/train
+full.train = bankfull[trainIndices,]
+full.test = bankfull[-trainIndices,]
+
+# Build binary test/train
+bin.train = bankbin[trainIndices,]
+bin.test = bankbin[-trainIndices,]
+
+# Scale binary data 
+scaledbin <- data.frame(scale(bankbin))
+scaledbin$y <- bankbin$y
+
+# Build scaled test/train
+scaled.train = scaledbin[trainIndices,]
+scaled.test = scaledbin[-trainIndices,]
 
 ```
 
@@ -266,6 +302,7 @@ df %>% ggplot(aes(y, nr.employed)) + geom_boxplot() + coord_flip()
 ggpairs(df)
 ggcorr(df)
 bankfull %>% keep(is.numeric) %>% ggpairs()
+
 ```
 
 
@@ -274,19 +311,6 @@ bankfull %>% keep(is.numeric) %>% ggpairs()
 
 
 ```{r logistic_regression, cache=TRUE}
-# Split the data into training and test set
-
-set.seed(115)
-trainIndices = sample(1:dim(bankfull)[1],round(.8 * dim(bankfull)[1]))
-
-# Build full test/train
-full.train = bankfull[trainIndices,]
-full.test = bankfull[-trainIndices,]
-
-# Build binary test/train
-bin.train = bankbin[trainIndices,]
-bin.test = bankbin[-trainIndices,]
-
 
 # Build feature list:
 x<-colnames(bankbin)
@@ -301,8 +325,8 @@ full.model <- glm(y ~ age+job+marital+education+default+housing+loan+contact+mon
 summary(full.model)
 
 
-## Stepwise Selection:
-step(full.model,direction="both")
+# Stepwise Selection commented out to speed up knit process:
+#step(full.model,direction="both")
 
 
 # Smaller model:
@@ -310,127 +334,26 @@ simple.model <- glm(y~job+contact+month+day_of_week+campaign+pdays+poutcome+emp.
 summary(simple.model)
 
 
-# Scaled data 
-scaledbin <- data.frame(scale(bankbin))
-scaledbin$y <- bankbin$y
-
-# Build scaled test/train
-scaled.train = scaledbin[trainIndices,]
-scaled.test = scaledbin[-trainIndices,]
-
-
 ```
 
 
 
 ```{r LDA analysis, cache=TRUE}
-df <- scaledbin
 
-set.seed(115)
-trainIndices = sample(1:dim(df)[1],round(.8 * dim(df)[1]))
-train = df[trainIndices,]
-test = df[-trainIndices,]
+LDA.model <- lda(y~., data=scaled.train)
 
-mylda<-lda(y~., data=train)
-pred<-predict(mylda,newdata=test)$class  #Predictions can come in many forms, the class form provides the categorical level of your response.
-Truth<-test$y
-x<-table(pred,Truth) # Creating a confusion matrix
-x
+pred<-predict(LDA.model, newdata=scaled.test)$class  #Predictions can come in many forms, the class form provides the categorical level of your response.
+
+Truth<-scaled.test$y
+
+LDA.confusionMatrix<-table(pred,Truth) # Creating a confusion matrix
+
+LDA.confusionMatrix
+
 #Missclassification Error
-ME<-(x[2,1]+x[1,2])/1000
+ME<-(LDA.confusionMatrix[2,1]+LDA.confusionMatrix[1,2])/1000
 ME
 
-```
-
-
-
-```{r PCA Analysis, cache=TRUE}
-
-pc.bankbin<-prcomp(bankbin[,-64],scale.=TRUE)
-pc.bankbin.scores<-pc.bankbin$x
-
-#Adding the response column to the PC's data frame
-pc.bankbin.scores<-data.frame(pc.bankbin.scores)
-pc.bankbin.scores$y<-bankbin$y
-
-#Use ggplot2 to plot the first few pc's
-ggplot(data = pc.bankbin.scores, aes(x = PC1, y = PC2)) +
-  geom_point(aes(col=y), size=1)+
-  ggtitle("PCA of Subscriptions")
-
-ggplot(data = pc.bankbin.scores, aes(x = PC2, y = PC3)) +
-  geom_point(aes(col=y), size=1)+
-  ggtitle("PCA of Subscriptions")
-
-ggplot(data = pc.bankbin.scores, aes(x = PC3, y = PC4)) +
-  geom_point(aes(col=y), size=1)+
-  ggtitle("PCA of Subscriptions")
-
-```
-
-
-```{r, cache=TRUE}
-# This chunk need a label.  Is this random forest?? What is algo name?
-
-#########################################################
-# Sampling the dataset into training data and test data:
-#############################################################
-
-set.seed(1234)
-splitPerc = .75
-index = sample(1:dim(bankCont)[1],round(splitPerc * dim(bankCont)[1]))
-#index<-sample(1:dim(Auto2)[1],192,replace=F)
-traindata<-bankCont[index,]
-testdata<-bankCont[-index,]
-
-  
-
-
-# Classification and Regression Trees
-bank.cart<-rpart(y ~ ., traindata , method = 'class')
-
-#par(mfrow=c(1,1))
-#fancyRpartPlot(bank.cart , digits=2 , palettes = c("Purples", "Oranges"))
-
-#predict
-cart_pred <- predict( bank.cart , testdata , type = "class")
-cart_prob <- predict( bank.cart , testdata , type = "prob")
-
-# Confusion matrix
-confusionMatrix(cart_pred , testdata$y)
-
-### Cross table validation for CART
-CrossTable(testdata$y, cart_pred,
-          prop.chisq = FALSE, prop.c = FALSE, prop.r = FALSE,
-          dnn = c('actual default', 'predicted default'))
-```
-
-
-
-```{r knn, cache=TRUE}
-#Implementing KNN
-###########################################
-bank.knn <- train(y ~ ., data = traindata, method = "knn", 
-                  maximize = TRUE,
-                  trControl = trainControl(method = "cv", number = 10),
-                  preProcess=c("center", "scale"))
-
-predictedkNN <- predict(bank.knn , newdata = testdata)
-confusionMatrix(predictedkNN , testdata$y)
-
-### Cross table validation for KNN
-CrossTable(testdata$y, predictedkNN,
-           prop.chisq = FALSE, prop.c = FALSE, prop.r = FALSE,
-           dnn = c('actual default', 'predicted default'))
-```
-
-
-
-```{r LDA}
-
-lda.fit <- lda(y ~ age+job+marital+education+default+housing+loan+contact+month+day_of_week+campaign+pdays+previous+poutcome+emp.var.rate+cons.price.idx+cons.conf.idx+euribor3m+nr.employed
-                 ,data = bankfull)
-lda.fit
 ```
 
 
@@ -442,32 +365,91 @@ lda.fit
 ```
 
 
+```{r PCA Analysis, cache=TRUE}
 
-# Rmd Examples
+PCA<-prcomp(bankbin[,-64],scale.=TRUE)
+PCA.scores<-PCA$x
 
-<!-- Ctrl+Shift+C comments out markdown -->
+# Add the response column to the PC's data frame
+PCA.scores<-data.frame(PCA.scores)
+PCA.scores$y<-bankbin$y
+
+# Store PCA Plots in a list
+PCA.plots <- list(
+
+ggplot(data = PCA.scores, aes(x = PC1, y = PC2)) +
+  geom_point(aes(col=y), size=1)+
+  ggtitle("PCA of Subscriptions"),
+
+ggplot(data = PCA.scores, aes(x = PC2, y = PC3)) +
+  geom_point(aes(col=y), size=1)+
+  ggtitle("PCA of Subscriptions"),
+
+ggplot(data = PCA.scores, aes(x = PC3, y = PC4)) +
+  geom_point(aes(col=y), size=1)+
+  ggtitle("PCA of Subscriptions")
+)
+
+# Display first three PCA Plots
+grid.arrange(PCA.plots[[1]], PCA.plots[[2]], PCA.plots[[3]],  ncol=3, nrow=1)
+
+```
+
+
+```{r, cache=TRUE}
+# This chunk need a label.  Is this random forest?? What is algo name?
+
+
+# Classification and Regression Trees
+bank.cart<-rpart(y ~ ., full.train , method = 'class')
+
+#par(mfrow=c(1,1))
+#fancyRpartPlot(bank.cart , digits=2 , palettes = c("Purples", "Oranges"))
+
+#predict
+cart_pred <- predict( bank.cart , full.train , type = "class")
+cart_prob <- predict( bank.cart , full.train , type = "prob")
+
+# Confusion matrix
+confusionMatrix(cart_pred , full.train$y)
+
+### Cross table validation for CART
+CrossTable(full.train$y, cart_pred,
+          prop.chisq = FALSE, prop.c = FALSE, prop.r = FALSE,
+          dnn = c('actual default', 'predicted default'))
+```
+
+
+KNN Has an 88% overall accuracy, with 97% sensitivity.  However, specificity suffers with only 29.6% accuracy. Scaling the data alone did not improve the performance of KNN.  We then fed KNN algorithm the limited set of predictors used in Logistic Regression, which also did not improve performance. 
+
+```{r KNN, cache=TRUE}
+
+# Implementing KNN
+###########################################
+
+# Model the same sample we fed to logistic regression (KNN is sensitive to noise)
+
+KNN.model <- train(y~job+contact+month+day_of_week+campaign+pdays+poutcome+emp.var.rate+cons.price.idx+cons.conf.idx+nr.employed, 
+                   data = full.train, method = "knn", 
+                   maximize = TRUE,
+                   trControl = trainControl(method = "cv", number = 10),
+                   preProcess=c("center", "scale")
+                   )
+
+KNN.preds <- predict(KNN.model , newdata = full.test)
+confusionMatrix(KNN.preds , full.test$y)
+
+### Cross table validation for KNN
+CrossTable(full.test$y, KNN.preds,
+           prop.chisq = FALSE, prop.c = FALSE, prop.r = FALSE,
+           dnn = c('actual default', 'predicted default'))
+```
 
 
 
-Suggested Downtime Activities:  
-
-1. Data cleaning (handle missing?,  train/test split logistics:  you want a good balance of Y/N in your train)
-2. summary statistics (the ones I kept complaining about on Project 1)
-3. EDA (basic boxplots, scatterplots, bar charts etc to see how things relate to the response, PCA tool),
-4. Maybe play around and fit a few LDA models with continuous stuff.
-
-### Centered Img
-##### ![caption](https://whitelabel.2u.com/cdn/v1/smu-mds/compass-dark.svg){width=10%}
 
 
-Note this is just a syntax example. Since we don't have a local picture to use, this will show nothing in the word doc.  Also worth noting is the H5 marking, which centers the image.
 
-
-#### Latex examples
-
-$$Variance Ratio=  \frac{(σ_{max})^2}{(σ_{min} )^2} = \frac{2.84^2}{1.20^2} =5.6$$
-
-$$log(ReportDeliveryTime) = SchedFreq + HourOfDay + DayOfMonth + ReportCategory + Server$$
 
 
 
