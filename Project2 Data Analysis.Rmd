@@ -397,6 +397,9 @@ PCA.scores<-PCA$x
 PCA.scores<-data.frame(PCA.scores)
 PCA.scores$y<-bankbin$y
 
+```
+
+```{r PCA Plots, eval=FALSE}
 # Store PCA Plots in a list
 PCA.plots <- list(
 
@@ -414,9 +417,12 @@ ggplot(data = PCA.scores, aes(x = PC3, y = PC4)) +
 )
 
 # Display first three PCA Plots
+png('./figures/PCA.png', width = 1100, height = 250)
 grid.arrange(PCA.plots[[1]], PCA.plots[[2]], PCA.plots[[3]],  ncol=3, nrow=1)
+dev.off()
 
 ```
+
 
 
 ```{r Recursive Partitioning, cache=TRUE}
@@ -472,7 +478,6 @@ CrossTable(full.test$y, KNN.preds,
 # Hypertuning identified 60 as the best K
 classifications = knn(scaled.train,scaled.test,as.factor(scaled.train$y), prob = TRUE, k = 60)
 confusionMatrix(table(scaled.test$y,classifications, dnn = c("Prediction", "Reference")), positive = '1')
-
 
 ```
 
