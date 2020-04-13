@@ -602,8 +602,8 @@ test.eval.LR$cm
 
 ```
 
-```{r -p4}
-# calculate accuracy, precision etc.
+```{r -p4 calculate accuracy, precision, recall, fscore}
+# calculate accuracy, precision 
 acc_LR=test.eval.LR$accuracy
 prc_LR=test.eval.LR$precision
 recall_LR=test.eval.LR$recall
