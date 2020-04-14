@@ -649,6 +649,7 @@ specs %>% kable("html") %>% kable_styling
 classifications = knn(scaled.train[,knnArray],scaled.test[,knnArray],as.factor(scaled.train$y), prob = TRUE, k = k)
 confusionMatrix(table(scaled.test$y,classifications, dnn = c("Prediction", "Reference")), positive = '1')
 
+?confusionMatrix
 ```
 
 
@@ -677,19 +678,12 @@ test.eval.DT = binclass_eval(as.integer(full.test$y)-1, pred.DT[,2] > 0.36)
 # Making the Confusion Matrix
 test.eval.DT$cm
 
-
-# calculate accuracy, precision etc.
-acc_DT=test.eval.DT$accuracy
-prc_DT=test.eval.DT$precision
-recall_DT=test.eval.DT$recall
-fscore_DT=test.eval.DT$fscore
-
 # print evaluation
-cat("Accuracy:  ",   acc_DT,
-    "\nPrecision: ", prc_DT,
-    "\nRecall:    ", recall_DT,
-    "\nFScore:    ", fscore_DT)
-
+cat("Accuracy:  ",   test.eval.DT$accuracy,
+    "\nPrecision: ", test.eval.DT$precision,
+    "\nRecall:    ", test.eval.DT$recall,
+    "\nFScore:    ", test.eval.DT$fscore
+    )
 
 # calculate ROC curve
 rocr.pred = prediction(predictions = pred.DT[,2], labels = full.test$y)
