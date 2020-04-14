@@ -85,7 +85,12 @@ We next investigated correlation.  As shown in the correlation plot,
 
 #knitr::include_graphics('./figures/corrPlot.png')
 
+knitr::include_graphics('./figures/corrPlot.png')
+
+
 ```
+
+
 
 there are some common sense correlations, particularly between specific factors in variables.  For example, cons.price.idx & emp.var.rate are positively correlated.  This is reasonable as both are market indicators that would naturally tether together.  
 
@@ -138,7 +143,10 @@ With a simple logistic regression model as a baseline, perform additional compet
 
 ## Non-parametric Models
 * (Optional) Use a nonparameteric model approach as a competing model.  Random forest or decision tree for predictors that are both categorical and continuous or a k-nearest neighbors approach if just working with continuous predictors.  
+
 ### KNN
+
+### Decision Tree
 
 ### Random Forest
 
@@ -147,6 +155,8 @@ With a simple logistic regression model as a baseline, perform additional compet
 *	Provide a summary table of the performance across the competing methods. Summarize the overall findings.  A really great report will also give insight as to why the “best” model won out.  This is where a thorough EDA will always help.
 Logistical Considerations.  
 * Make sure it is clear how many models were created to compete against the one in Objective 1.  Make note of any tuning parameters that were used and how you came up with them (knn and random forest logistics)  Required
+
+    Setup a table here to compare model performance metrics
 
 # Conclusion
 *	Overall report of the error metrics on a test set or CV run.  Also if the two best models have error rates of .05 and .045,  can we really say that one model is outperforming the other?  For the ambitious, McNemar’s test could be helpful in answering that.
@@ -321,6 +331,9 @@ summary(full.model)
 simple.model <- glm(y~job+contact+month+day_of_week+campaign+pdays+poutcome+emp.var.rate+cons.price.idx+cons.conf.idx+nr.employed, data=full.train, family="binomial")
 
 summary(simple.model)
+
+interaction.model <- glm(y~euribor3m+contact+month+cons.price.idx+emp.var.rate+euribor3m*nr.employed+pdays+campaign+pdays*campaign+job+euribor3m*month+euribor3m*age+euribor3m*pdays, data=full.train, family="binomial")
+summary(interaction.model)
 
 ```
 
@@ -559,21 +572,12 @@ index = sample(1:dim(bank2)[1],round(splitPerc * dim(bank2)[1]))
 #index<-sample(1:dim(Auto2)[1],192,replace=F)
 traindata<-bank2[index,]
 testdata<-bank2[-index,]
-```
 
-
-
-
-```{r - p2 build model , cache=TRUE}
 # creating the classifier
 classifier.lm = glm(formula = y ~ .,
                  family = binomial,
                  data = traindata)
-```
 
-
-
-```{r - p3 Evaluate model, cache=TRUE}
 
 pred_lm = predict(classifier.lm, type='response', newdata=testdata[-18])
 
@@ -589,17 +593,12 @@ test.eval.LR = binclass_eval(as.integer(testdata[,18])-1, pred_lm > 0.30)
 # Making the Confusion Matrix
 test.eval.LR$cm
 
-```
-
-```{r -p4 calculate accuracy, precision, recall, fscore}
 # calculate accuracy, precision 
 acc_LR=test.eval.LR$accuracy
 prc_LR=test.eval.LR$precision
 recall_LR=test.eval.LR$recall
 fscore_LR=test.eval.LR$fscore
-```
 
-```{r -p5 ROC AUC}
 library(ROCR)
 # calculate ROC
 rocr.pred.lr = prediction(predictions = pred_lm, labels = testdata$y)
@@ -608,11 +607,6 @@ rocr.auc.lr = as.numeric(performance(rocr.pred.lr, "auc")@y.values)
 
 # print ROC AUC
 rocr.auc.lr
-```
-
-```{r -p6 ROC curves}
-
-
 
 # plot ROC curve for Logistic Regression
 plot(rocr.perf.lr,
@@ -633,10 +627,7 @@ classifier = rpart(formula = y ~ .,
 
 # plot
 prp(classifier, type = 2, extra = 104, fallen.leaves = TRUE, main="Decision Tree")
-```
 
-
-```{r decision tree - p5}
 
 # predict test data by probability
 pred.DT = predict(classifier, newdata = testdata[-18], type = 'prob')
@@ -646,10 +637,6 @@ predictions_DT <- data.frame(y = testdata$y, pred = NA)
 predictions_DT$pred <- pred.DT[,2]
 plot_pred_type_distribution(predictions_DT,0.36)
 
-```
-
-
-```{r - decision tree - p6}
 # choose the best threshold as 0.36
 test.eval.DT = binclass_eval(as.integer(testdata[,18])-1, pred.DT[,2] > 0.36)
 
