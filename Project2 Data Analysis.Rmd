@@ -94,7 +94,9 @@ knitr::include_graphics('./figures/corrPlot.png')
 
 there are some common sense correlations, particularly between specific factors in variables.  For example, cons.price.idx & emp.var.rate are positively correlated.  This is reasonable as both are market indicators that would naturally tether together.  
 
-As referenced above, we excluded duration from the model selection process.  It is an indicator variable that can be utilized as a benchmark, but is not known before the calls are made.  
+As referenced above, we excluded duration from the model selection process.  It is an indicator variable that can be utilized as a benchmark, but is not known before the calls are made.  Additionally, we ran a test of variable importance (Boruta) that provided some additional insight into which variables are "important" and in what order.  We noted that Marital Status, Loan, Default and Housing are all relatively less important than other variables.  We will revisit this insight as we approach interactions.
+
+The final iteration that we did was to separate the data into a training and test set for all assessments going forward, consistently using the same split upon each interation.  
 
 ### Principal Component Analysis (PCA)
 The three PCA plots don't show as much separation as we would hope for. We can expect our prediction algorithms to struggle a little bit in providing accurate results, due to the tightly entangled results of our subscription (y) response variable.
@@ -107,9 +109,7 @@ The three PCA plots don't show as much separation as we would hope for. We can e
 ## Building the model
 
 ### Feature Selection
-			Any or all:  LASSO, RIDGE, ELASTIC NET,
-			Stepwise, Forward, Backward 
-			Manual / Intuition	
+In constructing our logistic regression model, we first included all variables in the model.  We moved forward manually, by first reducing the initial model based on the the variables deemed insignificant.  Those variables included Marital, Education, Default, Loan and Housing.  All showed insignifance in predicting subscriptions.
 ### Assessing the fit
       Lack of fit test
 ### Assumption Checking
