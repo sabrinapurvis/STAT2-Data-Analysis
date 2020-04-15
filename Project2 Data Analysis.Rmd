@@ -114,9 +114,9 @@ The three PCA plots don't show as much separation as we would hope for. We can e
 ## Building the model
 
 ### Feature Selection
-In constructing our logistic regression model, we first included all variables in the model.  We moved forward manually, by first reducing the initial model based on the the variables deemed insignificant.  Those variables included Marital, Education, Default, Loan and Housing.  All showed insignifance in predicting subscriptions.
+In constructing our logistic regression model, we first included all variables in the model.  We moved forward manually, by first reducing the initial model based on the the variables deemed insignificant.  Those variables included Marital, Education, Default, Loan and Housing.  All showed insignifance in predicting subscriptions.  
 ### Assessing the fit
-      Lack of fit test
+  When assessing fit, we determined that we would include AIC, AUC and look at the specificity/sensitivity.  Our "smaller model" produced an AIC of 14551, and AUC of 0.80888 and specificity of 0.933.
 ### Assumption Checking
       Influential point analysis (Cook’s D and Leverage)
 ### Residual Diagnostic Plots 
@@ -137,7 +137,8 @@ Perform your logistic regression analysis and provide interpretation of the regr
 With a simple logistic regression model as a baseline, perform additional competing models to improve on prediction performance metrics.  Which metrics are up to you and your given data set.  
 
 ## Adding Complexity to Logistic Regression
-* You must include one additional logistic regression model which is also a more complicated logistic regression model than in Objective 1.  By complicated, I do not mean that you include more predictors (that will be somewhat sorted out in Objective 1), but rather model complexity through interaction terms, new variables created by the group, transformations or additions through polynomials.  
+  When inserting complexity in the model, the team revisited the Boruta anaylsis of variable importance.  Euribor3M was the most important single variable identified in the assessment.  This variable, as mentioned above, is a lending rate banks use when specifically lending on loans with a 3 month maturity.  We applied this to month as the variable is time based.  Additionally, we included interactions with pdays, age and nr.employed believing we may find that socioeconomic factors and timing would impart significance.  Finally, we included an interaction between pdays and campaign with success.
+  Our final model produced an AIC of 14579, showing that interactions in this case didn't add real value.  Furthermore, they would require a more cumbersome interpretation of the model without clear influence by single variables.  
 
 ## Looking at Continous Predictors
 * Create another competing model using just the continuous predictors and use LDA or QDA.  
