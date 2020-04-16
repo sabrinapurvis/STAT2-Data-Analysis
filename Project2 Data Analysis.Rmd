@@ -187,7 +187,7 @@ bankfull[bankfull == "unknown"] <- NA
 plotNAs(bankfull)
 
 # Remove duration from model, as this isn't known until 'y' is known
-#bankfull <- bankfull %>% dplyr::select(!duration)
+bankfull <- bankfull %>% dplyr::select(!duration)
 
 # Drop NAs
 bankfull <- bankfull %>% drop_na()
