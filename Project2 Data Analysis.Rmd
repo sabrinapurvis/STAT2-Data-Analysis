@@ -338,6 +338,13 @@ simple.model <- glm(y~job+contact+month+day_of_week+campaign+pdays+poutcome+emp.
 
 summary(simple.model)
 
+#confidence intervals for simple model
+summary(simple.model$coefficients)
+CI_lower <- coefficients(simple.model)[2] - 1.96*summary(simple.model)$coefficients[2,2]
+CI_upper <- coefficients(simple.model)[2] + 1.96*summary(simple.model)$coefficients[2,2]
+
+confint(simple.model)
+
 
 pred_lm = predict(simple.model, type='response', newdata=full.test)
 
@@ -395,6 +402,12 @@ interaction.model <- glm(y~euribor3m+contact+month+cons.price.idx+emp.var.rate+e
 summary(interaction.model)
 
 
+#confidence intervals for simple model
+summary(interaction.model$coefficients)
+CI_lower <- coefficients(interaction.model)[2] - 1.96*summary(interaction.model)$coefficients[2,2]
+CI_upper <- coefficients(interaction.model)[2] + 1.96*summary(interaction.model)$coefficients[2,2]
+
+confint(interaction.model)
 
 othermodel<-glm(y~job+marital+education+contact+month+campaign+poutcome+emp.var.rate+cons.conf.idx, traindata, 
                 family = binomial(link="logit"))
