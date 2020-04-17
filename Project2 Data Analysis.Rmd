@@ -88,8 +88,8 @@ We next investigated correlation.  As shown in the correlation plot,
 
 knitr::include_graphics('./figures/corrPlot.png')
 
-```
 
+```
 
 there are some common sense correlations, particularly between specific factors in variables.  For example, cons.price.idx & emp.var.rate are positively correlated.  This is reasonable as both are market indicators that would naturally tether together.  
 
