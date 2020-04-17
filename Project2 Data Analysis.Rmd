@@ -106,10 +106,13 @@ As referenced above, we excluded duration from the model selection process.  It 
 
 ![](./figures/variableImportance.png){width="5in" height="5in"} 
 
-The final iteration that we did was to separate the data into a training and test set for all assessments going forward, consistently using the same split upon each interaction.  
+The final iteration that we did was to separate the data into a training and test set for all assessments going forward, consistently using the same split upon each interaction.   
+We now consider a dimension reduction method Principal Component Analysis (PCA).   
 
 ### Principal Component Analysis (PCA)
-The three PCA plots don't show as much separation as we would hope for. We can expect our prediction algorithms to struggle a little bit in providing accurate results, due to the tightly entangled results of our subscription (y) response variable.
+Principal Component Analysis (PCA) is a tool for unsupervised learning. It is a common approach for deriving a low-dimensional set of features from a large set of variables. PCA creates new uncorrelated variables from a group of variables and the information of these new variables can be used to understand the relationship among the original variables and for other analyses such as regression model and classification that we will mention later.    
+
+First, we perform a PCA on the bank marketing data set after scaling the variables to have standard deviation. Then we plot the first few principal components to visualize the data. The three PCA plots don't show as much separation as we would hope for. We can expect our prediction algorithms to struggle a little bit in providing accurate results, due to the tightly entangled results of our subscription (y) response variable.
 
 ![](./figures/PCA.png){width="7.5in"} 
 
