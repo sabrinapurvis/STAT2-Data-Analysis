@@ -145,6 +145,7 @@ Recall that we are calculating toward a yes or no outocme.  Each coefficient des
 The simple model produced in logistic regression highlights a few key factors among the variables that indicate importance.  As the presumped goal is achieving the Yes result, specific items could be focused on in future solicitation efforts to employ resources efficiently.  Students and Retired persons both tested as factors worth expanding on.  Additionally, cell phone contact would be advised.  Specific months proved significant, but that is likely due to the index numbers more than the actual month itself.  We must point out that this is an observational study, so no true conclusions can be made from this model about the larger population or around causality.  The findings are nonetheless interesting.
 
 # V. Alternative Models  
+
 ## Problem Statement  
 With our simple logistic regression model as a baseline, the team performed additional competing models evaluations to improve on prediction performance metrics.    
 
