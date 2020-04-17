@@ -49,7 +49,7 @@ source("./R/helpers.R")
 In this project, we will study different approaches to predict the success of bank telemarketing the Bank Marketing data set [1].   
 The retail banking industry provides financial services to families and individuals.  Banks’ main functions are threefold; they issue credit in the forms of loans and credit lines, provide a secure location to deposit money, and allow a mechanism to manage finances in the form of checking and savings accounts.  This analysis will focus specifically on the influential factors from direct marketing campaigns managed by a Portuguese banking institution in an attempt to get secure commitment for term deposits.  Understanding not only which marketing campaigns were most effective, but also the timing of the campaign and the socioeconomic demographics will allow the retail banking industry to further target and tune their approach to securing term deposits.  
 Bank Marketing data from this data set were used to address two project objects:  
-1. 1.	Display the ability to perform EDA  and perform a logistic regression analysis and provide interpretation of the regression coefficients including hypothesis testing, and confidence intervals.   
+1. Display the ability to perform EDA  and perform a logistic regression analysis and provide interpretation of the regression coefficients including hypothesis testing, and confidence intervals.   
 2. With a simple logistic regression model as a baseline, perform additional competing models to improve on prediction performance metrics.  
 
 
