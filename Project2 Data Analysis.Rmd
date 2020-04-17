@@ -743,7 +743,11 @@ abline(0, 1, col = "red", lty = 2)
 
 
 # References  
-[1] Anderson et al., Statistics for Business & Economics, Cengage, 2020.  
-[2] James et al., An Introduction to Statistical Learning with Application in R, Springer, 2017.  
-[3] T. Hastie et al., The Elements of Statistical Learning, Data Mining, Inference, and Prediction, 2nd Edition, Springer, 2017.  
-[4] Ramsey and Schafer, The Statistical Sleuth, A Course in Methods of Data Analysis, 3rd Edition, Cengage, 2013.  
+[1] *Bank Marketing Data Set*  https://archive.ics.uci.edu/ml/datasets/Bank%20Marketing#  
+[2] Albright, W. L. Winston, *Business Analytics - Data Analysis and Decision Making*, 7th Edition, 2019.  
+[3] Anderson et al., *Statistics for Business & Economics*, Cengage, 2020.    
+[4] James et al., *An Introduction to Statistical Learning with Application in R*, Springer, 2017.    
+[5] T. Hastie et al., *The Elements of Statistical Learning, Data Mining, Inference*, and Prediction, 2nd Edition, Springer, 2017.   
+[6] B. W. Lindgren,  *Statistical Theory*, 3th Edion, MacMillan Publishing, 1976.  
+[7] D. Montgomery, E. A. Peck, G. G. Vining, *Introdution to Linear Regression Analysis*,  5th Edion, John Wiley & Sons, 2012.  
+[8] Ramsey and Schafer, *The Statistical Sleuth, A Course in Methods of Data Analysis*, 3rd Edition, Cengage, 2013.    
