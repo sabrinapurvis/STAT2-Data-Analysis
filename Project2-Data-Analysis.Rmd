@@ -127,7 +127,7 @@ In constructing our logistic regression model, we first included all variables i
 <!-- $$Variance Ratio=  \frac{(σ_{max})^2}{(σ_{min} )^2} = \frac{2.84^2}{1.20^2} =5.6$$ -->
 
 $$y=job+contact+month+day\_of\_week+campaign+pdays+poutcome+emp.var.rate+cons.price.idx+cons.conf.idx+nr.employed$$		
-Recall that we are calculating toward a yes or no outocme.  Each coefficient described adds or detracts from the total.  The y-intercept is set at -291.40 (with confidence interval of [-355.9, -226.9]).  When looking at the levels of Job, blue collar and services are both significant and detrimental toward the overall value (both at -0.20 with CI [-0.34, -0.06] and [-0.29, 0.23] respectively).  Alternatively, retired and student both signifcantly impact the outcome positively.  Retired increases the value by 0.25 (CI of [0.06, 0.43]) while students increase by 0.27 (with CI of [0.04, 0.50]).  The method of contact is also of importance, where telephone calls (versus cell phone contact) decreases the overall outcome by -0.81 (with CI of [-0.98, -0.65]).  Specific Months had disparate inpact.  June produces the lowest coefficient with -0.72 and confidence interval of (-0.98, -0.45).  
+Recall that we are calculating toward a yes or no outocme.  Each coefficient described adds or detracts from the total.  The y-intercept is set at -291.40 (with confidence interval of [-355.9, -226.9]).  When looking at the levels of Job, blue collar and services are both significant and detrimental toward the overall value (both at -0.20 with CI [-0.34, -0.06] and [-0.29, 0.23] respectively).  Alternatively, retired and student both signifcantly impact the outcome positively.  Retired increases the value by 0.25 (CI of [0.06, 0.43]) while students increase by 0.27 (with CI of [0.04, 0.50]).  The method of contact is also of importance, where telephone calls (versus cell phone contact) decreases the overall outcome by -0.81 (with CI of [-0.98, -0.65]).  Specific Months had disparate inpact.  June produces the lowest coefficient with -0.72 and confidence interval of (-0.98, -0.45).  March provided the highest coefficient of 1.64 with confidence intervals of (1.35, 1.92). The consumer price index increases the overall outcome score by 2.44 points for each point increase in the index number (CI of [1.97, 2.90]).  
 
 		
 ## Logistic Regression Conclusion
@@ -145,12 +145,11 @@ With our simple logistic regression model as a baseline, the team performed addi
 
 ### LDA
 
-### KNN
-
 ## Non-parametric Models
 * (Optional) Use a nonparameteric model approach as a competing model.  Random forest or decision tree for predictors that are both categorical and continuous or a k-nearest neighbors approach if just working with continuous predictors.  
 
 ### KNN
+  KNN has an 88% overall accuracy, with 97% sensitivity when performed outright. However, specificity suffers with only 29.6% accuracy. Scaling the data alone did not improve the performance of KNN. We then fed KNN algorithm the limited set of predictors used in Logistic Regression, which also did not improve performance.  Hypertuning the data maintained the overall accuracy of 88%.  It improved specificity at the cost of sensitivity though.  Sensitivity is instead 68.3% whereas specificity is now 89.7%.  
 
 ### Decision Tree
 
@@ -737,7 +736,7 @@ abline(0, 1, col = "red", lty = 2)
 ##### ![](./figures/pairs.png){width=10%} 
 
 
-# Aknowledgement
+# Acknowledgement
 
 
 # References  
