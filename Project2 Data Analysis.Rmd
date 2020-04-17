@@ -436,6 +436,12 @@ CI_upper <- coefficients(interaction.model)[2] + 1.96*summary(interaction.model)
 
 #confint(interaction.model)
 
+
+#cooks D and residual plots for interaction.model
+plot(cooks.distance(interaction.model))
+plot(interaction.model)
+
+
 othermodel<-glm(y~job+marital+education+contact+month+campaign+poutcome+emp.var.rate+cons.conf.idx, full.train, 
                 family = binomial(link="logit"))
 summary(othermodel)
