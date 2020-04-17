@@ -44,7 +44,7 @@ source("./R/helpers.R")
 
 ```
 
-# Introduction
+# I. Introduction
 
 In this project, we will study different approaches to predict the success of bank telemarketing the Bank Marketing data set [1].   
 The retail banking industry provides financial services to families and individuals.  Banks’ main functions are threefold; they issue credit in the forms of loans and credit lines, provide a secure location to deposit money, and allow a mechanism to manage finances in the form of checking and savings accounts.  This analysis will focus specifically on the influential factors from direct marketing campaigns managed by a Portuguese banking institution in an attempt to get secure commitment for term deposits.  Understanding not only which marketing campaigns were most effective, but also the timing of the campaign and the socioeconomic demographics will allow the retail banking industry to further target and tune their approach to securing term deposits.  
@@ -53,7 +53,7 @@ Bank Marketing data from this data set were used to address two project objects:
 2. With a simple logistic regression model as a baseline, perform additional competing models to improve on prediction performance metrics.  
 
 
-# Data Description
+# II. Data Description
 
 The team was provided a substantial marketing dataset.  It was comprised of categorical and continuous variables and a resulting binary result (Y/N).  The data ranges from May 2008 to November 2010.  As described in the table below, we have equal counts of numeric and categorical variables.  There are demographics, data related to the depth and breadth of the marketing campaign, and market indicators included in this set.
 
@@ -82,7 +82,7 @@ The team was provided a substantial marketing dataset.  It was comprised of cate
 |Y|Binary|Did Client subscribe to a term deposit|
 
 
-# Exploratory Data Analysis (EDA)  
+# III. Exploratory Data Analysis (EDA)  
 
 During our preliminarily assessment of the data, we first evaluated the impact of missing data. We found that technically we did not have any missing data, but we were provided a fair amount of unknown values.  The original dataset has thousands of observations.  Because we did not feel limited by our dataset size, we decided to exclude any observation that has an unknown record recorded in any of the variables.  This left us over 30,000 complete observations to work with.  Next, we evaluated the normality of all continuous variables.  We employed boxplots and barcharts to visually inspect distribution.  We observed right skewness in Age, but we can rely on central limit theorem for normality assumptions in spite of visual indications.
 
@@ -106,7 +106,7 @@ As referenced above, we excluded duration from the model selection process.  It 
 
 ![](./figures/variableImportance.png){width="5in" height="5in"} 
 
-The final iteration that we did was to separate the data into a training and test set for all assessments going forward, consistently using the same split upon each interation.  
+The final iteration that we did was to separate the data into a training and test set for all assessments going forward, consistently using the same split upon each interaction.  
 
 ### Principal Component Analysis (PCA)
 The three PCA plots don't show as much separation as we would hope for. We can expect our prediction algorithms to struggle a little bit in providing accurate results, due to the tightly entangled results of our subscription (y) response variable.
@@ -114,7 +114,7 @@ The three PCA plots don't show as much separation as we would hope for. We can e
 ![](./figures/PCA.png){width="7.5in"} 
 
 
-# Logistic Regression Analysis
+# IV. Logistic Regression Analysis
 
 ## Building the model
 
@@ -138,7 +138,7 @@ Recall that we are calculating toward a yes or no outocme.  Each coefficient des
 ## Logistic Regression Conclusion
 The simple model produced in logistic regression highlights a few key factors among the variables that indicate importance.  As the presumped goal is achieving the Yes result, specific items could be focused on in future solicitation efforts to employ resources efficiently.  Students and Retired persons both tested as factors worth expanding on.  Additionally, cell phone contact would be advised.  Specific months proved significant, but that is likely due to the index numbers more than the actual month itself.  We must point out that this is an observational study, so no true conclusions can be made from this model about the larger population or around causality.  The findings are nonetheless interesting.
 
-# Alternative Models
+# V. Alternative Models
 With our simple logistic regression model as a baseline, the team performed additional competing models evaluations to improve on prediction performance metrics.    
 
 ## Adding Complexity to Logistic Regression
@@ -160,7 +160,7 @@ With our simple logistic regression model as a baseline, the team performed addi
 
 ### Random Forest
 
-# Model Performance Comparisons
+# VI. Model Performance Comparisons
 * Record the predictive performance metrics from your simple, highly interpretable model from Objective 1.  
 *	Provide a summary table of the performance across the competing methods. Summarize the overall findings.  A really great report will also give insight as to why the “best” model won out.  This is where a thorough EDA will always help.
 Logistical Considerations.  
@@ -168,7 +168,7 @@ Logistical Considerations.
 
     Setup a table here to compare model performance metrics
 
-# Conclusion
+# VII. Conclusion
 *	Overall report of the error metrics on a test set or CV run.  Also if the two best models have error rates of .05 and .045,  can we really say that one model is outperforming the other?  For the ambitious, McNemar’s test could be helpful in answering that.
 *	The conclusion should reprise the questions and conclusions of objective 2 with recommendations of the final model, what could be done to help analysis and model building in the future, and any insight as to why one method outshined all the rest if that is indeed the case.  If they all are similar why did you go with your final model?
 
