@@ -175,6 +175,26 @@ Logistical Considerations.
 *	Overall report of the error metrics on a test set or CV run.  Also if the two best models have error rates of .05 and .045,  can we really say that one model is outperforming the other?  For the ambitious, McNemar’s test could be helpful in answering that.
 *	The conclusion should reprise the questions and conclusions of objective 2 with recommendations of the final model, what could be done to help analysis and model building in the future, and any insight as to why one method outshined all the rest if that is indeed the case.  If they all are similar why did you go with your final model?
 
+# Acknowledgement
+
+
+# References  
+[1] *Bank Marketing Data Set*  https://archive.ics.uci.edu/ml/datasets/Bank%20Marketing#  
+[2] Albright, W. L. Winston, *Business Analytics - Data Analysis and Decision Making*, 7th Edition, 2019.  
+[3] Anderson et al., *Statistics for Business & Economics*, Cengage, 2020.    
+[4] James et al., *An Introduction to Statistical Learning with Application in R*, Springer, 2017.    
+[5] T. Hastie et al., *The Elements of Statistical Learning, Data Mining, Inference*, and Prediction, 2nd Edition, Springer, 2017.   
+[6] B. W. Lindgren,  *Statistical Theory*, 3th Edion, MacMillan Publishing, 1976.  
+[7] D. Montgomery, E. A. Peck, G. G. Vining, *Introdution to Linear Regression Analysis*,  5th Edion, John Wiley & Sons, 2012.  
+[8] Ramsey and Schafer, *The Statistical Sleuth, A Course in Methods of Data Analysis*, 3rd Edition, Cengage, 2013.    
+
+
+
+
+Dustin Bracy – Southern Methodist University – Email: dbracy@smu.edu   
+Huy Hoang Nguyen – Southern Methodist University – Email: hoangnguyen@smu.edu  
+Sabrina Purvis – Southern Methodist University – Email: spurvis@smu.edu   
+
 
 
 # Appendix
