@@ -117,7 +117,7 @@ First, we perform a PCA on the bank marketing data set after scaling the variabl
 ![](./figures/PCA.png){width="7.5in"} 
 
 
-# IV. Logistic Regression Analysis
+# IV. Logistic Regression Analysis  
 
 ## Problem Statement  
 Logistic Regression is a popular method for classifying individuals, given the values of a set of explanatory variables. It is a multiple regression for a dichotomous outcome using a nonlinear function of the explanatory variables for classification. It estimates the probability that an individual is in a particular category. In the next steps, we will build predictive logistic regression models using Feature Selection methods (Forward, Backward, Stepwise). We will discuss how we build models with assumption check, parameter interpretation as well as our conclusion.  
@@ -133,7 +133,7 @@ In constructing our logistic regression model, we first included all variables i
 ### Assumption Checking
   We evaluated the Cook's D Plot and Leverage plot to assess assumption violations.  Cook's D did not return a value above 0.0020, showing that there are no outliers to consider.  Leverage also supports this, with only one value above 0.020.  
   
-### Residual Diagnostic Plots 
+### Residual Diagnostic Plots  
 			Optional  Residual Plots
 ## Interpretation  
 
@@ -150,24 +150,25 @@ Recall that we are calculating toward a yes or no outocme.  Each coefficient des
 The simple model produced in logistic regression highlights a few key factors among the variables that indicate importance.  As the presumped goal is achieving the Yes result, specific items could be focused on in future solicitation efforts to employ resources efficiently.  Students and Retired persons both tested as factors worth expanding on.  Additionally, cell phone contact would be advised.  Specific months proved significant, but that is likely due to the index numbers more than the actual month itself.  We must point out that this is an observational study, so no true conclusions can be made from this model about the larger population or around causality.  The findings are nonetheless interesting.
 
 # V. Alternative Models  
-
+## Problem Statement  
 With our simple logistic regression model as a baseline, the team performed additional competing models evaluations to improve on prediction performance metrics.    
 
 ## Adding Complexity to Logistic Regression
   When inserting complexity in the model, the team revisited the Boruta anaylsis of variable importance.  Euribor3M was the most important single variable identified in the assessment.  This variable, as mentioned above, is a lending rate banks use when specifically lending on loans with a 3 month maturity.  We applied this to month as the variable is time based.  Additionally, we included interactions with pdays, age and nr.employed believing we may find that socioeconomic factors and timing would impart significance.  Finally, we included an interaction between pdays and campaign with success.
   Our final model produced an AIC of 14579, showing that interactions in this case didn't add real value.  Furthermore, they would require a more cumbersome interpretation of the model without clear influence by single variables.  Additionally, it produced a ROC of 0.809, again not performing significantly better than the simple logistic regression model.  
 
-## Looking at Continous Predictors
+## Looking at Continous Predictors  
 
-### LDA
+### LDA  
 
 
 
-### KNN
+### KNN  
   KNN has an 88% overall accuracy, with 97% sensitivity when performed outright. However, specificity suffers with only 29.6% accuracy. Scaling the data alone did not improve the performance of KNN. We then fed KNN algorithm the limited set of predictors used in Logistic Regression, which also did not improve performance.  Hypertuning the data maintained the overall accuracy of 88%.  It improved specificity at the cost of sensitivity though.  Sensitivity is instead 68.3% whereas specificity is now 89.7%.  
 
 
 # VI. Model Performance Comparisons  
+
 * Record the predictive performance metrics from your simple, highly interpretable model from Objective 1.  
 *	Provide a summary table of the performance across the competing methods. Summarize the overall findings.  A really great report will also give insight as to why the “best” model won out.  This is where a thorough EDA will always help.
 Logistical Considerations.  
@@ -175,7 +176,8 @@ Logistical Considerations.
 
     Setup a table here to compare model performance metrics
 
-# VII. Conclusion
+# VII. Conclusion  
+
   The business problem we were tasked to solve was how can we best predict subscriptions for term deposits.  The team decided early on that while overall accuracy was certainly important, priority should be given to the model that accurately predicts the yes outcome the best.  With that in mind, we found that 
   
 XXXXX ENTER FINAL MODEL HERE XXXXX 
@@ -185,10 +187,12 @@ would be recommended.  Furthermore, as stated previously, this is an observation
 *	Overall report of the error metrics on a test set or CV run.  Also if the two best models have error rates of .05 and .045,  can we really say that one model is outperforming the other?  For the ambitious, McNemar’s test could be helpful in answering that.
 *	The conclusion should reprise the questions and conclusions of objective 2 with recommendations of the final model, what could be done to help analysis and model building in the future, and any insight as to why one method outshined all the rest if that is indeed the case.  If they all are similar why did you go with your final model?
 
-# Acknowledgement
+# Acknowledgement  
+
 We would like to express our sincere gratitude to Dr. Jacob Turner (SMU) for excellent course design that we have obtained during the Spring semester 2020 of MSDS SMU.
 
 # References  
+
 [1] *Bank Marketing Data Set*  https://archive.ics.uci.edu/ml/datasets/Bank%20Marketing#  
 [2] Albright, W. L. Winston, *Business Analytics - Data Analysis and Decision Making*, 7th Edition, 2019.  
 [3] Anderson et al., *Statistics for Business & Economics*, Cengage, 2020.    
