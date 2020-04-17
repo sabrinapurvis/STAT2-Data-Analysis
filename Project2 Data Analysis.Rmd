@@ -116,6 +116,9 @@ First, we perform a PCA on the bank marketing data set after scaling the variabl
 
 # IV. Logistic Regression Analysis
 
+## Problem Statement  
+Logistic Regression is a popular method for classifying individuals, given the values of a set of explanatory variables. It is a multiple regression for a dichotomous outcome using a nonlinear function of the explanatory variables for classification. It estimates the probability that an individual is in a particular category. In the next steps, we will build predictive logistic regression models using Feature Selection methods (Forward, Backward, Stepwise). We will discuss how we build models with assumption check, parameter interpretation as well as our conclusion.  
+
 ## Building the model
 
 ### Feature Selection
