@@ -240,6 +240,12 @@ To access just the coefficients for this model, we use the coef() function.
 ![](./figures/coeflogistic.png){width="7.5in"}  
 
 
+We can use the confint() function (using profiled log-likelihood) or confint.default() function (using standard errors) to obtain confidence intervals for the coefficient estimates. Note that for logistic models, confidence intervals are based on the profiled log-likelihood function.    
+
+![](./figures/CIsLogistic.png){width="7.5in"}
+
+
+
 
  
 
