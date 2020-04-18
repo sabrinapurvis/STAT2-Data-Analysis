@@ -304,62 +304,93 @@ scaled.test = scaledbin[-trainIndices,]
 
 
 ```
+\newpage
 
 ### EDA
 
-```{r EDA, fig.width=7.25, fig.height=4.5, cache=TRUE, warning=FALSE}
+```{r EDA, fig.width=7.25, fig.height=8, cache=TRUE, warning=FALSE}
 
 df <- bankfull # input dataframes for plots
 
-mutate(df, prev = as.factor(previous)) %>% ggplot(aes(prev, y, fill=y)) + geom_col()
-
-df %>% ggplot(aes(y, age)) + geom_boxplot() + coord_flip()
-
+#Wide:
 ggarrange(
   percentagePlot(df, fct_rev(df$job), "Job Type") + coord_flip(),
   percentagePlot(df, fct_rev(df$education), "Education Level") + coord_flip() ,
-  percentagePlot(df, df$contact, "Contact Method") ,
+ncol=1, nrow=2)
+
+ggarrange(
   percentagePlot(df, fct_rev(df$month), "Month") + coord_flip(),
   percentagePlot(df, fct_rev(df$day_of_week), "Day of the Week") + coord_flip(),
-ncol = 3, nrow=2)
+ncol=1, nrow=2)
 
-# Do we want to show the non-selected feature plots?
+ggarrange(
+  mutate(df, prev = as.factor(previous)) %>% ggplot(aes(prev, y, fill=y)) + geom_col(),
+  df %>% ggplot(aes(y, age)) + geom_boxplot() + coord_flip(),
+  df %>% ggplot(aes(month, y,  fill=y)) + geom_col()  ,
+  df %>% ggplot(aes(y, campaign)) + geom_boxplot() + coord_flip() ,
+ncol = 1, nrow=4)
+
+ggarrange(
+  percentagePlot(df, df$previous, "Previous") + coord_flip(),
+  df %>% ggplot(aes(day_of_week, y,  fill=y)) + geom_col()  ,
+ncol = 1, nrow=2)
+
+
+#Square:
 ggarrange(
   percentagePlot(df, df$marital, "Marital Status"), 
-  percentagePlot(df, df$default, "Default"),
+  percentagePlot(df, df$contact, "Contact Method") ,  
   percentagePlot(df, df$housing, "Housing"), 
   percentagePlot(df, df$loan, "Loan"),
-  percentagePlot(df, df$previous, "Previous") + coord_flip(),
-  percentagePlot(df, df$poutcome, "Poutcome"),
-ncol = 3, nrow=2)
+  percentagePlot(df, df$default, "Default"),
+  percentagePlot(df, df$poutcome, "Poutcome"),  
+ncol = 2, nrow=3)
+
 
 ggarrange (
-  df %>% ggplot(aes(month, y,  fill=y)) + geom_col()  ,
-  df %>% ggplot(aes(day_of_week, y,  fill=y)) + geom_col()  ,
   df %>% ggplot(aes(campaign, y,  fill=y)) + geom_col() ,
-  df %>% ggplot(aes(y, campaign)) + geom_boxplot() + coord_flip() ,
-  df %>% ggplot(aes(pdays, y,  fill=y)) + geom_boxplot(),
   df %>% ggplot(aes(previous, y,  fill=y)) + geom_col() ,
   df %>% ggplot(aes(emp.var.rate, y,  fill=y)) + geom_col() ,
-  df %>% ggplot(aes(y, emp.var.rate)) + geom_boxplot() + coord_flip()   ,
-  df %>% ggplot(aes(cons.price.idx, y,  fill=y)) + geom_col() ,
+  df %>% ggplot(aes(y, emp.var.rate)) + geom_boxplot() + coord_flip()   ,  
   df %>% ggplot(aes(y, cons.price.idx)) + geom_boxplot() + coord_flip() ,
   df %>% ggplot(aes(cons.conf.idx, y,  fill=y)) + geom_col()  ,
+ncol = 2, nrow = 3)
+
+ggarrange (
   df %>% ggplot(aes(y, cons.conf.idx)) + geom_boxplot() + coord_flip()  ,
   df %>% ggplot(aes(euribor3m, y,  fill=y)) + geom_col(),
   df %>% ggplot(aes(y, euribor3m)) + geom_boxplot() + coord_flip()  ,
-  df %>% ggplot(aes(nr.employed, y,  fill=y)) + geom_col()  ,
+  df %>% ggplot(aes(nr.employed, y,  fill=y)) + geom_col() + coord_flip() ,
   df %>% ggplot(aes(y, nr.employed)) + geom_boxplot() + coord_flip(),
-ncol = 4, nrow = 4)
+  df %>% ggplot(aes(cons.price.idx, y,  fill=y)) + geom_col() + coord_flip() ,
+ncol = 2, nrow = 3)
 
-#additional EDA Graphics
 
-ggcorr(df)
+
 
 ```
 
+<!-- Caution: Big plots -->
+
+#### Correlation Plot 
+##### ![](./figures/corrPlot.png)
+\newpage
+#### Scatterplot Matrix  
+##### ![](./figures/Scatterplot Matrix.png)
+\newpage
+#### Generalized Pairs Plot  
+##### ![](./figures/pairs.png)
+\newpage
+#### Alt Correlation Plot  
+##### ![](./figures/ggcorr.png)
+
 
 ```{r EDA Big Plots, eval=FALSE, warning=FALSE}
+
+#additional EDA Graphics
+png(height=800, width=800, pointsize=15, file="./figures/ggcorr.png")
+ggcorr(df)
+dev.off()
 
 # Build Correlation Plot
 buildCorrPlot(bankbin)
@@ -378,6 +409,7 @@ print(boruta_signif)
 png(height=800, width=800, pointsize=15, file="./figures/variableImportance.png")
 plot(boruta_output, cex.axis=.7, las=2, xlab="", main="Variable Importance")
 dev.off()
+
 
 
 ```
@@ -917,17 +949,4 @@ ModelComparison$Decision_Tree <- append(randomForest.CM$overall[1], randomForest
 
 
 ```
-
-
-<!-- Caution: Big plots -->
-
-## EDA Plots
-### Correlation Plot
-##### ![](./figures/corrPlot.png){width=10%} 
-\newpage
-### Scatterplot Matrix  
-##### ![](./figures/Scatterplot Matrix.png){width=10%} 
-\newpage
-### Generalized Pairs Plot  
-##### ![](./figures/pairs.png){width=10%} 
 
