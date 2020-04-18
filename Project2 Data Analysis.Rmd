@@ -183,9 +183,11 @@ Linear Discriminant Analysis allows for exploration of continuous variables by b
 
 # VI. Model Performance Comparisons  
 
+Because of the nature of the dataset, emphasis is placed on correctly predicting a positive outcome (i.e. the customer subscribes to term deposits).  So for comparison purposes in the context of our goals, we're going to focus on the following metrics: Area Under the Curve (AUC), Overall Accuracy (F1 score), Precision (percentage of predicted positive events out of all positive events), and Recall (Ability to *correctly* predict when an event occurs).  
+
 **Performance Comparison table**
 
-|Model|AUC|Overall Accuracy|Precision (PPV)|Recall (TPR)|
+|Model|AUC|Overall Accuracy|Precision (Pos Pred Values)|Recall (Sensitivity)|
 |---|---|---|---|---|
 |Logistic Regression (Simple)|---|---|---|---|
 |Logistic Regression (Interaction)|---|---|---|---|
@@ -532,8 +534,10 @@ confint(interaction.model)
 
 
 #cooks D and residual plots for interaction.model
+### DPB: These plots interfere with chunk execution.  You will need to manually run everything after these interactive plots
 plot(cooks.distance(interaction.model))
 plot(interaction.model)
+### DPB: These plots interfere with chunk execution.  You will need to manually run everything after these interactive plots
 
 
 othermodel<-glm(y~job+marital+education+contact+month+campaign+poutcome+cons.conf.idx, full.train, 
