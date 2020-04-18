@@ -765,7 +765,29 @@ abline(0, 1, col = "red", lty = 2)
 ```
 
 
-
+```{r Randon Forest}
+#Random forrest
+#Here we will do a truly RF run by selecting mtry. mtry controls how many
+#predictors are sampled for each bootstrap sample.
+rf<-randomForest(y~.,data=full.train,mtry=9,importance=T,ntree=1000)
+#Go get the ROC
+rf.pred<-predict(rf,newdata=full.test,type="prob")
+pred <- prediction(rf.pred[,1], full.test$y)
+roc.perf = performance(pred, measure = "tpr", x.measure = "fpr")
+#Note in the following code the term "train" means nothing here. 
+#I'm just rinsing and repeating code the produces the curve.
+auc.train <- performance(pred, measure = "auc")
+auc.train <- auc.train@y.values
+plot(roc.perf,main="AUC of Test set RF - mtry=9")
+abline(a=0, b= 1)
+text(x = .40, y = .6,paste("AUC = ", round(auc.train[[1]],4), sep = ""))
+#Making predictions on test and then observing accuracy rates
+fit.pred<-predict(rf,newdata=full.test,type="response",cutoff=c(0.58,0.42))
+confusionMatrix(fit.pred,full.test$y) #Default prediction uses .5 as cut off you can change it specifying "cutoff" option
+#Which variables are important.  We can use variable importance.
+varImpPlot (rf,type=1,main="Variable Importance")
+varImpPlot (rf,type=2,main="Variable Importance")
+```
 
 
 
