@@ -244,7 +244,9 @@ Because of the nature of the dataset, emphasis is placed on correctly predicting
 
 For all models, in order to compare equally, we ran both with the full data, and with the subset used in the simple logistic regression model.  The additional data points did not significantly help any of the models, so for the final comparison we used the subset used in the simple regression model for comparison. 
 
-During modeling of categorical KNN, we utilized a full model, with all variables in it from the simple logistic regression model and performed ten iterations of cross validation.  Using KNN with scaled, continuous predictors and the same variables broken out in a one-hot encoded fashion, we were able to obtain much better _______ (sensitivity?) metrics.  We employed a hyper-tuning approach to find the best value of K, retraining the model on each value of K up to the `sqrt` of the number of observations in our model.  It was determined the best value of K was 60, and this is what was used for the tuned KNN model.  
+During modeling of categorical KNN, we utilized a full model, with all variables in it from the simple logistic regression model and performed ten iterations of cross validation.  Using KNN with scaled, continuous predictors and the same variables broken out in a one-hot encoded fashion, we were able to obtain much better precision metrics, but at the expense of recall.  We employed a hyper-tuning approach to find the best value of K, retraining the model on each value of K up to the square root of the number of observations in our model.  It was determined the best value of K was 60, and this is what was used for the tuned KNN model.  
+
+Ultimately, the logistic regression models had the best performance with the highest AUC score, and performing best on overall positive prediction metrics.
 
 
 # VII. Conclusion  
