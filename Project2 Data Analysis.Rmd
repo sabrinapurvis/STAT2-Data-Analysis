@@ -442,6 +442,7 @@ car::vif(simple.model0)
 #Final model after removing  emp.var.rate
 simple.model <- glm(y~job+contact+month+day_of_week+campaign+pdays+poutcome+cons.price.idx+cons.conf.idx+nr.employed, data=full.train, family="binomial")
 
+car::vif(simple.model)
 summary(simple.model)
 
 #confidence intervals for simple model
