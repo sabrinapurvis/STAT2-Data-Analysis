@@ -206,9 +206,18 @@ We do test Global Null Hypothesis by Likehood Ratio test.
 
 We can perfom  Score or Wald test for Global Null Hypothesis. Another way to run ANOVA  to get more infomation.  
 
-![](./figures/WaldLRT.png){width="7.5in"}   
+![](./figures/WaldLRT.png){width="7.5in"}     
 
- 
+By  p values < 0.05,  we reject the null hypothesis. It means that at least one explanatory variable in the model is significant.   
+
+
+
+Before a model is relied upon to draw conclusions or predict future outcomes, we should check, as far as possible, that the model we have assumed is correctly specified. That is, that the data do not conflict with assumptions made by the model. For binary outcomes logistic regression is the most popular modelling approach.We now look at the popular, but sometimes criticized, Hosmer-Lemeshow goodness of fit test for logistic regression. The p value is less than 0.05, then our model is calibrated.    
+
+![](./figures/hoslem.png){width="5in"}   
+
+
+
 
 
   
