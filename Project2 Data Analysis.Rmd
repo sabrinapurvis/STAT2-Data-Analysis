@@ -432,6 +432,13 @@ step(full.model,direction="both")
 
 step(simple.model,direction="both")
 
+x<- summary(simple.model)
+y<- confint(simple.model)
+
+cbind(x$coefficients,y)
+
+
+
 
 ```
 
@@ -502,11 +509,11 @@ title(main="Test Set ROC")
 
 LDA.model <- lda(y~., data=scaled.train)
 
-pred<-predict(LDA.model, newdata=scaled.test)$class  #Predictions can come in many forms, the class form provides the categorical level of your response.
+LDA.preds<-predict(LDA.model, newdata=scaled.test) #$class  #Predictions can come in many forms, the class form provides the categorical level of your response.
 
 Truth<-scaled.test$y
 
-LDA.confusionMatrix<-table(pred,Truth) # Creating a confusion matrix
+LDA.confusionMatrix<-table(LDA.preds$class,Truth) # Creating a confusion matrix
 
 LDA.confusionMatrix
 
@@ -514,15 +521,25 @@ LDA.confusionMatrix
 ME<-(LDA.confusionMatrix[2,1]+LDA.confusionMatrix[1,2])/1000
 ME
 
+
+### CONSTRUCTING ROC AUC PLOT:
+# Get the posteriors as a dataframe.
+
+LDA.post <- as.data.frame(LDA.preds$posterior)
+# Evaluate the model
+
+pred <- prediction(LDA.post[,2], scaled.test$y)
+roc.perf = performance(pred, measure = "tpr", x.measure = "fpr")
+auc.train <- performance(pred, measure = "auc")
+auc.train <- auc.train@y.values
+# Plot
+plot(roc.perf)
+abline(a=0, b= 1)
+text(x = .25, y = .65 ,paste("AUC = ", round(auc.train[[1]],3), sep = ""))
+
+
 ```
 
-
-```{r QDA, cache=TRUE}
-#qda.fit <- qda(y ~ age+job+marital+education+default+housing+loan+contact+month+day_of_week+campaign+pdays+previous+poutcome+emp.var.rate+cons.price.idx+cons.conf.idx+euribor3m+nr.employed
- #                ,data = bankfull)
-#qda.fit
-
-```
 
 ### PCA
 
