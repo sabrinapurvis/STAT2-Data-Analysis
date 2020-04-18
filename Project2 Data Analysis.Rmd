@@ -265,8 +265,6 @@ would be recommended.  Furthermore, as stated previously, this is an observation
 
 We would like to express our sincere gratitude to Dr. Jacob Turner (SMU) for excellent course design that we have obtained during the Spring semester 2020 of MSDS SMU.
 
-\newpage  
-
 # References  
 
 [1] *Bank Marketing Data Set*  https://archive.ics.uci.edu/ml/datasets/Bank%20Marketing#  
@@ -290,11 +288,9 @@ We would like to express our sincere gratitude to Dr. Jacob Turner (SMU) for exc
 
 \newpage
 
-# Appendix
+# Code Appendix
 
-## Code Section
-
-### Feature Engineering
+## Feature Engineering
 
 ```{r Feature Engineering, warning=FALSE}
 
@@ -354,7 +350,7 @@ scaled.test = scaledbin[-trainIndices,]
 ```
 \newpage
 
-### EDA
+## EDA
 
 ```{r EDA, fig.width=7.25, fig.height=8, cache=TRUE, warning=FALSE}
 
@@ -420,16 +416,16 @@ ncol = 2, nrow = 3)
 
 <!-- Caution: Big plots -->
 
-#### Correlation Plot 
+### Correlation Plot 
 ##### ![](./figures/corrPlot.png)
 \newpage
-#### Scatterplot Matrix  
+### Scatterplot Matrix  
 ##### ![](./figures/Scatterplot Matrix.png)
 \newpage
-#### Generalized Pairs Plot  
+### Generalized Pairs Plot  
 ##### ![](./figures/pairs.png)
 \newpage
-#### Alt Correlation Plot  
+### Alt Correlation Plot  
 ##### ![](./figures/ggcorr.png)
 
 
@@ -462,7 +458,7 @@ dev.off()
 
 ```
 
-### Logistic Regression
+## Logistic Regression
 
 ```{r logistic_regression, cache=TRUE}
 
@@ -524,11 +520,11 @@ prc_LR=test.eval.LR$precision
 recall_LR=test.eval.LR$recall
 fscore_LR=test.eval.LR$fscore
 
-cat("Accuracy:  ",   acc_LR,
-    "\nPrecision: ", prc_LR,
-    "\nRecall:    ", trecall_LR,
-    "\nFScore:    ", fscore_LR
-    )
+#cat("Accuracy:  ",   acc_LR,
+ #   "Precision: ", prc_LR,
+ #   "Recall:    ", trecall_LR,
+#    "FScore:    ", fscore_LR
+ #   )
 
 
 # calculate ROC
@@ -551,7 +547,8 @@ abline(0, 1, col = "red", lty = 2)
 predictions_LR$predFactor <- ifelse(predictions_LR$pred > .3, 'yes', 'no')
 LogR_simple.CM <- confusionMatrix(table(full.test$y, predictions_LR$predFactor, dnn = c("Truth", "Prediction")), positive = 'yes')
 
-
+enframe(LogR_simple.CM$byClass)
+LogR_simple.CM$overall
 ```
 
 ```{r Logistic Regression Feature Selection, eval=FALSE}
@@ -644,7 +641,7 @@ LogR_interaction.CM <- confusionMatrix(table(full.test$y, predictions_LRint$pred
 ```
 
 
-### LDA
+## LDA
 
 ```{r LDA analysis, cache=TRUE}
 
@@ -685,7 +682,7 @@ LDA.CM <- confusionMatrix(table(scaled.test$y, LDA.preds$class, dnn = c("Truth",
 ```
 
 
-### PCA
+## PCA
 
 ```{r PCA Analysis, cache=TRUE}
 
@@ -734,7 +731,7 @@ dev.off()
 ```
 
 
-### KNN
+## KNN
 
 KNN Has an 88% overall accuracy, with 97% sensitivity.  However, specificity suffers with only 29.6% accuracy. Scaling the data alone did not improve the performance of KNN.  We then fed KNN algorithm the limited set of predictors used in Logistic Regression, which also did not improve performance. 
 
@@ -913,7 +910,7 @@ confusionMatrix(table(scaled.test$y,KNN.preds.tuned, dnn = c("Truth", "Predictio
 ```
 
 
-### Recursive Partitioning (Decision Trees)
+## Recursive Partitioning (Decision Trees)
 
 
 ```{r Decision Tree, cache=TRUE}
