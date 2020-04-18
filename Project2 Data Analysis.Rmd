@@ -87,7 +87,7 @@ The team was provided a substantial marketing dataset.  It was comprised of cate
 
 # III. Exploratory Data Analysis (EDA)  
 
-During our preliminarily assessment of the data, we first evaluated the impact of missing data. We found that technically we did not have any missing data, but we were provided a fair amount of unknown values.  The original dataset has thousands of observations.  Because we did not feel limited by our dataset size, we decided to exclude any observation that has an unknown record recorded in any of the variables.  This left us over 30,000 complete observations to work with. We also can see that the variable month only has 10 levels (no jan and feb).   Next, we evaluated the normality of all continuous variables.  We employed boxplots and barcharts to visually inspect distribution.  We observed right skewness in Age, but we can rely on central limit theorem for normality assumptions in spite of visual indications.
+During our preliminary assessment of the data, we first evaluated the impact of missing data. We found that technically we did not have any missing data, but we were provided a fair amount of unknown values.  The original dataset has thousands of observations.  Because we did not feel limited by our dataset size, we decided to exclude any observation that has an unknown record recorded in any of the variables.  This left us over 30,000 complete observations to work with. We also can see that the variable month only has 10 levels (no Jan and Feb).   Next, we evaluated the normality of all continuous variables.  We employed box plots and bar charts to visually inspect distribution.  We observed right skewness in Age, but we can rely on central limit theorem for normality assumptions in spite of visual indications.
 
 We next investigated correlation.  As shown in the correlation plot, 
 ![](./figures/corrPlot.png){width="4.5in" height="4.5in"} 
@@ -123,12 +123,12 @@ Logistic Regression is a popular method for classifying individuals, given the v
 ## Building the model  
 By using this Bank Marketing data set [1], we will jump into Multiple Logistic Regression. We will predict a binary response of subscription y (Y/N) by using multiple predictors. Mathematically, the model can be generalized as follows
 $$log(\frac{p(X)}{1-p(X)})=log(odds)=\beta_0+\beta_1X_1+\beta_2X_2+...+\beta_pX_p$$
-where $X=(X_1,X_2,...,X_p)$ are $p$ predictors. By using the maximum likehood method, we can estimate $\beta_0,\beta_1,...,\beta_p$. This method has better statistical properties than the least square approach to estimate the unknown linear regression coefficients in linear regression models. Maximum likehood is a very general approach that is used to fit many of the nonlinear models, especially in our case here, the logistic regression model. In fact, the least square approach is a special case of maximum likehood mathematically. However, in this project, we use glm function to fit the model with the argument family=binomial to tell R to run logistic regression and we can also get these estimates without concerning ourselves with the details of the maximum likehood fitting procedure.  The problem can be rewritten as the following form
+where $X=(X_1,X_2,...,X_p)$ are $p$ predictors. By using the maximum likelihood method, we can estimate $\beta_0,\beta_1,...,\beta_p$. This method has better statistical properties than the least square approach to estimate the unknown linear regression coefficients in linear regression models. Maximum like hood is a very general approach that is used to fit many of the nonlinear models, especially in our case here, the logistic regression model. In fact, the least square approach is a special case of maximum like hood mathematically. However, in this project, we use glm function to fit the model with the argument family=binomial to tell R to run logistic regression and we can also get these estimates without concerning ourselves with the details of the maximum like hood fitting procedure.  The problem can be rewritten as the following form
 $$p(X)=\frac{e^{\beta_0+\beta_1X_1+\beta_2X_2+...+\beta_pX_p}}{1+e^{\beta_0+\beta_1X_1+\beta_2X_2+...+\beta_pX_p}}.$$
 
 
 ### Feature Selection
-In constructing our logistic regression, we fit various models by using forward, backward and stepwise on the full model. We reduce the initial model based on the the variables deemed insignificant.  Those variables included Marital, Education, Default, Loan and Housing.  All showed insignifance in predicting subscriptions.  We also use stepwise method on the simple model. We also use stepwise method on the reduced model without interaction term as follows 
+In constructing our logistic regression, we fit various models by using forward, backward and stepwise on the full model. We reduce the initial model based on the the variables deemed insignificant.  Those variables included Marital, Education, Default, Loan and Housing.  All showed insignificance in predicting subscriptions.  We also use stepwise method on the simple model. We also use stepwise method on the reduced model without interaction term as follows 
 
 $$log(odds) =\beta_0+ \beta_1 * job+\beta_2 * contact+\beta_3 * month+\beta_4 * day\_of\_week+\beta_5 * campaign+\beta_6 * pdays+\beta_7 * poutcome+\beta_8 * emp.var.rate+\beta_9 * cons.price.idx+\beta_10 * cons.conf.idx+\beta_11 * nr.employed.$$	
 
@@ -144,7 +144,7 @@ Logistic regression does not make many of the key assumptions of linear regressi
 Binary logistic regression requires the dependent variable to be binary and ordinal logistic regression requires the dependent variable to be ordinal. In this model, our response variable is categorical (Y/N) then this assumption is good.  
 We assume the observations to be independent of each other to perform the analysis.   
 
-We also check the   linearity assumption between independent variables and log odds by using Global Null Hypothesis test (Likehood Ratio, Score, Wald). Here we use Likelihood Ratio Test.   
+We also check the   linearity assumption between independent variables and log odds by using Global Null Hypothesis test (Likelihood Ratio, Score, Wald). Here we use Likelihood Ratio Test.   
 
 ![](./figures/LRT.png){width="4.5in"} 
 
@@ -158,7 +158,7 @@ Logistic regression requires there to be little or no multicollinearity among th
 ![](./figures/vif_before.png){width="4.5in"} 
 the VIF of emp_var_rate and nr_employed are  high. Then we decide to remove emp_var_rate and we check again VIFs with the new model.  
 ![](./figures/vif_after.png){width="4.5in"} 
-The new model looks like good. We will choose it as our final model for this objecttive.  
+The new model looks like good. We will choose it as our final model for this objective.  
 
 We evaluated the Cook's D Plot and Leverage plot to assess assumption violations.  Cook's D did not return a value above 0.0020, showing that there are no outliers to consider.  Leverage also supports this, with only one value above 0.020.  
   ![](./figures/ResidualLEverage.png){width="4.5in"}
@@ -183,12 +183,12 @@ We evaluated the Cook's D Plot and Leverage plot to assess assumption violations
 <!-- $$Variance Ratio=  \frac{(σ_{max})^2}{(σ_{min} )^2} = \frac{2.84^2}{1.20^2} =5.6$$ -->
 
 $$y=job+contact+month+day\_of\_week+campaign+pdays+poutcome+emp.var.rate+cons.price.idx+cons.conf.idx+nr.employed$$		
-Recall that we are calculating toward a yes or no outocme.  Each coefficient described adds or detracts from the total.  The y-intercept is set at -291.40 (with confidence interval of [-355.9, -226.9]).  When looking at the levels of Job, blue collar and services are both significant and detrimental toward the overall value (both at -0.20 with CI [-0.34, -0.06] and [-0.29, 0.23] respectively).  Alternatively, retired and student both signifcantly impact the outcome positively.  Retired increases the value by 0.25 (CI of [0.06, 0.43]) while students increase by 0.27 (with CI of [0.04, 0.50]).  The method of contact is also of importance, where telephone calls (versus cell phone contact) decreases the overall outcome by -0.81 (with CI of [-0.98, -0.65]).  Specific Months had disparate inpact.  June produces the lowest coefficient with -0.72 and confidence interval of (-0.98, -0.45).  March provided the highest coefficient of 1.64 with confidence intervals of (1.35, 1.92). The consumer price index increases the overall outcome score by 2.44 points for each point increase in the index number (CI of [1.97, 2.90]).  
+Recall that we are calculating toward a yes or no outcome.  Each coefficient described adds or detracts from the total.  The y-intercept is set at -291.40 (with confidence interval of [-355.9, -226.9]).  When looking at the levels of Job, blue collar and services are both significant and detrimental toward the overall value (both at -0.20 with CI [-0.34, -0.06] and [-0.29, 0.23] respectively).  Alternatively, retired and student both significantly impact the outcome positively.  Retired increases the value by 0.25 (CI of [0.06, 0.43]) while students increase by 0.27 (with CI of [0.04, 0.50]).  The method of contact is also of importance, where telephone calls (versus cell phone contact) decreases the overall outcome by -0.81 (with CI of [-0.98, -0.65]).  Specific Months had disparate impact.  June produces the lowest coefficient with -0.72 and confidence interval of (-0.98, -0.45).  March provided the highest coefficient of 1.64 with confidence intervals of (1.35, 1.92). The consumer price index increases the overall outcome score by 2.44 points for each point increase in the index number (CI of [1.97, 2.90]).  
 ![](./figures/CIsLogisticSimplemodel.png){width="3.5in"}
 		
 ## Logistic Regression Conclusion  
 
-The simple model produced in logistic regression highlights a few key factors among the variables that indicate importance.  As the presumped goal is achieving the Yes result, specific items could be focused on in future solicitation efforts to employ resources efficiently.  Students and Retired persons both tested as factors worth expanding on.  Additionally, cell phone contact would be advised.  Specific months proved significant, but that is likely due to the index numbers more than the actual month itself.  We must point out that this is an observational study, so no true conclusions can be made from this model about the larger population or around causality.  The findings are nonetheless interesting.
+The simple model produced in logistic regression highlights a few key factors among the variables that indicate importance.  As the presumed goal is achieving the Yes result, specific items could be focused on in future solicitation efforts to employ resources efficiently.  Students and Retired persons both tested as factors worth expanding on.  Additionally, cell phone contact would be advised.  Specific months proved significant, but that is likely due to the index numbers more than the actual month itself.  We must point out that this is an observational study, so no true conclusions can be made from this model about the larger population or around causality.  The findings are nonetheless interesting.
 
 # V. Alternative Models  
 
@@ -196,10 +196,10 @@ The simple model produced in logistic regression highlights a few key factors am
 With our simple logistic regression model as a baseline, the team performed additional competing models evaluations to improve on prediction performance metrics.    
 
 ## Adding Complexity to Logistic Regression
-  When inserting complexity in the model, the team revisited the Boruta anaylsis of variable importance.  Euribor3M was the most important single variable identified in the assessment.  This variable, as mentioned above, is a lending rate banks use when specifically lending on loans with a 3 month maturity.  We applied this to month as the variable is time based.  Additionally, we included interactions with pdays, age and nr.employed believing we may find that socioeconomic factors and timing would impart significance.  Finally, we included an interaction between pdays and campaign with success.
+  When inserting complexity in the model, the team revisited the Boruta analysis of variable importance.  Euribor3M was the most important single variable identified in the assessment.  This variable, as mentioned above, is a lending rate banks use when specifically lending on loans with a 3 month maturity.  We applied this to month as the variable is time based.  Additionally, we included interactions with pdays, age and nr.employed believing we may find that socioeconomic factors and timing would impart significance.  Finally, we included an interaction between pdays and campaign with success.
   Our final model produced an AIC of 14579, showing that interactions in this case didn't add real value.  Furthermore, they would require a more cumbersome interpretation of the model without clear influence by single variables.  Additionally, it produced a ROC of 0.809, again not performing significantly better than the simple logistic regression model.  
 
-## Looking at Continous Predictors  
+## Looking at Continuous Predictors  
 
 ### LDA  
 Linear Discriminant Analysis allows for exploration of continuous variables by blending impacts across all variables in a single model.  When we performed this analysis, we found a misclassification error of .625 but a AUC of 0.929.  The challenge in LDA is that all components are included in each new model, thereby masking significance in single variables.  However, the coefficients in LD1 do still provide insight.   Euribor3m, Cons.Price.Idx, and Emp.Var.Rate appear to significantly overshadow the other included variables.  We found this same significance in the other model assessments.  
@@ -207,7 +207,7 @@ Linear Discriminant Analysis allows for exploration of continuous variables by b
 
 
 ### KNN  
-  In the real world, we cannot always predict qualificative response using the Bayes classifier because computing Bayer classifier is impossible. The reason is that we do not know the conditional distribution of Y given X. One of the ideas is K-nearest neighbors (KNN) clasifier. It is a simple, supervised machine learning algorithm that can be used to solve both classification and regression problems. By using the KNN regression method, it has an 88% overall accuracy, with 97% sensitivity when performed outright. However, specificity suffers with only 29.6% accuracy. Scaling the data alone did not improve the performance of KNN. We then fed KNN algorithm the limited set of predictors used in Logistic Regression, which also did not improve performance.  Hypertuning the data maintained the overall accuracy of 88%.  It improved specificity at the cost of sensitivity though.  Sensitivity is instead 68.3% whereas specificity is now 89.7%.  
+  In the real world, we cannot always predict qualitative response using the Bayes classifier because computing Bayer classifier is impossible. The reason is that we do not know the conditional distribution of Y given X. One of the ideas is K-nearest neighbors (KNN) classifier. It is a simple, supervised machine learning algorithm that can be used to solve both classification and regression problems. By using the KNN regression method, it has an 88% overall accuracy, with 97% sensitivity when performed outright. However, specificity suffers with only 29.6% accuracy. Scaling the data alone did not improve the performance of KNN. We then fed KNN algorithm the limited set of predictors used in Logistic Regression, which also did not improve performance.  Hyper-tuning the data maintained the overall accuracy of 88%.  It improved specificity at the cost of sensitivity though.  Sensitivity is instead 68.3% whereas specificity is now 89.7%.  
 
 
 # VI. Model Performance Comparisons  
@@ -227,9 +227,9 @@ Because of the nature of the dataset, emphasis is placed on correctly predicting
 |Random Forest|.793|.871|.431|.495|
 
 
-For all models, in order to compare equally, we ran both with the full data, and with the subset used in the simple logistic regression model.  The additional datapoints did not significantly help any of the models, so for the final comparison we used the subset used in the simple regression model for comparison. 
+For all models, in order to compare equally, we ran both with the full data, and with the subset used in the simple logistic regression model.  The additional data points did not significantly help any of the models, so for the final comparison we used the subset used in the simple regression model for comparison. 
 
-During modeling of categorical KNN, we utilized a full model, with all variables in it from the simple logistic regression model and performed ten iterations of cross validation.  Using KNN with scaled, continuous predictors and the same variables broken out in a onehot endoded fashion, we were able to obtain much better _______ (sensitivity?) metrics.  We employed a hypertuning approach to find the best value of K, retraining the model on each value of K up to the `sqrt` of the number of observations in our model.  It was determined the best value of K was 60, and this is what was used for the tuned KNN model.  
+During modeling of categorical KNN, we utilized a full model, with all variables in it from the simple logistic regression model and performed ten iterations of cross validation.  Using KNN with scaled, continuous predictors and the same variables broken out in a one-hot encoded fashion, we were able to obtain much better _______ (sensitivity?) metrics.  We employed a hyper-tuning approach to find the best value of K, retraining the model on each value of K up to the `sqrt` of the number of observations in our model.  It was determined the best value of K was 60, and this is what was used for the tuned KNN model.  
 
 
 # VII. Conclusion  
@@ -238,10 +238,10 @@ During modeling of categorical KNN, we utilized a full model, with all variables
   
 XXXXX ENTER FINAL MODEL HERE XXXXX 
 
-would be recommended.  Furthermore, as stated previously, this is an observational study.  We would be remiss to fail to recognize the economic paralells between this data timeframe and our current economic climate.  Our next steps would be to identify, if possible, year as well in the dataset.  That would allow us to attempt to tune the model a bit in line with today's economic volatility.  
+would be recommended.  Furthermore, as stated previously, this is an observational study.  We would be remiss to fail to recognize the economic parallels between this data time frame and our current economic climate.  Our next steps would be to identify, if possible, year as well in the dataset.  That would allow us to attempt to tune the model a bit in line with today's economic volatility.  
 
 *	Overall report of the error metrics on a test set or CV run.  Also if the two best models have error rates of .05 and .045,  can we really say that one model is outperforming the other?  For the ambitious, McNemar’s test could be helpful in answering that.
-*	The conclusion should reprise the questions and conclusions of objective 2 with recommendations of the final model, what could be done to help analysis and model building in the future, and any insight as to why one method outshined all the rest if that is indeed the case.  If they all are similar why did you go with your final model?
+*	The conclusion should reprise the questions and conclusions of objective 2 with recommendations of the final model, what could be done to help analysis and model building in the future, and any insight as to why one method outshines all the rest if that is indeed the case.  If they all are similar why did you go with your final model?
 
 # Acknowledgement  
 
@@ -256,8 +256,8 @@ We would like to express our sincere gratitude to Dr. Jacob Turner (SMU) for exc
 [5] James et al., *An Introduction to Statistical Learning with Application in R*, Springer, 2017.    
 [6] T. Hastie et al., *The Elements of Statistical Learning, Data Mining, Inference*, and Prediction, 2nd Edition, Springer, 2017.   
 [7] D. Hosmer, S. Lemeshow, *Applied Logistic Regression*, 2th Edition, John Wiley & Sons, 2000.   
-[8] B. W. Lindgren,  *Statistical Theory*, 3th Edion, MacMillan Publishing, 1976.  
-[9] D. Montgomery, E. A. Peck, G. G. Vining, *Introdution to Linear Regression Analysis*,  5th Edion, John Wiley & Sons, 2012.  
+[8] B. W. Lindgren,  *Statistical Theory*, 3th Edition, MacMillan Publishing, 1976.  
+[9] D. Montgomery, E. A. Peck, G. G. Vining, *Introduction to Linear Regression Analysis*,  5th Edition, John Wiley & Sons, 2012.  
 [10] Ramsey and Schafer, *The Statistical Sleuth, A Course in Methods of Data Analysis*, 3rd Edition, Cengage, 2013.  
 [11] P. Pandey, *A Guide to Machine Learning in R for Beginners: Logistic Regression*, https://medium.com/analytics-vidhya/a-guide-to-machine-learning-in-r-for-beginners-part-5-4c00f2366b90, Medium, 2018.  
 [12] P. Pandey, *Simplifying the ROC and AUC metrics*, https://towardsdatascience.com/understanding-the-roc-and-auc-curves-a05b68550b69, Towards Data Science, 2019.    
