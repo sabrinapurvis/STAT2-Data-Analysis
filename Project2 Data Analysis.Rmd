@@ -131,12 +131,22 @@ $$p(X)=\frac{e^{\beta_0+\beta_1X_1+\beta_2X_2+...+\beta_pX_p}}{1+e^{\beta_0+\bet
 In constructing our logistic regression, we fit various models by using forward, backward and stepwise on the full model. We reduce the initial model based on the the variables deemed insignificant.  Those variables included Marital, Education, Default, Loan and Housing.  All showed insignifance in predicting subscriptions.  We also use stepwise method on the simple model. We also use stepwise method on the reduced model without interaction term as follows 
 
 $$log(odd) =\beta_0+ \beta_1 * job+\beta_2 * contact+\beta_3 * month+\beta_4 * day\_of\_week+\beta_5 * campaign+\beta_6 * pdays+\beta_7 * poutcome+\beta_8 * emp.var.rate+\beta_9 * cons.price.idx+\beta_10 * cons.conf.idx+\beta_11 * nr.employed$$	
-### Assessing the fit
-  When assessing fit, we determined that we would include AIC, AUC and look at the specificity/sensitivity.  Our "smaller model" produced an AIC of 14551, and AUC of 0.8088 and specificity of 0.933.  
+
+
   
-### Assumption Checking
+### Assumption Checking   
+
+Logistic regression does not make many of the key assumptions of linear regression and general linear models that are based on ordinary least squares algorithms – particularly regarding linearity, normality, homoscedasticity, and measurement level. First, logistic regression does not require a linear relationship between the dependent and independent variables.  Second, the error terms (residuals) do not need to be normally distributed.  Third, homoscedasticity is not required.  Finally, the dependent variable in logistic regression is not measured on an interval or ratio scale.     
+
+
+
+
   We evaluated the Cook's D Plot and Leverage plot to assess assumption violations.  Cook's D did not return a value above 0.0020, showing that there are no outliers to consider.  Leverage also supports this, with only one value above 0.020.  
   ![](./figures/ResidualLEverage.png){width="4.5in"}
+  
+  
+   Assessing the fit
+  When assessing fit, we determined that we would include AIC, AUC and look at the specificity/sensitivity.  Our "smaller model" produced an AIC of 14551, and AUC of 0.8088 and specificity of 0.933.  
  
 ### Model Analysis
 ![](./figures/summarylogistic.png){width="4.5in"}
