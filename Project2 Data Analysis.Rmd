@@ -139,6 +139,9 @@ By checking VIFs (explained in Assumption Checking), we arrive the final model (
 
 When assessing fit, we determined that we would include AIC, AUC and look at the specificity/sensitivity.  Our "smaller model" produced an AIC of 14664, and AUC of 0.8067405 and specificity of 0.933.    
 
+![](./figures/ROClogistic.png){width="4.5in"}  
+
+
 ### Assumption Checking   
 
 Logistic regression does not make many of the key assumptions of linear regression and general linear models that are based on ordinary least squares algorithms – particularly regarding linearity, normality, homoscedasticity, and measurement level. First, logistic regression does not require a linear relationship between the dependent and independent variables.  Second, the error terms (residuals) do not need to be normally distributed.  Third, homoscedasticity is not required.  Finally, the dependent variable in logistic regression is not measured on an interval or ratio scale. However, some other assumptions still apply.  
