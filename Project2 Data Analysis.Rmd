@@ -161,6 +161,7 @@ With our simple logistic regression model as a baseline, the team performed addi
 ## Looking at Continous Predictors  
 
 ### LDA  
+Linear Discriminant Analysis allows for exploration of continuous variables by blending impacts across all variables in a single model.  When we performed this analysis, we found a misclassification error of .625 but a AUC of 0.929.  The challenge in LDA is that all components are included in each new model, thereby masking significance in single variables.  However, the coefficients in LD1 do still provide insight.   Euribor3m, Cons.Price.Idx, and Emp.Var.Rate appear to significantly overshadow the other included variables.  We found this same significance in the other model assessments.  
 
 
 
@@ -219,11 +220,12 @@ We would like to express our sincere gratitude to Dr. Jacob Turner (SMU) for exc
 [7] D. Hosmer, S. Lemeshow, *Applied Logistic Regression*, 2th Edition, John Wiley & Sons, 2000.   
 [8] B. W. Lindgren,  *Statistical Theory*, 3th Edion, MacMillan Publishing, 1976.  
 [9] D. Montgomery, E. A. Peck, G. G. Vining, *Introdution to Linear Regression Analysis*,  5th Edion, John Wiley & Sons, 2012.  
-[10] Ramsey and Schafer, *The Statistical Sleuth, A Course in Methods of Data Analysis*, 3rd Edition, Cengage, 2013. 
-[11] *UCLA - Logit Regression R Data Analysis Examples*, https://stats.idre.ucla.edu/r/dae/logit-regression/  
-[12] J. S. Long, *Regression Models for Categorical and Limited Dependent Variables*, Thousand Oaks, CA: Sage Publications, 1997.  
-
-
+[10] Ramsey and Schafer, *The Statistical Sleuth, A Course in Methods of Data Analysis*, 3rd Edition, Cengage, 2013.  
+[11] P. Pandey, *A Guide to Machine Learning in R for Beginners: Logistic Regression*, https://medium.com/analytics-vidhya/a-guide-to-machine-learning-in-r-for-beginners-part-5-4c00f2366b90, Medium, 2018.  
+[12] P. Pandey, *Simplifying the ROC and AUC metrics*, https://towardsdatascience.com/understanding-the-roc-and-auc-curves-a05b68550b69, Towards Data Science, 2019.    
+[13] *UCLA - Logit Regression R Data Analysis Examples*, https://stats.idre.ucla.edu/r/dae/logit-regression/  
+[14] J. S. Long, *Regression Models for Categorical and Limited Dependent Variables*, Thousand Oaks, CA: Sage Publications, 1997.  
+ 
 **Dustin Bracy** – Southern Methodist University – Email: dbracy@smu.edu   
 **Huy Hoang Nguyen** – Southern Methodist University – Email: hoangnguyen@smu.edu  
 **Sabrina Purvis** – Southern Methodist University – Email: spurvis@smu.edu   
