@@ -141,7 +141,7 @@ In constructing our logistic regression model, we first included all variables i
 
 ![](./figures/coeflogistic.png){width="7.5in"}
 
-![](./figures/probslogistic.png){width="7.5in"}
+![](./figures/probslogisticmodel.png){width="7.5in"}
   
 ### Residual Diagnostic Plots  
 			Optional  Residual Plots
