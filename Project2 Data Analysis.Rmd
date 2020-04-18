@@ -522,6 +522,13 @@ prc_LR=test.eval.LR$precision
 recall_LR=test.eval.LR$recall
 fscore_LR=test.eval.LR$fscore
 
+cat("Accuracy:  ",   acc_LR,
+    "\nPrecision: ", prc_LR,
+    "\nRecall:    ", trecall_LR,
+    "\nFScore:    ", fscore_LR
+    )
+
+
 # calculate ROC
 rocr.pred.lr = prediction(predictions = pred_lm, labels = full.test$y)
 rocr.perf.lr = performance(rocr.pred.lr, measure = "tpr", x.measure = "fpr")
