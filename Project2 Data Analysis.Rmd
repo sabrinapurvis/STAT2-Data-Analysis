@@ -161,11 +161,11 @@ With our simple logistic regression model as a baseline, the team performed addi
 ## Looking at Continous Predictors  
 
 ### LDA  
-
+  Linear Discriminant Analysis allows for exploration of continuous variables by blending impacts across all variables in a single model.  When we performed this analysis, we found a misclassification error of .625 but a AUC of 0.929.  The challenge in LDA is that all components are included in each new model, thereby masking significance in single variables.  However, the coefficients in LD1 do still provide insight.   Euribor3m, Cons.Price.Idx, and Emp.Var.Rate appear to significantly overshadow the other included variables.  We found this same significance in the other model assessments.  
 
 
 ### KNN  
-  In the real world, we cannot always predict qualificative response using the Bayes classifier because computing Bayer classifier is impossible. The reason is that we do not know the conditional distribution of Y given X. One of the ideas is K-nearest neighbors (KNN) clasifier. It is a simple, supervised machine learning algorithm that can be used to solve both classification and regression problems. By using the KNN regression method, it has an 88% overall accuracy, with 97% sensitivity when performed outright. However, specificity suffers with only 29.6% accuracy. Scaling the data alone did not improve the performance of KNN. We then fed KNN algorithm the limited set of predictors used in Logistic Regression, which also did not improve performance.  Hypertuning the data maintained the overall accuracy of 88%.  It improved specificity at the cost of sensitivity though.  Sensitivity is instead 68.3% whereas specificity is now 89.7%.  
+  In the real world, we cannot always predict qualificative response using the Bayes classifier because computing Bayes classifier is impossible. The reason is that we do not know the conditional distribution of Y given X. One of the ideas is K-nearest neighbors (KNN) clasifier. It is a simple, supervised machine learning algorithm that can be used to solve both classification and regression problems. By using the KNN regression method, it has an 88% overall accuracy, with 97% sensitivity when performed outright. However, specificity suffers with only 29.6% accuracy. Scaling the data alone did not improve the performance of KNN. We then fed KNN algorithm the limited set of predictors used in Logistic Regression, which also did not improve performance.  Hypertuning the data maintained the overall accuracy of 88%.  It improved specificity at the cost of sensitivity though.  Sensitivity is instead 68.3% whereas specificity is now 89.7%.  
 
 
 # VI. Model Performance Comparisons  
@@ -179,14 +179,9 @@ Logistical Considerations.
 
 # VII. Conclusion  
 
-  The business problem we were tasked to solve was how can we best predict subscriptions for term deposits.  The team decided early on that while overall accuracy was certainly important, priority should be given to the model that accurately predicts the yes outcome the best.  With that in mind, we found that 
-  
-XXXXX ENTER FINAL MODEL HERE XXXXX 
+  The business problem we were tasked to solve was how can we best predict subscriptions for term deposits.  The team decided early on that while overall accuracy was certainly important, priority should be given to the model that accurately predicts the yes outcome the best.  With that in mind, we found that the simple logistic regression model 
+would be recommended.  We found it brought in balance between the categorical and continuous variables and allowed for the most direct intpretation.  Furthermore, as stated previously, this is an observational study.  We would be remiss to fail to recognize the economic paralells between this data timeframe and our current economic climate.  Our next steps would be to identify, if possible, year as well in the dataset.  That would allow us to attempt to tune the model a bit in line with today's economic volatility.  
 
-would be recommended.  Furthermore, as stated previously, this is an observational study.  We would be remiss to fail to recognize the economic paralells between this data timeframe and our current economic climate.  Our next steps would be to identify, if possible, year as well in the dataset.  That would allow us to attempt to tune the model a bit in line with today's economic volatility.  
-
-*	Overall report of the error metrics on a test set or CV run.  Also if the two best models have error rates of .05 and .045,  can we really say that one model is outperforming the other?  For the ambitious, McNemar’s test could be helpful in answering that.
-*	The conclusion should reprise the questions and conclusions of objective 2 with recommendations of the final model, what could be done to help analysis and model building in the future, and any insight as to why one method outshined all the rest if that is indeed the case.  If they all are similar why did you go with your final model?
 
 # Acknowledgement  
 
