@@ -217,10 +217,8 @@ Before a model is relied upon to draw conclusions or predict future outcomes, we
 ![](./figures/hoslem.png){width="5in"}   
 
 
+By ROC curve, we also get AUC of 0.8067405 (see Feature Selection section).   
 
-
-
-  
 
 #### Interpretation  
 
