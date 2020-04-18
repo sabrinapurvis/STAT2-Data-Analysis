@@ -184,6 +184,7 @@ With our simple logistic regression model as a baseline, the team performed addi
 |Random Forest|---|---|---|---|
 
 Break
+Break
 
 * Record the predictive performance metrics from your simple, highly interpretable model from Objective 1.  
 *	Provide a summary table of the performance across the competing methods. Summarize the overall findings.  A really great report will also give insight as to why the “best” model won out.  This is where a thorough EDA will always help.
