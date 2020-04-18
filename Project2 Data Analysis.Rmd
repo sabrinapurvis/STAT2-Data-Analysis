@@ -400,10 +400,10 @@ summary(simple.model)
 
 #confidence intervals for simple model
 summary(simple.model$coefficients)
-CI_lower <- coefficients(simple.model)[2] - 1.96*summary(simple.model)$coefficients[2,2]
-CI_upper <- coefficients(simple.model)[2] + 1.96*summary(simple.model)$coefficients[2,2]
+#CI_lower <- coefficients(simple.model)[2] - 1.96*summary(simple.model)$coefficients[2,2]
+#CI_upper <- coefficients(simple.model)[2] + 1.96*summary(simple.model)$coefficients[2,2]
 
-#confint(simple.model)
+confint(simple.model)
 
 #cooks D and residual plots for simple.model
 plot(cooks.distance(simple.model))
