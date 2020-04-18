@@ -765,7 +765,7 @@ abline(0, 1, col = "red", lty = 2)
 ```
 
 
-```{r Randon Forest}
+```{r Random Forest}
 #Random forrest
 #Here we will do a truly RF run by selecting mtry. mtry controls how many
 #predictors are sampled for each bootstrap sample.
@@ -778,7 +778,7 @@ roc.perf = performance(pred, measure = "tpr", x.measure = "fpr")
 #I'm just rinsing and repeating code the produces the curve.
 auc.train <- performance(pred, measure = "auc")
 auc.train <- auc.train@y.values
-plot(roc.perf,main="AUC of Test set RF - mtry=9")
+plot(roc.perf,main="AUC of Test set Random Forest ")
 abline(a=0, b= 1)
 text(x = .40, y = .6,paste("AUC = ", round(auc.train[[1]],4), sep = ""))
 #Making predictions on test and then observing accuracy rates
