@@ -120,7 +120,7 @@ Logistic Regression is a popular method for classifying individuals, given the v
 ## Building the model  
 By using this Bank Marketing data set [1], we will jump into Multiple Logistic Regression. We will predict a binary response of subscription y (Y/N) by using multiple predictors. Mathematically, the model can be generalized as follows
 $$log(\frac{p(X)}{1-p(X)})=\beta_0+\beta_1X_1+\beta_2X_2+...+\beta_pX_p$$
-where $X=(X_1,X_2,...,X_p)$ are $p$ predictors. By using the maximum likehood method, we can estimate $\beta_0,\beta_1,...,\beta_p$. In this project, we use glm function to fit the model with the argument family=binomial to tell R to run logistic regression and we can also get these estimates. The problem can be rewritten as the following form
+where $X=(X_1,X_2,...,X_p)$ are $p$ predictors. By using the maximum likehood method, we can estimate $\beta_0,\beta_1,...,\beta_p$. This method has better statistical properties than the least square approach to estimate the unknown linear regression coefficients in linear regression models. Maximum likehood is a very general approach that is used to fit many of the nonlinear models, especially in our case here, the logistic regression model. In fact, the least square approach is a special case of maximum likehood mathematically. However, in this project, we use glm function to fit the model with the argument family=binomial to tell R to run logistic regression and we can also get these estimates without concerning ourselves with the details of the maximum likehood fitting procedure.  The problem can be rewritten as the following form
 $$p(X)=\frac{e^{\beta_0+\beta_1X_1+\beta_2X_2+...+\beta_pX_p}}{1+e^{\beta_0+\beta_1X_1+\beta_2X_2+...+\beta_pX_p}}.$$
 
 
