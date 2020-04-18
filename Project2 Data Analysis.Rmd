@@ -195,18 +195,17 @@ We would like to express our sincere gratitude to Dr. Jacob Turner (SMU) for exc
 # References  
 
 [1] *Bank Marketing Data Set*  https://archive.ics.uci.edu/ml/datasets/Bank%20Marketing#  
-[2] Albright, W. L. Winston, *Business Analytics - Data Analysis and Decision Making*, 7th Edition, 2019.  
+[2] Albright, W. L. Winston, *Business Analytics - Data Analysis and Decision Making*, 7th Edition, Cengage, 2019.  
 [3] Anderson et al., *Statistics for Business & Economics*, Cengage, 2020.    
 [4] G. Rodriguez, *Logit Models in R*, https://data.princeton.edu/wws509/r/c3s1, Princeton.   
 [5] James et al., *An Introduction to Statistical Learning with Application in R*, Springer, 2017.    
 [6] T. Hastie et al., *The Elements of Statistical Learning, Data Mining, Inference*, and Prediction, 2nd Edition, Springer, 2017.   
-[7] B. W. Lindgren,  *Statistical Theory*, 3th Edion, MacMillan Publishing, 1976.  
-[8] D. Montgomery, E. A. Peck, G. G. Vining, *Introdution to Linear Regression Analysis*,  5th Edion, John Wiley & Sons, 2012.  
-[9] Ramsey and Schafer, *The Statistical Sleuth, A Course in Methods of Data Analysis*, 3rd Edition, Cengage, 2013. 
-[10] *UCLA - Logit Regression R Data Analysis Examples* https://stats.idre.ucla.edu/r/dae/logit-regression/  
-
-
-
+[7] D. Hosmer, S. Lemeshow, *Applied Logistic Regression*, 2th Edition, John Wiley & Sons, 2000.   
+[8] B. W. Lindgren,  *Statistical Theory*, 3th Edion, MacMillan Publishing, 1976.  
+[9] D. Montgomery, E. A. Peck, G. G. Vining, *Introdution to Linear Regression Analysis*,  5th Edion, John Wiley & Sons, 2012.  
+[10] Ramsey and Schafer, *The Statistical Sleuth, A Course in Methods of Data Analysis*, 3rd Edition, Cengage, 2013. 
+[11] *UCLA - Logit Regression R Data Analysis Examples*, https://stats.idre.ucla.edu/r/dae/logit-regression/  
+[12] J. S. Long, *Regression Models for Categorical and Limited Dependent Variables*, Thousand Oaks, CA: Sage Publications, 1997.  
 
 
 **Dustin Bracy** – Southern Methodist University – Email: dbracy@smu.edu   
