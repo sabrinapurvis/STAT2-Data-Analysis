@@ -12,7 +12,6 @@ editor_options:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-library(tidyverse)
 library(MASS)
 library(caret)
 library(corrplot)
@@ -32,6 +31,7 @@ library(class)
 library(ROCR)
 library(car)
 library(ResourceSelection)
+library(tidyverse)
 
 # wordStyleRef style changes:
 ## Set margins to .5"
@@ -249,7 +249,7 @@ bankfull[bankfull == "unknown"] <- NA
 plotNAs(bankfull)
 
 # Remove duration from model, as this isn't known until 'y' is known
-bankfull <- bankfull %>% dplyr::select(!duration)
+#bankfull <- bankfull %>% dplyr::select(!duration)
 
 # Drop NAs
 bankfull <- bankfull %>% drop_na()
