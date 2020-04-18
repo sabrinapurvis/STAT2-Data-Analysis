@@ -166,7 +166,7 @@ The new model looks like good. We will choose it as our final model for this obj
 
 We evaluated the Cook's D Plot and Leverage plot to assess assumption violations.  Cook's D did not return a value above 0.0020, showing that there are no outliers to consider.  Leverage also supports this, with only one value above 0.020.    
 
-  ![](./figures/ResidualLEverage.png){width="4.5in"}
+  ![](./figures/ResidualLEverage.png){width="7.5in"}
   
   
    Assessing the fit
