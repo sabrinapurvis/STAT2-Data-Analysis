@@ -159,7 +159,7 @@ We assume the observations to be independent of each other to perform the analys
 
 We also check the   linearity assumption between independent variables and log odds by using Global Null Hypothesis test (Likelihood Ratio, Score, Wald). Here we use Likelihood Ratio Test.   
 
-![](./figures/LRT.png){width="4.5in"} 
+![](./figures/LRT.png){width="5in"} 
 
 We also can perform the  Wald test (Anova(simple.model, type="II", test="Wald"))  to get the similar result as Likelihood Ratio Test. Another way to get Likelihood Ratio Test result by this code anova(MyGLM, test="LRT"). Although this analysis does not require the dependent and independent variables to be related linearly, it requires that the independent variables are linearly related to the log odds. By  p values < 0.05,  we reject the null hypothesis. It means that at least one explanatory variable in the model is significant.   
 
@@ -192,7 +192,8 @@ We evaluated the Cook's D Plot and Leverage plot to assess assumption violations
 
   ![](./figures/ResidualLEverage.png){width="7.5in"}
   
-  
+#### Residual Diagnostic Plots  
+			Optional  Residual Plots  
  
 
 ![](./figures/summarylogistic.png){width="4.5in"}
@@ -201,8 +202,7 @@ We evaluated the Cook's D Plot and Leverage plot to assess assumption violations
 
 ![](./figures/probslogisticmodel.png){width="7.5in"}
   
-#### Residual Diagnostic Plots  
-			Optional  Residual Plots
+
 #### Interpretation  
 
   The optimal  model is best described as:
