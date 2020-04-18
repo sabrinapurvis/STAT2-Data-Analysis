@@ -154,13 +154,18 @@ We also can perform the  Wald test (Anova(simple.model, type="II", test="Wald"))
 
 Here, logistic regression typically requires a large sample size then this assumption is satisfied based on the data set [1].  
 
-Logistic regression requires there to be little or no multicollinearity among the independent variables. This means that the independent variables should not be too highly correlated with each other.  By checking the VIF of the reduced model above,
-![](./figures/vif_before.png){width="4.5in"} 
-the VIF of emp_var_rate and nr_employed are  high. Then we decide to remove emp_var_rate and we check again VIFs with the new model.  
-![](./figures/vif_after.png){width="4.5in"} 
+Logistic regression requires there to be little or no multicollinearity among the independent variables. This means that the independent variables should not be too highly correlated with each other.  By checking the VIF of the reduced model above,  
+
+![](./figures/vif_before.png){width="4.5in"}  
+
+the VIF of emp_var_rate and nr_employed are  high. Then we decide to remove emp_var_rate and we check again VIFs with the new model.    
+
+![](./figures/vif_after.png){width="4.5in"}   
+
 The new model looks like good. We will choose it as our final model for this objecttive.  
 
-We evaluated the Cook's D Plot and Leverage plot to assess assumption violations.  Cook's D did not return a value above 0.0020, showing that there are no outliers to consider.  Leverage also supports this, with only one value above 0.020.  
+We evaluated the Cook's D Plot and Leverage plot to assess assumption violations.  Cook's D did not return a value above 0.0020, showing that there are no outliers to consider.  Leverage also supports this, with only one value above 0.020.    
+
   ![](./figures/ResidualLEverage.png){width="4.5in"}
   
   
