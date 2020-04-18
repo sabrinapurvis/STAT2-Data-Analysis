@@ -162,7 +162,8 @@ With our simple logistic regression model as a baseline, the team performed addi
 
 ### LDA  
 
-
+ Linear Discriminant Analysis allows for exploration of continuous variables by blending impacts across all variables in a single model.  When we performed this analysis, we found a misclassification error of .625 but a AUC of 0.929.  The challenge in LDA is that all components are included in each new model, thereby masking significance in single variables.  However, the coefficients in LD1 do still provide insight.   Euribor3m, Cons.Price.Idx, and Emp.Var.Rate appear to significantly overshadow the other included variables.  We found this same significance in the other model assessments.  
+ 
 
 ### KNN  
   In the real world, we cannot always predict qualificative response using the Bayes classifier because computing Bayer classifier is impossible. The reason is that we do not know the conditional distribution of Y given X. One of the ideas is K-nearest neighbors (KNN) clasifier. It is a simple, supervised machine learning algorithm that can be used to solve both classification and regression problems. By using the KNN regression method, it has an 88% overall accuracy, with 97% sensitivity when performed outright. However, specificity suffers with only 29.6% accuracy. Scaling the data alone did not improve the performance of KNN. We then fed KNN algorithm the limited set of predictors used in Logistic Regression, which also did not improve performance.  Hypertuning the data maintained the overall accuracy of 88%.  It improved specificity at the cost of sensitivity though.  Sensitivity is instead 68.3% whereas specificity is now 89.7%.  
