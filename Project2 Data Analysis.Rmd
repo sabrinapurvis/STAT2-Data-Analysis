@@ -130,20 +130,27 @@ $$p(X)=\frac{e^{\beta_0+\beta_1X_1+\beta_2X_2+...+\beta_pX_p}}{1+e^{\beta_0+\bet
 ### Feature Selection
 In constructing our logistic regression, we fit various models by using forward, backward and stepwise on the full model. We reduce the initial model based on the the variables deemed insignificant.  Those variables included Marital, Education, Default, Loan and Housing.  All showed insignifance in predicting subscriptions.  We also use stepwise method on the simple model. We also use stepwise method on the reduced model without interaction term as follows 
 
-$$log(odd) =\beta_0+ \beta_1 * job+\beta_2 * contact+\beta_3 * month+\beta_4 * day\_of\_week+\beta_5 * campaign+\beta_6 * pdays+\beta_7 * poutcome+\beta_8 * emp.var.rate+\beta_9 * cons.price.idx+\beta_10 * cons.conf.idx+\beta_11 * nr.employed.$$	
+$$log(odds) =\beta_0+ \beta_1 * job+\beta_2 * contact+\beta_3 * month+\beta_4 * day\_of\_week+\beta_5 * campaign+\beta_6 * pdays+\beta_7 * poutcome+\beta_8 * emp.var.rate+\beta_9 * cons.price.idx+\beta_10 * cons.conf.idx+\beta_11 * nr.employed.$$	
 
 By checking VIFs (explained in Assumption Checking), we arrive the final model (without emp.var.rate)
 
-  $$log(odd) =\beta_0+ \beta_1 * job+\beta_2 * contact+\beta_3 * month+\beta_4 * day\_of\_week+\beta_5 * campaign+\beta_6 * pdays+\beta_7 * poutcome++\beta_8 * cons.price.idx+\beta_9 * cons.conf.idx+\beta_10 * nr.employed.$$   
+  $$log(odds) =\beta_0+ \beta_1 * job+\beta_2 * contact+\beta_3 * month+\beta_4 * day\_of\_week+\beta_5 * campaign+\beta_6 * pdays+\beta_7 * poutcome++\beta_8 * cons.price.idx+\beta_9 * cons.conf.idx+\beta_10 * nr.employed.$$   
+  
   
 ### Assumption Checking   
 
 Logistic regression does not make many of the key assumptions of linear regression and general linear models that are based on ordinary least squares algorithms – particularly regarding linearity, normality, homoscedasticity, and measurement level. First, logistic regression does not require a linear relationship between the dependent and independent variables.  Second, the error terms (residuals) do not need to be normally distributed.  Third, homoscedasticity is not required.  Finally, the dependent variable in logistic regression is not measured on an interval or ratio scale. However, some other assumptions still apply.  
 
 Binary logistic regression requires the dependent variable to be binary and ordinal logistic regression requires the dependent variable to be ordinal. In this model, our response variable is categorical (Y/N) then this assumption is good.  
-We assume the observations to be independent of each other to perform the analysis.    
+We assume the observations to be independent of each other to perform the analysis.   
 
-We also check the   linearity assumption between independent variables and log odds by using Global Null Hypothesis test (that we can run in SAS).  Although this analysis does not require the dependent and independent variables to be related linearly, it requires that the independent variables are linearly related to the log odds.     
+We also check the   linearity assumption between independent variables and log odds by using Global Null Hypothesis test (Likehood Ratio, Score, Wald). Here we use Likelihood Ratio Test.   
+
+![](./figures/LRT.png){width="4.5in"} 
+
+We also can perform the  Wald test (Anova(simple.model, type="II", test="Wald")) to get the similar result as Likelihood Ratio Test.  Although this analysis does not require the dependent and independent variables to be related linearly, it requires that the independent variables are linearly related to the log odds. 
+
+
 
 Here, logistic regression typically requires a large sample size then this assumption is satisfied based on the data set [1].  
 
