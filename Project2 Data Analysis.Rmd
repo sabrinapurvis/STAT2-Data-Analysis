@@ -12,6 +12,7 @@ editor_options:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(car)
 library(MASS)
 library(caret)
 library(corrplot)
@@ -433,7 +434,13 @@ full.model <- glm(y ~ age+job+marital+education+default+housing+loan+contact+mon
 summary(full.model)
 
 # Smaller model:
-simple.model <- glm(y~job+contact+month+day_of_week+campaign+pdays+poutcome+emp.var.rate+cons.price.idx+cons.conf.idx+nr.employed, data=full.train, family="binomial")
+simple.model0 <- glm(y~job+contact+month+day_of_week+campaign+pdays+poutcome+emp.var.rate+cons.price.idx+cons.conf.idx+nr.employed, data=full.train, family="binomial")
+
+#test VIF and remove emp.var.rate
+car::vif(simple.model0)
+
+#Final model after removing  emp.var.rate
+simple.model <- glm(y~job+contact+month+day_of_week+campaign+pdays+poutcome+cons.price.idx+cons.conf.idx+nr.employed, data=full.train, family="binomial")
 
 summary(simple.model)
 
@@ -511,16 +518,16 @@ cbind(x$coefficients,y)
 
 ```{r Logistic_Interaction, cache=TRUE}
 
-interaction.model <- glm(y~euribor3m+contact+month+cons.price.idx+emp.var.rate+euribor3m*nr.employed+pdays+campaign+pdays*campaign+job+euribor3m*month+euribor3m*age+euribor3m*pdays, data=full.train, family="binomial")
+interaction.model <- glm(y~euribor3m+contact+month+cons.price.idx+euribor3m*nr.employed+pdays+campaign+pdays*campaign+job+euribor3m*month+euribor3m*age+euribor3m*pdays, data=full.train, family="binomial")
 summary(interaction.model)
 
 
 #confidence intervals for simple model
 summary(interaction.model$coefficients)
-CI_lower <- coefficients(interaction.model)[2] - 1.96*summary(interaction.model)$coefficients[2,2]
-CI_upper <- coefficients(interaction.model)[2] + 1.96*summary(interaction.model)$coefficients[2,2]
+#CI_lower <- coefficients(interaction.model)[2] - 1.96*summary(interaction.model)$coefficients[2,2]
+#CI_upper <- coefficients(interaction.model)[2] + 1.96*summary(interaction.model)$coefficients[2,2]
 
-#confint(interaction.model)
+confint(interaction.model)
 
 
 #cooks D and residual plots for interaction.model
@@ -528,7 +535,7 @@ plot(cooks.distance(interaction.model))
 plot(interaction.model)
 
 
-othermodel<-glm(y~job+marital+education+contact+month+campaign+poutcome+emp.var.rate+cons.conf.idx, full.train, 
+othermodel<-glm(y~job+marital+education+contact+month+campaign+poutcome+cons.conf.idx, full.train, 
                 family = binomial(link="logit"))
 
 summary(othermodel)
