@@ -137,7 +137,7 @@ By checking VIFs (explained in Assumption Checking), we arrive the final model (
 
   $$log(odds) =\beta_0+ \beta_1 * job+\beta_2 * contact+\beta_3 * month+\beta_4 * day\_of\_week+\beta_5 * campaign+\beta_6 * pdays+\beta_7 * poutcome++\beta_8 * cons.price.idx+\beta_9 * cons.conf.idx+\beta_10 * nr.employed.$$   
 
-When assessing fit, we determined that we would include AIC, AUC and look at the specificity/sensitivity.  Our "smaller model" produced an AIC of 14664, and AUC of 0.8067405 and specificity of 0.933.    
+When assessing fit, we determined that we would include AIC, AUC and look at the specificity/sensitivity.  Our "smaller model" produced an AIC of 14664, and AUC of 0.8067405 and accuracy 0.8764.    
 
 ![](./figures/ROClogistic.png){width="4.5in"}  
 
