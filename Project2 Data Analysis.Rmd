@@ -170,17 +170,6 @@ With our simple logistic regression model as a baseline, the team performed addi
 
 # VI. Model Performance Comparisons  
 
-**Performance Comparison table**
-
-|Model|AUC|Overall Accuracy|Precision (PPV)|Recall (TPR)|
-|Logistic Regression (Simple)|---|----------------|-----------|-----------|
-|Logistic Regression (Interaction)|---|----------------|-----------|-----------|
-|Linear Discriminate Analysis (LDA)|---|----------------|-----------|-----------|
-|K-Nearest Neighbors (KNN) continuous|---|----------------|-----------|-----------|
-|K-Nearest Neighbors (KNN) categorical|---|----------------|-----------|-----------|
-
-
-
 * Record the predictive performance metrics from your simple, highly interpretable model from Objective 1.  
 *	Provide a summary table of the performance across the competing methods. Summarize the overall findings.  A really great report will also give insight as to why the “best” model won out.  This is where a thorough EDA will always help.
 Logistical Considerations.  
@@ -214,9 +203,14 @@ We would like to express our sincere gratitude to Dr. Jacob Turner (SMU) for exc
 [7] D. Hosmer, S. Lemeshow, *Applied Logistic Regression*, 2th Edition, John Wiley & Sons, 2000.   
 [8] B. W. Lindgren,  *Statistical Theory*, 3th Edion, MacMillan Publishing, 1976.  
 [9] D. Montgomery, E. A. Peck, G. G. Vining, *Introdution to Linear Regression Analysis*,  5th Edion, John Wiley & Sons, 2012.  
-[10] Ramsey and Schafer, *The Statistical Sleuth, A Course in Methods of Data Analysis*, 3rd Edition, Cengage, 2013. 
-[11] *UCLA - Logit Regression R Data Analysis Examples*, https://stats.idre.ucla.edu/r/dae/logit-regression/  
-[12] J. S. Long, *Regression Models for Categorical and Limited Dependent Variables*, Thousand Oaks, CA: Sage Publications, 1997.  
+[10] Ramsey and Schafer, *The Statistical Sleuth, A Course in Methods of Data Analysis*, 3rd Edition, Cengage, 2013.  
+[11] P. Pandey, *A Guide to Machine Learning in R for Beginners: Logistic Regression*, https://medium.com/analytics-vidhya/a-guide-to-machine-learning-in-r-for-beginners-part-5-4c00f2366b90, Medium, 2018.  
+[12] P. Pandey, *Simplifying the ROC and AUC metrics*, https://towardsdatascience.com/understanding-the-roc-and-auc-curves-a05b68550b69, Towards Data Science, 2019.    
+[13] *UCLA - Logit Regression R Data Analysis Examples*, https://stats.idre.ucla.edu/r/dae/logit-regression/  
+[14] J. S. Long, *Regression Models for Categorical and Limited Dependent Variables*, Thousand Oaks, CA: Sage Publications, 1997.  
+
+
+
 
 
 **Dustin Bracy** – Southern Methodist University – Email: dbracy@smu.edu   
@@ -348,6 +342,8 @@ ggcorr(df)
 
 ```{r EDA Big Plots, eval=FALSE, warning=FALSE}
 
+
+
 # Build Correlation Plot
 buildCorrPlot(bankbin)
 
@@ -396,13 +392,13 @@ summary(simple.model$coefficients)
 CI_lower <- coefficients(simple.model)[2] - 1.96*summary(simple.model)$coefficients[2,2]
 CI_upper <- coefficients(simple.model)[2] + 1.96*summary(simple.model)$coefficients[2,2]
 
-#confint(simple.model)
+confint(simple.model)
 
 #cooks D and residual plots for simple.model
 plot(cooks.distance(simple.model))
 plot(simple.model)
 
-pred_lm <-predict(simple.model, type='response', newdata=full.test)
+pred_lm = predict(simple.model, type='response', newdata=full.test)
 
 # plot the prediction distribution
 predictions_LR <- data.frame(y = full.test$y, pred = NA)
@@ -438,10 +434,6 @@ plot(rocr.perf.lr,
      main = 'ROC Curve')
 mtext(paste('Logistic Regression - auc : ', round(rocr.auc.lr, 5)))
 abline(0, 1, col = "red", lty = 2)
-
-predictions_LR$predFactor <- ifelse(predictions_LR$pred > .3, 'yes', 'no')
-LogR_simple.CM <- confusionMatrix(table(full.test$y, predictions_LR$predFactor, dnn = c("Truth", "Prediction")), positive = 'yes')
-
 
 ```
 
@@ -484,7 +476,6 @@ plot(interaction.model)
 
 othermodel<-glm(y~job+marital+education+contact+month+campaign+poutcome+emp.var.rate+cons.conf.idx, full.train, 
                 family = binomial(link="logit"))
-
 summary(othermodel)
 
 (vif(othermodel)[,3])^2
@@ -521,15 +512,6 @@ text(x = .40, y = .6,paste("AUC = ", round(auc.val1[[1]],3), sep = ""))
 title(main="Test Set ROC")
 
 
-intPred <- predict(interaction.model, type='response', newdata=full.test)
-
-predictions_LRint <- data.frame(y = full.test$y, pred = NA)
-predictions_LRint$pred <- intPred
-predictions_LRint$predFactor <- ifelse(predictions_LRint$pred > .3, 'yes', 'no')
-
-LogR_interaction.CM <- confusionMatrix(table(full.test$y, predictions_LRint$predFactor, dnn = c("Truth", "Prediction")), positive = 'yes')
-
-
 ```
 
 
@@ -538,14 +520,19 @@ LogR_interaction.CM <- confusionMatrix(table(full.test$y, predictions_LRint$pred
 ```{r LDA analysis, cache=TRUE}
 
 LDA.model <- lda(y~., data=scaled.train)
-LDA.preds<-predict(LDA.model, newdata=scaled.test)
 
-LDA.confusionMatrix<-table(LDA.preds$class,scaled.test$y) # Creating a confusion matrix using class (categorical level)
+LDA.preds<-predict(LDA.model, newdata=scaled.test) #$class  #Predictions can come in many forms, the class form provides the categorical level of your response.
+
+Truth<-scaled.test$y
+
+LDA.confusionMatrix<-table(LDA.preds$class,Truth) # Creating a confusion matrix
+
 LDA.confusionMatrix
 
 #Missclassification Error
 ME<-(LDA.confusionMatrix[2,1]+LDA.confusionMatrix[1,2])/1000
 ME
+
 
 ### CONSTRUCTING ROC AUC PLOT:
 # Get the posteriors as a dataframe.
@@ -561,8 +548,6 @@ auc.train <- auc.train@y.values
 plot(roc.perf)
 abline(a=0, b= 1)
 text(x = .25, y = .65 ,paste("AUC = ", round(auc.train[[1]],3), sep = ""))
-
-LDA.CM <- confusionMatrix(table(scaled.test$y, LDA.preds$class, dnn = c("Truth", "Prediction")), positive = '1')
 
 
 ```
@@ -590,7 +575,6 @@ plot(1:57,PCA.prop,type="l",main="Scree Plot",ylim=c(0,1),xlab="PC #",ylab="Prop
 lines(1:57,PCA.cumprop,lty=3)
 
 ```
-
 
 ```{r PCA Plots, eval=FALSE}
 # Store PCA Plots in a list
@@ -627,14 +611,14 @@ bank.cart<-rpart(y~job+contact+month+day_of_week+campaign+pdays+poutcome+emp.var
 #fancyRpartPlot(bank.cart , digits=2 , palettes = c("Purples", "Oranges"))
 
 #predict
-cart_pred <- predict( bank.cart , full.test , type = "class")
-cart_prob <- predict( bank.cart , full.test , type = "prob")
+cart_pred <- predict( bank.cart , full.train , type = "class")
+cart_prob <- predict( bank.cart , full.train , type = "prob")
 
 # Confusion matrix
-rPart.CM <- confusionMatrix(table(full.test$y, cart_pred, dnn = c("Truth", "Prediction")), positive = 'yes')
+confusionMatrix(cart_pred , full.train$y)
 
 ### Cross table validation for CART
-CrossTable(full.test$y, cart_pred,
+CrossTable(full.train$y, cart_pred,
           prop.chisq = FALSE, prop.c = FALSE, prop.r = FALSE,
           dnn = c('actual default', 'predicted default'))
 ```
@@ -658,61 +642,21 @@ KNN.model <- train(y~job+contact+month+day_of_week+campaign+pdays+poutcome+emp.v
                    preProcess=c("center", "scale")
                    )
 
-KNN.preds.full <- predict(KNN.model , newdata = full.test)
-KNN.CM.full <- confusionMatrix(KNN.preds.full , full.test$y, positive = 'yes')
+KNN.preds <- predict(KNN.model , newdata = full.test)
+confusionMatrix(KNN.preds , full.test$y)
 
 ### Cross table validation for KNN
-CrossTable(full.test$y, KNN.preds.full,
+CrossTable(full.test$y, KNN.preds,
            prop.chisq = FALSE, prop.c = FALSE, prop.r = FALSE,
            dnn = c('actual default', 'predicted default'))
-
-
 ```
 
 
 ```{r alternative KNN, cache=TRUE}
-knnArray <- c(
-  "job.admin.",
-  "job.blue.collar",
-  "job.entrepreneur",
-  "job.housemaid",
-  "job.management",
-  "job.retired",
-  "job.self.employed",
-  "job.services",
-  "job.student",
-  "job.technician",
-  "job.unemployed",
-  "contact.cellular",
-  "contact.telephone",
-  "month.apr",
-  "month.aug",
-  "month.dec",
-  "month.jul",
-  "month.jun",
-  "month.mar",
-  "month.may",
-  "month.nov",
-  "month.oct",
-  "month.sep",
-  "day_of_week.fri",
-  "day_of_week.mon",
-  "day_of_week.thu",
-  "day_of_week.tue",
-  "day_of_week.wed",
-  "campaign",
-  "pdays",
-  "poutcome.failure",
-  "poutcome.nonexistent",
-  "poutcome.success",
-  "emp.var.rate",
-  "cons.price.idx",
-  "cons.conf.idx",
-  "nr.employed"
-)
+
 # Hypertuning identified 60 as the best K
-KNN.preds.tuned = knn(scaled.train[,knnArray],scaled.test[,knnArray],as.factor(scaled.train$y), prob = TRUE, k = 60)
-KNN.CM.tuned <- confusionMatrix(table(KNN.preds.tuned, scaled.test$y, dnn = c("Truth", "Prediction")), positive = '1')
+classifications = knn(scaled.train,scaled.test,as.factor(scaled.train$y), prob = TRUE, k = 60)
+confusionMatrix(table(scaled.test$y,classifications, dnn = c("Prediction", "Reference")), positive = '1')
 
 ```
 
@@ -771,8 +715,8 @@ for(j in 1:iterations) {
   KNN.test = scaledbin[-trainIndices,]
   for(i in 1:numks) {
     # predict using i-th value of k
-    KNN.preds.tuned = knn(KNN.train[,knnArray],KNN.test[,knnArray],as.factor(KNN.train$y), prob = TRUE, k = i)
-    CM = confusionMatrix(table(as.factor(KNN.test$y),KNN.preds.tuned, dnn = c("Truth", "Prediction")), positive = '1')
+    classifications = knn(KNN.train[,knnArray],KNN.test[,knnArray],as.factor(KNN.train$y), prob = TRUE, k = i)
+    CM = confusionMatrix(table(as.factor(KNN.test$y),classifications, dnn = c("Prediction", "Reference")), positive = '1')
     masterAcc[j,i] = CM$overall[1]
     masterSen[j,i] = CM$byClass[1]
     masterSpec[j,i] = ifelse(is.na(CM$byClass[2]),0,CM$byClass[2])
@@ -791,8 +735,9 @@ specs <- c(MeanAcc[k],MeanSen[k],MeanSpec[k])
 names(specs) <- c("Avg Accuracy", "Avg Sensitivity", "Avg Specificity")
 specs %>% kable("html") %>% kable_styling
 
-KNN.preds.tuned = knn(scaled.train[,knnArray],scaled.test[,knnArray],as.factor(scaled.trai$y), prob = TRUE, k = k)
-confusionMatrix(table(scaled.test$y,KNN.preds.tuned, dnn = c("Truth", "Prediction")), positive = '1')
+classifications = knn(scaled.train[,knnArray],scaled.test[,knnArray],as.factor(scaled.train$y), prob = TRUE, k = k)
+confusionMatrix(table(scaled.test$y,classifications, dnn = c("Prediction", "Reference")), positive = '1')
+
 
 ```
 
@@ -846,16 +791,10 @@ plot(rocr.perf,
      main = 'ROC Curve')
 mtext(paste('Decision Tree - auc : ', round(rocr.auc, 5)))
 abline(0, 1, col = "red", lty = 2)
-
-
-predictions_DT$predFactor <- ifelse(predictions_DT$pred > .36, 'yes', 'no')
-
-DecisionTree.CM <- confusionMatrix(table(full.test$y, predictions_DT$predFactor, dnn = c("Truth", "Prediction")), positive = 'yes')
-
 ```
 
 
-```{r Random Forest, cache=TRUE}
+```{r Random Forest}
 #Random forrest
 #Here we will do a truly RF run by selecting mtry. mtry controls how many
 #predictors are sampled for each bootstrap sample.
@@ -874,36 +813,12 @@ text(x = .40, y = .6,paste("AUC = ", round(auc.train[[1]],4), sep = ""))
 #Making predictions on test and then observing accuracy rates
 fit.pred<-predict(rf,newdata=full.test,type="response",cutoff=c(0.58,0.42))
 confusionMatrix(fit.pred,full.test$y) #Default prediction uses .5 as cut off you can change it specifying "cutoff" option
-randomForest.CM <- confusionMatrix(table(full.test$y, fit.pred, dnn = c("Truth", "Prediction")), positive = 'yes')
-
-
 #Which variables are important.  We can use variable importance.
 varImpPlot (rf,type=1,main="Variable Importance")
 varImpPlot (rf,type=2,main="Variable Importance")
 ```
 
 
-
-```{r model comparison, cache=TRUE}
-
-# Name Confusion Matrix object
-#KNN.stats <- confusionMatrix(table(scaled.test$y,classifications, dnn = c("Prediction", "Reference")), positive = '1')
-
-# Create tibble from first metric:
-ModelComparison <- enframe((append(KNN.CM.full$overall[1], KNN.CM.full$byClass)), name = "Metric", value = 'KNN_Full')
-
-# Add Additional Models:
-ModelComparison$KNN_Tuned <- append(KNN.CM.tuned$overall[1], KNN.CM.tuned$byClass)
-ModelComparison$LDA <- append(LDA.CM$overall[1], LDA.CM$byClass)
-ModelComparison$Logistic_Simple <- append(LogR_simple.CM$overall[1], LogR_simple.CM$byClass)
-ModelComparison$Logistic_Interaction <- append(LogR_interaction.CM$overall[1], LogR_interaction.CM$byClass)
-ModelComparison$Recursive_Partition <- append(rPart.CM$overall[1], rPart.CM$byClas)
-ModelComparison$Decision_Tree <- append(DecisionTree.CM$overall[1], DecisionTree.CM$byClas)
-ModelComparison$Decision_Tree <- append(randomForest.CM$overall[1], randomForest.CM$byClas)
-
-
-
-```
 
 
 <!-- Caution: Big plots -->
