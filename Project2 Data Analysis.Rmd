@@ -34,6 +34,7 @@ library(car)
 library(ResourceSelection)
 library(tidyverse)
 library(ggpubr)
+library(lmtest)
 
 
 # wordStyleRef style changes:
@@ -488,6 +489,8 @@ simple.model <- glm(y~job+contact+month+day_of_week+campaign+pdays+poutcome+cons
 car::vif(simple.model)
 summary(simple.model)
 
+
+lrtest(simple.model) #Likelihood ratio test
 #confidence intervals for simple model
 summary(simple.model$coefficients)
 #CI_lower <- coefficients(simple.model)[2] - 1.96*summary(simple.model)$coefficients[2,2]
