@@ -128,7 +128,7 @@ $$p(X)=\frac{e^{\beta_0+\beta_1X_1+\beta_2X_2+...+\beta_pX_p}}{1+e^{\beta_0+\bet
 
 
 ### Feature Selection
-In constructing our logistic regression, we fit various models by using forward, backward and stepwise on the full model. We reduce the initial model based on the the variables deemed insignificant.  Those variables included Marital, Education, Default, Loan and Housing.  All showed insignifance in predicting subscriptions.  We also use stepwise method on the simple model. Finally, we come to the final logistic regression model without interaction term 
+In constructing our logistic regression, we fit various models by using forward, backward and stepwise on the full model. We reduce the initial model based on the the variables deemed insignificant.  Those variables included Marital, Education, Default, Loan and Housing.  All showed insignifance in predicting subscriptions.  We also use stepwise method on the simple model. We also use stepwise method on the reduced model without interaction term as follows 
 
 $$log(odd) =\beta_0+ \beta_1 * job+\beta_2 * contact+\beta_3 * month+\beta_4 * day\_of\_week+\beta_5 * campaign+\beta_6 * pdays+\beta_7 * poutcome+\beta_8 * emp.var.rate+\beta_9 * cons.price.idx+\beta_10 * cons.conf.idx+\beta_11 * nr.employed$$	
 ### Assessing the fit
