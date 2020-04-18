@@ -262,6 +262,8 @@ would be recommended.  Furthermore, as stated previously, this is an observation
 
 We would like to express our sincere gratitude to Dr. Jacob Turner (SMU) for excellent course design that we have obtained during the Spring semester 2020 of MSDS SMU.
 
+\newpage  
+
 # References  
 
 [1] *Bank Marketing Data Set*  https://archive.ics.uci.edu/ml/datasets/Bank%20Marketing#  
