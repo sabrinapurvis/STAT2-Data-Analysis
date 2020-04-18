@@ -138,6 +138,8 @@ In constructing our logistic regression model, we first included all variables i
  
 ### Model Analysis
 ![](./figures/summarylogistic.png){width="4.5in"}
+
+![](./figures/coeflogistic.png){width="7.5in"}
   
 ### Residual Diagnostic Plots  
 			Optional  Residual Plots
