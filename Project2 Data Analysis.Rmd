@@ -217,17 +217,37 @@ Before a model is relied upon to draw conclusions or predict future outcomes, we
 ![](./figures/hoslem.png){width="5in"}   
 
 
-By ROC curve, we also get AUC of 0.8067405 (see Feature Selection section).   
+By ROC curve, we also get AUC of 0.8067405 (see Feature Selection section).     
 
 
-#### Interpretation  
 
 
-![](./figures/summarylogistic.png){width="4.5in"}
+#### Interpretation    
 
-![](./figures/coeflogistic.png){width="7.5in"}
+ We use predict() function in R to predict the probability to get secure commitment for term deposits (Y/N). The type="response" option for the output form $P(Y=1|X)$ as opposed to other information such as the logit. Here the first ten probabilities are printed.  
+ 
+![](./figures/probslogisticmodel.png){width="7.5in"} 
 
-![](./figures/probslogisticmodel.png){width="7.5in"}   
+We know that these values correspond to the probability of getting secure commitment for term deposits "yes" rather than "no". We can check it easily by contrasts() function indicates that R has created a dummy variable with a 1 to "yes".  
+
+Here are the summary of the final model.  
+
+![](./figures/summarylogistic.png){width="4.5in"}   
+
+To access just the coefficients for this model, we use the coef() function.  
+
+
+![](./figures/coeflogistic.png){width="7.5in"}  
+
+
+We can use the confint() function (using profiled log-likelihood) or confint.default() function (using standard errors) to obtain confidence intervals for the coefficient estimates. Note that for logistic models, confidence intervals are based on the profiled log-likelihood function.    
+
+![](./figures/CIsLogistic.png){width="7.5in"}
+
+
+
+
+ 
 
 
 
