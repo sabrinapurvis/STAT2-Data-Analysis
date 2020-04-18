@@ -101,7 +101,7 @@ We next investigated correlation.  As shown in the correlation plot below,
 
 
 ```
-most of the relationships between these predictors have random behavior. Most correlations are close to zero or between the interval (-0.4,0.4). However, there are some common sense correlations, particularly between specific factors in variables.  For example: cons.price.idx vs. emp.var.rate are positively correlated.  This is reasonable as both are market indicators that would naturally tether together. Some very strong and positive correlations can be seen easily such that emp.var.rate vs. euribor3m, emp.var.rate vs. nr.employed and euribor3m vs. nr.employed, involved three collinear predictors – Employment variation rate, Number of employees and Offered rate.   
+most of the relationships between these predictors have random behavior. Most correlations are close to zero or between the interval (-0.4,0.4). However, there are some common sense correlations, particularly between specific factors in variables.  For example: cons.price.idx vs. emp.var.rate are positively correlated.  This is reasonable as both are market indicators that would naturally tether together. Some very strong and positive correlations can be seen easily such that emp.var.rate vs. euribor3m, emp.var.rate vs. nr.employed and euribor3m vs. nr.employed, involved three colinear predictors – Employment variation rate, Number of employees and Offered rate.   
 
 We excluded duration from the model selection process, because it is an indicator variable that can be utilized as a benchmark, but is not known before the calls are made, so should not be used in prediction. Additionally, we ran a test of variable importance by using Boruta package. The Boruta algorithm is a wrapper built around the random forest classification algorithm. It provided some additional insight into which variables are “important” and in what order. We noted that Marital Status, Loan, Default and Housing are all relatively less important than other variables.  We will revisit this insight as we approach interactions.
 
@@ -192,7 +192,7 @@ the VIF of emp_var_rate and nr_employed are  high. Then we decide to remove emp_
 
 ![](./figures/vif_after.png){width="4.5in"}   
 
-The new model looks like good. We will choose it as our final model for this objecttive.  
+The new model looks like good. We will choose it as our final model for this objective.  
 
 We evaluated the Cook's D Plot and Leverage plot to assess assumption violations.  Cook's D did not return a value above 0.0020, showing that there are no outliers to consider.  Leverage also supports this, with only one value above 0.020.    
 
@@ -200,11 +200,11 @@ We evaluated the Cook's D Plot and Leverage plot to assess assumption violations
   
 #### Hypothesis Tests   
 
-We do test Global Null Hypothesis by Likehood Ratio test.
+We do test Global Null Hypothesis by Likelihood Ratio test.
 
 ![](./figures/LRT.png){width="5in"}   
 
-We can perfom  Score or Wald test for Global Null Hypothesis. Another way to run ANOVA  to get more infomation.  
+We can perform  Score or Wald test for Global Null Hypothesis. Another way to run ANOVA  to get more information.  
 
 ![](./figures/WaldLRT.png){width="7.5in"}     
 
@@ -246,7 +246,7 @@ We can use the confint() function (using profiled log-likelihood) or confint.def
 
 Recall that we are calculating toward a yes or no outcome.  Each coefficient described adds or detracts from the total.  The y-intercept is set at -58.83 (related to log(odds) (with confidence interval of [50.03, 67.59]).  When looking at the levels of Job, blue collar and services are both significant and detrimental toward the overall value (both at -0.20 with CI [-0.35, -0.07] and [-0.38, 0.03] respectively).  Alternatively, retired and student both significantly impact the outcome positively.  Retired increases the value by 0.29 (CI of [0.11, 0.47]) while students increase by 0.29 (with CI of [0.06, 0.52]).  The method of contact is also of importance, where telephone calls (versus cell phone contact) decreases the overall outcome by -0.54 (with CI of [-0.69, -0.40]).  Specific Months had disparate impact.  May produces the lowest coefficient with -0.65 and confidence interval of (-0.81, -0.49).  March provided the highest coefficient of 0.81 with confidence intervals of (0.56, 1.06).   
 
-To  predict the odds of getting secure commitment for term deposits (Y/N), we only put the value of each predictor inside the model and take the exponetial to get probaility (from 0 to 1).  Notice that with categorical explanatory variables, Yes  is 1 and No is 0.
+To  predict the odds of getting secure commitment for term deposits (Y/N), we only put the value of each predictor inside the model and take the exponential to get probability (from 0 to 1).  Notice that with categorical explanatory variables, Yes  is 1 and No is 0.
 
 
 		
