@@ -139,7 +139,9 @@ $$log(odd) =\beta_0+ \beta_1 * job+\beta_2 * contact+\beta_3 * month+\beta_4 * d
 Logistic regression does not make many of the key assumptions of linear regression and general linear models that are based on ordinary least squares algorithms – particularly regarding linearity, normality, homoscedasticity, and measurement level. First, logistic regression does not require a linear relationship between the dependent and independent variables.  Second, the error terms (residuals) do not need to be normally distributed.  Third, homoscedasticity is not required.  Finally, the dependent variable in logistic regression is not measured on an interval or ratio scale. However, some other assumptions still apply.  
 Binary logistic regression requires the dependent variable to be binary and ordinal logistic regression requires the dependent variable to be ordinal. In this model, our response variable is categorical (Y/N) then this assumption is good.  
 We assume the observations to be independent of each other to perform the analysis.  
-We also check the   linearity assumption between independent variables and log odds.  Although this analysis does not require the dependent and independent variables to be related linearly, it requires that the independent variables are linearly related to the log odds. 
+We also check the   linearity assumption between independent variables and log odds by using Global Null Hypothesis test (that we can run in SAS).  Although this analysis does not require the dependent and independent variables to be related linearly, it requires that the independent variables are linearly related to the log odds.   
+Here, logistic regression typically requires a large sample size then this assumption is satisfied based on the data set [1].  
+Logistic regression requires there to be little or no multicollinearity among the independent variables. This means that the independent variables should not be too highly correlated with each other.
 
 
 
