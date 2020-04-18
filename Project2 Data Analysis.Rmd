@@ -634,7 +634,7 @@ cart_prob <- predict( bank.cart , full.test , type = "prob")
 rPart.CM <- confusionMatrix(table(full.test$y, cart_pred, dnn = c("Truth", "Prediction")), positive = 'yes')
 
 ### Cross table validation for CART
-CrossTable(full.train$y, cart_pred,
+CrossTable(full.test$y, cart_pred,
           prop.chisq = FALSE, prop.c = FALSE, prop.r = FALSE,
           dnn = c('actual default', 'predicted default'))
 ```
