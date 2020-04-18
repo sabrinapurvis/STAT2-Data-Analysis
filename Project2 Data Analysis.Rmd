@@ -115,9 +115,14 @@ First, we perform a PCA on the bank marketing data set after scaling the variabl
 # IV. Logistic Regression Analysis  
 
 ## Problem Statement  
-Logistic Regression is a popular method for classifying individuals, given the values of a set of explanatory variables. It is a multiple regression for a dichotomous outcome using a nonlinear function of the explanatory variables for classification. It estimates the probability that an individual is in a particular category. In the next steps, we will build predictive logistic regression models using Feature Selection methods (Forward, Backward, Stepwise). We will discuss how we build models with assumption check, parameter interpretation as well as our conclusion.  
+Logistic Regression is a popular method for classifying individuals, given the values of a set of explanatory variables. It is a multiple regression for a dichotomous outcome using a nonlinear function of the explanatory variables for classification. It estimates the probability that an individual is in a particular category. In the next steps, we will build predictive logistic regression models using Feature Selection methods (Forward, Backward, Stepwise, LASSO). We will discuss how we build models with assumption check, parameter interpretation as well as our conclusion.    
 
-## Building the model
+## Building the model  
+By using this Bank Marketing data set [1], we will jump into Multiple Logistic Regression. We will predict a binary response of subscription y (Y/N) by using multiple predictors. Mathematically, the model can be generalized as follows
+$$log(\frac{p(X)}{1-p(X)})=\beta_0+\beta_1X_1+\beta_2X_2+...+\beta_pX_p$$
+where $X=(X_1,X_2,...,X_p)$ are $p$ predictors. By using the maximum likehood method, we can estimate $\beta_0,\beta_1,...,\beta_p$. In this project, we use glm() function to fit the model with the argument family=binomial to tell R to run logistic regression and we can also get these estimates. The problem can be rewritten as the following form
+$$p(X)=\frac{e^{\beta_0+\beta_1X_1+\beta_2X_2+...+\beta_pX_p}}{1+e^{\beta_0+\beta_1X_1+\beta_2X_2+...+\beta_pX_p}}.$$
+
 
 ### Feature Selection
 In constructing our logistic regression model, we first included all variables in the model.  We moved forward manually, by first reducing the initial model based on the the variables deemed insignificant.  Those variables included Marital, Education, Default, Loan and Housing.  All showed insignifance in predicting subscriptions.  
@@ -201,15 +206,17 @@ We would like to express our sincere gratitude to Dr. Jacob Turner (SMU) for exc
 # References  
 
 [1] *Bank Marketing Data Set*  https://archive.ics.uci.edu/ml/datasets/Bank%20Marketing#  
-[2] Albright, W. L. Winston, *Business Analytics - Data Analysis and Decision Making*, 7th Edition, 2019.  
+[2] Albright, W. L. Winston, *Business Analytics - Data Analysis and Decision Making*, 7th Edition, Cengage, 2019.  
 [3] Anderson et al., *Statistics for Business & Economics*, Cengage, 2020.    
-[4] James et al., *An Introduction to Statistical Learning with Application in R*, Springer, 2017.    
-[5] T. Hastie et al., *The Elements of Statistical Learning, Data Mining, Inference*, and Prediction, 2nd Edition, Springer, 2017.   
-[6] B. W. Lindgren,  *Statistical Theory*, 3th Edion, MacMillan Publishing, 1976.  
-[7] D. Montgomery, E. A. Peck, G. G. Vining, *Introdution to Linear Regression Analysis*,  5th Edion, John Wiley & Sons, 2012.  
-[8] Ramsey and Schafer, *The Statistical Sleuth, A Course in Methods of Data Analysis*, 3rd Edition, Cengage, 2013.    
-
-
+[4] G. Rodriguez, *Logit Models in R*, https://data.princeton.edu/wws509/r/c3s1, Princeton.   
+[5] James et al., *An Introduction to Statistical Learning with Application in R*, Springer, 2017.    
+[6] T. Hastie et al., *The Elements of Statistical Learning, Data Mining, Inference*, and Prediction, 2nd Edition, Springer, 2017.   
+[7] D. Hosmer, S. Lemeshow, *Applied Logistic Regression*, 2th Edition, John Wiley & Sons, 2000.   
+[8] B. W. Lindgren,  *Statistical Theory*, 3th Edion, MacMillan Publishing, 1976.  
+[9] D. Montgomery, E. A. Peck, G. G. Vining, *Introdution to Linear Regression Analysis*,  5th Edion, John Wiley & Sons, 2012.  
+[10] Ramsey and Schafer, *The Statistical Sleuth, A Course in Methods of Data Analysis*, 3rd Edition, Cengage, 2013. 
+[11] *UCLA - Logit Regression R Data Analysis Examples*, https://stats.idre.ucla.edu/r/dae/logit-regression/  
+[12] J. S. Long, *Regression Models for Categorical and Limited Dependent Variables*, Thousand Oaks, CA: Sage Publications, 1997.  
 
 
 **Dustin Bracy** – Southern Methodist University – Email: dbracy@smu.edu   
