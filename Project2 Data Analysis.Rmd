@@ -148,7 +148,7 @@ We also check the   linearity assumption between independent variables and log o
 
 ![](./figures/LRT.png){width="4.5in"} 
 
-Although this analysis does not require the dependent and independent variables to be related linearly, it requires that the independent variables are linearly related to the log odds. 
+We also can perform the  Wald test (Anova(simple.model, type="II", test="Wald")) to get the similar result as Likelihood Ratio Test.  Although this analysis does not require the dependent and independent variables to be related linearly, it requires that the independent variables are linearly related to the log odds. 
 
 
 
