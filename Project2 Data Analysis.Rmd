@@ -101,7 +101,7 @@ We next investigated correlation.  As shown in the correlation plot below,
 
 
 ```
-most of the relationships between these predictors have random behavior. Most correlations are close to zero or between the interval (-0.4,0.4). However, there are some common sense correlations, particularly between specific factors in variables.  For example: cons.price.idx vs. emp.var.rate are positively correlated.  This is reasonable as both are market indicators that would naturally tether together. Some very strong and positive correlations can be seen easily such that emp.var.rate vs. euribor3m, emp.var.rate vs. nr.employed and euribor3m vs. nr.employed, involved three collinear predictors – Employment variation rate, Number of employees and Offered rate.   
+most of the relationships between these predictors have random behavior. Most correlations are close to zero or between the interval (-0.4,0.4). However, there are some common sense correlations, particularly between specific factors in variables.  For example: cons.price.idx vs. emp.var.rate are positively correlated.  This is reasonable as both are market indicators that would naturally tether together. Some very strong and positive correlations can be seen easily such that emp.var.rate vs. euribor3m, emp.var.rate vs. nr.employed and euribor3m vs. nr.employed, involved three colinear predictors – Employment variation rate, Number of employees and Offered rate.   
 
 We excluded duration from the model selection process, because it is an indicator variable that can be utilized as a benchmark, but is not known before the calls are made, so should not be used in prediction. Additionally, we ran a test of variable importance by using Boruta package. The Boruta algorithm is a wrapper built around the random forest classification algorithm. It provided some additional insight into which variables are “important” and in what order. We noted that Marital Status, Loan, Default and Housing are all relatively less important than other variables.  We will revisit this insight as we approach interactions.
 
@@ -120,54 +120,47 @@ First, we perform a PCA on the bank marketing data set after scaling the variabl
 # IV. Logistic Regression Analysis  
 
 ## Problem Statement  
-Logistic Regression is a popular method for classifying individuals, given the values of a set of explanatory variables. It is a multiple regression for a dichotomous outcome using a nonlinear function of the explanatory variables for classification. It estimates the probability that an individual is in a particular category. In the next steps, we will build predictive logistic regression models using Feature Selection methods (Forward, Backward, Stepwise). We will discuss how we build models with assumption check, parameter interpretation as well as our conclusion.    
+Logistic Regression is a popular method for classifying individuals, given the values of a set of explanatory variables. It is a multiple regression algorithm for a dichotomous outcome using a nonlinear function of the explanatory variables for classification. It estimates the probability that an individual is in a particular category. In the next steps, we will build predictive logistic regression models using Feature Selection methods (Forward, Backward, Stepwise). We will discuss how we build models with assumption check, parameter interpretation as well as our conclusion.    
 
 ## Building the model  
-By using this Bank Marketing data set [1], we will jump into Multiple Logistic Regression. We will predict a binary response of subscription y (Y/N) by using multiple predictors. Mathematically, the model can be generalized as follows
+By using this Bank Marketing data set [1], we will jump into Multiple Logistic Regression. We will predict a binary response of subscription y (Y/N) by using multiple predictors. Mathematically, the model can be generalized as follows:
 $$log(\frac{p(X)}{1-p(X)})=log(odds)=\beta_0+\beta_1X_1+\beta_2X_2+...+\beta_pX_p$$
-where $X=(X_1,X_2,...,X_p)$ are $p$ predictors. By using the maximum likelihood method, we can estimate $\beta_0,\beta_1,...,\beta_p$. This method has better statistical properties than the least square approach to estimate the unknown linear regression coefficients in linear regression models. Maximum like hood is a very general approach that is used to fit many of the nonlinear models, especially in our case here, the logistic regression model. In fact, the least square approach is a special case of maximum like hood mathematically. However, in this project, we use glm function to fit the model with the argument family=binomial to tell R to run logistic regression and we can also get these estimates without concerning ourselves with the details of the maximum like hood fitting procedure.  The problem can be rewritten as the following form
+where $X=(X_1,X_2,...,X_p)$ are $p$ predictors. By using the maximum likelihood method, we can estimate $\beta_0,\beta_1,...,\beta_p$. This method has better statistical properties than the least square approach to estimate the unknown linear regression coefficients in linear regression models. Maximum likelihood is a very general approach that is used to fit many of the nonlinear models, especially in our case here with the logistic regression model. In fact, the least squares approach is a special case of maximum likelihood mathematically. However, in this project, we use glm function to fit the model with the argument family=binomial to tell R to run logistic regression and we can also get these estimates without concerning ourselves with the details of the maximum likelihood fitting procedure.  The problem can be rewritten as the following form:
 $$p(X)=\frac{e^{\beta_0+\beta_1X_1+\beta_2X_2+...+\beta_pX_p}}{1+e^{\beta_0+\beta_1X_1+\beta_2X_2+...+\beta_pX_p}}.$$
 
 
 ### Feature Selection
-In constructing our logistic regression, we fit various models by using forward, backward and stepwise on the full model. We reduce the initial model based on the the variables deemed insignificant.  Those variables included Marital, Education, Default, Loan and Housing.  All showed insignificance in predicting subscriptions.  We also use stepwise method on the simple model. We also use stepwise method on the reduced model without interaction term as follows 
+In constructing our logistic regression algorithm, we fit various models by using forward, backward and stepwise on the full model. We reduced the initial model based on the the variables deemed insignificant.  Those variables included: Marital, Education, Default, Loan and Housing.  All showed insignificance in predicting subscriptions.  We also used stepwise method on the simple model and the reduced model without interaction term as follows: 
 
 $$log(odds) =\beta_0+ \beta_1 * job+\beta_2 * contact+\beta_3 * month+\beta_4 * day\_of\_week+\beta_5 * campaign+\beta_6 * pdays+\beta_7 * poutcome+\beta_8 * emp.var.rate+\beta_9 * cons.price.idx+\beta_10 * cons.conf.idx+\beta_11 * nr.employed.$$	
 
-By checking VIFs (explained in Assumption Checking), we arrive the final model (without emp.var.rate)
+By checking VIFs (explained in Assumption Checking), we arrive the final model (without emp.var.rate):
 
   $$log(odds) =\beta_0+ \beta_1 * job+\beta_2 * contact+\beta_3 * month+\beta_4 * day\_of\_week+\beta_5 * campaign+\beta_6 * pdays+\beta_7 * poutcome++\beta_8 * cons.price.idx+\beta_9 * cons.conf.idx+\beta_10 * nr.employed.$$   
 
-<<<<<<< HEAD
-When assessing fit, we determined that we would include AIC, AUC and look at the specificity/sensitivity.  Our "smaller model" produced an AIC of 14664, and AUC of 0.8067405 and specificity of 0.933.    
-=======
 When assessing fit, we determined that we would include AIC, AUC and look at the specificity/sensitivity.  Our "smaller model" produced an AIC of 14664, and AUC of 0.8067405 and accuracy 0.8764.    
 
 ![](./figures/ROClogistic.png){width="4.5in"}  
 
 
-
 ### Model Analysis   
 
-After Feature Selection step, the optimal  model is best described as   
+After Feature Selection, the optimal model is best described as:   
 
 $$log(odds) =\beta_0+ \beta_1 * job+\beta_2 * contact+\beta_3 * month+\beta_4 * day\_of\_week+\beta_5 * campaign+\beta_6 * pdays+\beta_7 * poutcome++\beta_8 * cons.price.idx+\beta_9 * cons.conf.idx+\beta_10 * nr.employed.$$   
 
-We will go through analysis steps related to the final model.   
+Next, we will go through analysis steps related to the final model.   
 
 
 #### Assumption Checking   
 
 Logistic regression does not make many of the key assumptions of linear regression and general linear models that are based on ordinary least squares algorithms – particularly regarding linearity, normality, homoscedasticity, and measurement level. First, logistic regression does not require a linear relationship between the dependent and independent variables.  Second, the error terms (residuals) do not need to be normally distributed.  Third, homoscedasticity is not required.  Finally, the dependent variable in logistic regression is not measured on an interval or ratio scale. However, some other assumptions still apply.  
 
-Binary logistic regression requires the dependent variable to be binary and ordinal logistic regression requires the dependent variable to be ordinal. In this model, our response variable is categorical (Y/N) then this assumption is good.  
-We assume the observations to be independent of each other to perform the analysis.   
-
-We also check the   linearity assumption between independent variables and log odds by using Global Null Hypothesis test (Likelihood Ratio, Score, Wald). Here we use Likelihood Ratio Test.   
+Binary logistic regression requires the dependent variable to be binary and ordinal logistic regression requires the dependent variable to be ordinal. In this model, our response variable is categorical (Y/N) then this assumption is good.  We assume the observations to be independent of each other to perform the analysis. We also check the linearity assumption between independent variables and log odds by using Global Null Hypothesis test (Likelihood Ratio, Score, Wald). Here we use Likelihood Ratio Test, shown below.   
 
 ![](./figures/LRT.png){width="5in"} 
 
-We also can perform the  Wald test (Anova(simple.model, type="II", test="Wald"))  to get the similar result as Likelihood Ratio Test. Another way to get Likelihood Ratio Test result by this code anova(MyGLM, test="LRT"). Although this analysis does not require the dependent and independent variables to be related linearly, it requires that the independent variables are linearly related to the log odds. By  p values < 0.05,  we reject the null hypothesis. It means that at least one explanatory variable in the model is significant.   
+We also can perform the Wald test (Anova(simple.model, type="II", test="Wald")) to get the similar result as Likelihood Ratio Test. Another way to get Likelihood Ratio Test result by this code anova(MyGLM, test="LRT"). Although this analysis does not require the dependent and independent variables to be related linearly, it requires that the independent variables are linearly related to the log odds. By  p values < 0.05,  we reject the null hypothesis. It means that at least one explanatory variable in the model is significant.   
 
 
 
@@ -177,60 +170,47 @@ Logistic regression requires there to be little or no multicollinearity among th
 
 ![](./figures/vif_before.png){width="4.5in"} 
 
-the VIF of emp_var_rate and nr_employed are  high. Then we decide to remove emp_var_rate and we check again VIFs with the new model.  
+the VIF of emp_var_rate and nr_employed are high. Then we decide to remove emp_var_rate and we check again VIFs with the new model.  
 
 ![](./figures/vif_after.png){width="4.5in"} 
 
-The new model looks like good. We will choose it as our final model for this objective.  
+The new model now looks good. We will choose it as our final model for this objective.  
 
+We evaluated the Cook's D Plot and Leverage plot to assess assumption violations. Cook's D did not return a value above 0.0020, showing that there are no significant outliers to consider.  The Residual Leverage plot also supports this, with only one value above 0.020.    
 
-Logistic regression requires there to be little or no multicollinearity among the independent variables. This means that the independent variables should not be too highly correlated with each other.  By checking the VIF of the reduced model above,  
-
-![](./figures/vif_before.png){width="4.5in"}  
-
-the VIF of emp_var_rate and nr_employed are  high. Then we decide to remove emp_var_rate and we check again VIFs with the new model.    
-
-![](./figures/vif_after.png){width="4.5in"}   
-
-The new model looks like good. We will choose it as our final model for this objecttive.  
-
-We evaluated the Cook's D Plot and Leverage plot to assess assumption violations.  Cook's D did not return a value above 0.0020, showing that there are no outliers to consider.  Leverage also supports this, with only one value above 0.020.    
-
-  ![](./figures/ResidualLEverage.png){width="7.5in"}
+  ![](./figures/ResidualLeverage.png){width="7.5in"}
   
 #### Hypothesis Tests   
 
-We do test Global Null Hypothesis by Likehood Ratio test.
+We can test for a Global Null Hypothesis with a Likelihood Ratio test.
 
 ![](./figures/LRT.png){width="5in"}   
 
-We can perfom  Score or Wald test for Global Null Hypothesis. Another way to run ANOVA  to get more infomation.  
+We can perform Score or Wald test for Global Null Hypothesis. Alternatively, we can run ANOVA to get more information.  
 
 ![](./figures/WaldLRT.png){width="7.5in"}     
 
-By  p values < 0.05,  we reject the null hypothesis. It means that at least one explanatory variable in the model is significant.   
+Because our p value is less than 0.05,we reject the null hypothesis. It means that at least one explanatory variable in the model is significant in determining the response.   
 
-
-
-Before a model is relied upon to draw conclusions or predict future outcomes, we should check, as far as possible, that the model we have assumed is correctly specified. That is, that the data do not conflict with assumptions made by the model. For binary outcomes logistic regression is the most popular modelling approach.We now look at the popular, but sometimes criticized, Hosmer-Lemeshow goodness of fit test for logistic regression. The p value is less than 0.05, then our model is calibrated.    
+Before a model is relied upon to draw conclusions or predict future outcomes we should check, as far as possible, that the model we have assumed is correctly specified. That is, that the data do not conflict with assumptions made by the model. For binary outcomes logistic regression is the most popular modelling approach.  We now look at the popular, but sometimes criticized, Hosmer-Lemeshow goodness of fit test for logistic regression. The p value is less than 0.05, affirming our model is calibrated.    
 
 ![](./figures/hoslem.png){width="5in"}   
 
 
-By ROC curve, we also get AUC of 0.8067405 (see Feature Selection section).     
+The ROC curve calculation shows an AUC of 0.8067405 (see Feature Selection above for plot).     
 
 
 
 
 #### Interpretation    
 
- We use predict() function in R to predict the probability to get secure commitment for term deposits (Y/N). The type="response" option for the output form $P(Y=1|X)$ as opposed to other information such as the logit. Here the first ten probabilities are printed.  
+We use predict() function in R to predict the probability of securing commitment for term deposits (Y/N). The type="response" option for the output form $P(Y=1|X)$ as opposed to other information such as the logit. Below are the first ten probabilities:  
  
 ![](./figures/probslogisticmodel.png){width="7.5in"} 
 
-We know that these values correspond to the probability of getting secure commitment for term deposits "yes" rather than "no". We can check it easily by contrasts() function indicates that R has created a dummy variable with a 1 to "yes".  
+We know that these values correspond to the probability of securing commitment for term deposits "yes" rather than "no". We can check it easily by using the contrasts() function, which indicates that R has created a dummy variable with a 1 to indicate "yes".  
 
-Here are the summary of the final model.  
+Here are the summary statistics for the final model.  
 
 ![](./figures/summarylogistic.png){width="4.5in"}   
 
@@ -244,15 +224,14 @@ We can use the confint() function (using profiled log-likelihood) or confint.def
 
 ![](./figures/CIsLogistic.png){width="7.5in"}
 
-Recall that we are calculating toward a yes or no outcome.  Each coefficient described adds or detracts from the total.  The y-intercept is set at -58.83 (related to log(odds) (with confidence interval of [50.03, 67.59]).  When looking at the levels of Job, blue collar and services are both significant and detrimental toward the overall value (both at -0.20 with CI [-0.35, -0.07] and [-0.38, 0.03] respectively).  Alternatively, retired and student both significantly impact the outcome positively.  Retired increases the value by 0.29 (CI of [0.11, 0.47]) while students increase by 0.29 (with CI of [0.06, 0.52]).  The method of contact is also of importance, where telephone calls (versus cell phone contact) decreases the overall outcome by -0.54 (with CI of [-0.69, -0.40]).  Specific Months had disparate impact.  May produces the lowest coefficient with -0.65 and confidence interval of (-0.81, -0.49).  March provided the highest coefficient of 0.81 with confidence intervals of (0.56, 1.06).   
+Recall that we are calculating toward a yes or no outcome.  Each coefficient described adds or detracts from the total.  The y-intercept is set at -58.83 (related to log(odds) (with confidence interval of [50.03, 67.59]).  When looking at the levels of Job, blue collar and services are both significant and detrimental toward the overall value (both at -0.20 with CI [-0.35, -0.07] and [-0.38, 0.03] respectively).  Alternatively, retired and student both significantly impact the outcome positively.  Retired increases the value by 0.29 (CI of [0.11, 0.47]) while students increase by 0.29 (with CI of [0.06, 0.52]).  The method of contact is also of importance, where telephone calls (versus cell phone contact) decreases the overall outcome by -0.54 (with CI of [-0.69, -0.40]).  Specific Months had disparate impact.  The month of May produces the lowest coefficient with -0.65 and confidence interval of (-0.81, -0.49).  March provided the highest coefficient of 0.81 with confidence intervals of (0.56, 1.06).   
 
-To  predict the odds of getting secure commitment for term deposits (Y/N), we only put the value of each predictor inside the model and take the exponetial to get probaility (from 0 to 1).  Notice that with categorical explanatory variables, Yes  is 1 and No is 0.
+To predict the odds of getting secure commitment for term deposits (Y/N), we only put the value of each predictor inside the model and take the exponential to get probability (from 0 to 1).  Notice that with categorical explanatory variables, Yes  is 1 and No is 0.
 
 
-		
 ## Logistic Regression Conclusion  
 
-The simple model produced in logistic regression highlights a few key factors among the variables that indicate importance.  As the presumed goal is achieving the Yes result, specific items could be focused on in future solicitation efforts to employ resources efficiently.  Students and Retired persons both tested as factors worth expanding on.  Additionally, cell phone contact would be advised.  Specific months proved significant, but that is likely due to the index numbers more than the actual month itself.  We must point out that this is an observational study, so no true conclusions can be made from this model about the larger population or around causality.  The findings are nonetheless interesting.
+The simple model produced in logistic regression highlights a few key factors among the variables that indicate importance.  As the presumed goal is achieving a Yes result, specific items could be focused on in future solicitation efforts to employ resources efficiently.  Students and Retired persons both tested as factors worth expanding on.  Additionally, cell phone contact would be advised.  Specific months proved significant, but that is likely due to the index numbers more than the actual month itself.  We must point out that this is an observational study, so no true conclusions can be made from this model about the larger population or around causality.  The findings are nonetheless interesting.
 
 # V. Alternative Models  
 
@@ -302,12 +281,10 @@ Ultimately, the logistic regression models had the best performance with the hig
 
   The business problem we were tasked to solve was how can we best predict subscriptions for term deposits.  The team decided early on that while overall accuracy was certainly important, priority should be given to the model that accurately predicts the yes outcome the best.  With that in mind, we found that 
   
-XXXXX ENTER FINAL MODEL HERE XXXXX 
+  $$log(odds) =\beta_0+ \beta_1 * job+\beta_2 * contact+\beta_3 * month+\beta_4 * day\_of\_week+\beta_5 * campaign+\beta_6 * pdays+\beta_7 * poutcome++\beta_8 * cons.price.idx+\beta_9 * cons.conf.idx+\beta_10 * nr.employed.$$   
 
-would be recommended.  Furthermore, as stated previously, this is an observational study.  We would be remiss to fail to recognize the economic parallels between this data time frame and our current economic climate.  Our next steps would be to identify, if possible, year as well in the dataset.  That would allow us to attempt to tune the model a bit in line with today's economic volatility.  
+would be recommended.  Furthermore, as stated previously, this is an observational study.  We would be remiss in failing to recognize the economic parallels between this data time frame and our current economic climate.  Our next steps would be to identify, if possible, year as well in the dataset.  That would allow us to attempt to tune the model a bit in line with today's economic volatility.  
 
-*	Overall report of the error metrics on a test set or CV run.  Also if the two best models have error rates of .05 and .045,  can we really say that one model is outperforming the other?  For the ambitious, McNemar’s test could be helpful in answering that.
-*	The conclusion should reprise the questions and conclusions of objective 2 with recommendations of the final model, what could be done to help analysis and model building in the future, and any insight as to why one method outshines all the rest if that is indeed the case.  If they all are similar why did you go with your final model?
 
 # Acknowledgement  
 
